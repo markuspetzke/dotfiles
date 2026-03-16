@@ -19,11 +19,11 @@ require("lazy").setup({
   spec = {
     { import = "plugins" },
   },
-	defaults = {
-		lazy = false,
-		version = false,
-	},
-	install = { colorscheme = { "catppuccin" }},
+  defaults = {
+    lazy = false,
+    version = false,
+  },
+  install = { colorscheme = { "catppuccin" } },
 
-  checker = { enabled = true },
+  checker = { enabled = true, notify = false },
 })

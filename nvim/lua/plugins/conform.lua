@@ -16,13 +16,11 @@ return {
     formatters_by_ft = {
       -- Lua
       lua = { "stylua" },
-
       -- JavaScript/TypeScript
       javascript = { "prettier" },
       typescript = { "prettier" },
       javascriptreact = { "prettier" },
       typescriptreact = { "prettier" },
-
       -- Web
       html = { "prettier" },
       css = { "prettier" },
@@ -30,19 +28,14 @@ return {
       json = { "prettier" },
       yaml = { "prettier" },
       markdown = { "prettier" },
-
       -- Rust
       rust = { "rustfmt" },
-
-      ["*"] = { "trim_whitespace" },
+      ["_"] = { "trim_whitespace" },
     },
-
-    -- Format beim Speichern
     format_on_save = {
-      timeout_ms = 500,
-      lsp_fallback = true,
+      timeout_ms = 2500,
+      lsp_format = "fallback",
     },
-
     notify_on_error = true,
   },
   init = function()

@@ -1,10 +1,9 @@
 return {
   "ibhagwan/fzf-lua",
-  lazy = false, -- Suchwerkzeuge sollten immer da sein
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
     files = {
-      find_opts = [[-type f \! -path '*/.git/*' \! -path '*/node_modules/*' \! -path '*/.cargo/*' \! -path '*/target/*' \! -path '*/mason.nvim/*' \! -path '*/.npm/*' \! -path '*/.zoom/*' \! -path '*/.cache/*' \! -path '*/Games/*' \! -name "*.crate" \! -path "*/.local/*"  \! -name "*.dll" \! -name "*.jpg" \! -name "*.png" \! -name "*.dll"  \! -name "*.history" \! -name "*.tar.gz" \! -name "*.gif"  ]],
+      cmd = "fd --type f --hidden --exclude .git --exclude node_modules --exclude .cargo --exclude target",
     },
   },
 
@@ -32,6 +31,27 @@ return {
         require("fzf-lua").oldfiles()
       end,
       desc = "Recent Files",
+    },
+    {
+      "<leader>fg",
+      function()
+        require("fzf-lua").live_grep()
+      end,
+      desc = "Live Grep",
+    },
+    {
+      "<leader>fb",
+      function()
+        require("fzf-lua").buffers()
+      end,
+      desc = "Buffers",
+    },
+    {
+      "<leader>fh",
+      function()
+        require("fzf-lua").help_tags()
+      end,
+      desc = "Help Tags",
     },
   },
 }

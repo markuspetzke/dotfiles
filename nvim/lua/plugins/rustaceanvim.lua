@@ -1,16 +1,14 @@
 return {
-  'mrcjkb/rustaceanvim',
-  version = '^6',
-  lazy = false,
-  ft = { 'rust' },
+  "mrcjkb/rustaceanvim",
+  version = "^6",
+  ft = { "rust" },
   opts = {
     server = {
       on_attach = function(client, bufnr)
-        -- Inlay hints für Rust
         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
       end,
       default_settings = {
-        ['rust-analyzer'] = {
+        ["rust-analyzer"] = {
           cargo = {
             allFeatures = true,
             loadOutDirsFromCheck = true,
@@ -18,13 +16,15 @@ return {
               enable = true,
             },
           },
-          checkOnSave = true,
+          check = {
+            command = "clippy",
+          },
           procMacro = {
             enable = true,
             ignored = {
-              ['async-trait'] = { 'async_trait' },
-              ['napi-derive'] = { 'napi' },
-              ['async-recursion'] = { 'async_recursion' },
+              ["async-trait"] = { "async_trait" },
+              ["napi-derive"] = { "napi" },
+              ["async-recursion"] = { "async_recursion" },
             },
           },
           -- Inlay Hints Konfiguration
@@ -40,10 +40,10 @@ return {
               minLines = 25,
             },
             closureReturnTypeHints = {
-              enable = 'never',
+              enable = "never",
             },
             lifetimeElisionHints = {
-              enable = 'never',
+              enable = "never",
               useParameterNames = false,
             },
             maxLength = 25,
@@ -51,7 +51,7 @@ return {
               enable = true,
             },
             reborrowHints = {
-              enable = 'never',
+              enable = "never",
             },
             renderColons = true,
             typeHints = {
@@ -65,6 +65,6 @@ return {
     },
   },
   config = function(_, opts)
-    vim.g.rustaceanvim = vim.tbl_deep_extend('keep', vim.g.rustaceanvim or {}, opts or {})
+    vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
   end,
 }

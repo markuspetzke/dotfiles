@@ -6,7 +6,7 @@ return {
       { "<auto>", mode = "nso" },
     },
     preset = "modern",
-    delay = 0,
+    delay = 300,
     icons = {
       breadcrumb = "»",
       separator = "➜",
@@ -23,7 +23,7 @@ return {
 
     wk.add({
       -- [fzf-lua]
-      { "<leader>f", group = "Find (Telescope)" },
+      { "<leader>f", group = "Find " },
 
       { "<leader>c", group = "LSP/Code" },
       { "<leader>cr", desc = "Rename" },
