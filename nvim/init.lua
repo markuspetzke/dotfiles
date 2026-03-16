@@ -7,4 +7,4 @@ require("config.options")
 
 require("config.autocmds")
 require("config.keymaps")
-require("bufferline").setup()
+-- require("bufferline").setup()
