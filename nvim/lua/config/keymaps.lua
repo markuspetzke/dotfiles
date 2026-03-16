@@ -1,10 +1,12 @@
-local map = require("utils.utils").map
+local map = vim.keymap.set
 
 -- Insert mode
 vim.keymap.set("i", "jj", "<ESC>", { silent = true, desc = "Exit insert mode" })
 
 -- Speichern
-vim.keymap.set({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
+vim.keymap.set({ "i", "x", "n", "i", "v" }, "<C-s>", function()
+  vim.cmd("update")
+end, { desc = "Save file" })
 
 -- Besseres j/k bei wrapped lines
 map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true, desc = "Down" })

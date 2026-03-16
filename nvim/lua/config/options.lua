@@ -1,11 +1,9 @@
--- Leader
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
-
 -- Netrw deaktivieren (snacks explorer übernimmt)
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.have_nerd_font = true
+
+vim.cmd.colorscheme("catppuccin")
 
 -- UI
 vim.opt.number = true

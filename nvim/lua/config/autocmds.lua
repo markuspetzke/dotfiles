@@ -2,7 +2,7 @@ local function augroup(name)
   return vim.api.nvim_create_augroup("user_" .. name, { clear = true })
 end
 
--- Auto create dir when saving a file, in case some intermediate directory does not exist
+-- Auto create dir when saving a file
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   group = augroup("auto_create_dir"),
   callback = function(event)

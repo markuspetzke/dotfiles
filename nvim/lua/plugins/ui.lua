@@ -1,12 +1,12 @@
 return {
 
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-  {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "catppuccin",
-    },
-  },
+  -- {
+  --   "LazyVim/LazyVim",
+  --   opts = {
+  --     colorscheme = "catppuccin",
+  --   },
+  -- },
   {
     "karb94/neoscroll.nvim",
     event = "VeryLazy",
