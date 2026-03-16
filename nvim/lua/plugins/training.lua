@@ -19,7 +19,10 @@ return {
     "m4xshen/hardtime.nvim",
     dependencies = { "MunifTanjim/nui.nvim" },
     opts = {
-      disabled_keys = {},
+      disabled_keys = {
+        ["<Up>"] = false,
+        ["<Down>"] = false,
+      },
       disabled_filetypes = disabled_fts,
     },
   },
