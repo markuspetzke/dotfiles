@@ -1,11 +1,13 @@
 *
 !nvim/
+!nvim/**
 !hypr/
+!hypr/**
 !kitty/
+!kitty/**
 !rivalcfg/
+!rivalcfg/**
 !waybar/
+!waybar/**
 
 !.gitignore
-
-
-
