@@ -1,0 +1,11 @@
+*
+!nvim/
+!hypr/
+!kitty/
+!rivalcfg/
+!waybar/
+
+!.gitignore
+
+
+
