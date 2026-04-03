@@ -3,8 +3,10 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.have_nerd_font = true
 
-vim.cmd.colorscheme("kanso-ink") --catppuccin, rose-pine, kanso, kanagawa
-
+vim.cmd.colorscheme("kanso") --catppuccin, rose-pine, kanso, kanagawa, horizon
+vim.api.nvim_set_hl(0, "SnacksPickerGitStatusUntracked", { fg = "#27D797" })
+vim.api.nvim_set_hl(0, "SnacksPickerPathIgnored", { fg = "#5c6370" })
+vim.api.nvim_set_hl(0, "SnacksPickerPathHidden", { fg = "#5c6370" })
 -- UI
 vim.opt.number = true
 vim.opt.relativenumber = true
