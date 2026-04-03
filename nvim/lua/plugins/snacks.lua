@@ -31,7 +31,7 @@ return {
       },
       filters = {
         hidden = false,
-        custom = { "^%.git$", "^node_modules$", "^%.DS_Store$" },
+        custom = { "^%.git$", "^node_modules$", "^%.DS_Store$", "^dist$", "^target$" },
       },
       icons = {
         folder_closed = "",
