@@ -44,13 +44,18 @@ return {
         map("n", "<leader>ca", vim.lsp.buf.code_action)
       end
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "ts_ls" },
+        ensure_installed = { "lua_ls", "ts_ls", "astro" },
         handlers = {
           function(server_name)
             lspconfig[server_name].setup({
               on_attach = on_attach,
             })
           end,
+          -- astro = function()
+          --   lspconfig.astro.setup({
+          --     on_attach = on_attach,
+          --   })
+          -- end,
         },
       })
     end,
