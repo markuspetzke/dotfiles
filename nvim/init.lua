@@ -2,16 +2,13 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+-- Disable netrw early; snacks explorer owns file browsing.
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+vim.g.have_nerd_font = true
+
 require("config.lazy")
 require("config.options")
 
 require("config.autocmds")
 require("config.keymaps")
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "astro",
-  callback = function()
-    vim.opt_local.iskeyword:remove("-")
-  end,
-})
--- require("bufferline").setup()

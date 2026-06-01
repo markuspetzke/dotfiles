@@ -2,7 +2,7 @@ local map = vim.keymap.set
 
 vim.keymap.set("i", "jj", "<ESC>", { silent = true, desc = "Exit insert mode" })
 
-vim.keymap.set({ "i", "x", "n", "i", "v" }, "<C-s>", function()
+vim.keymap.set({ "i", "n", "v", "x" }, "<C-s>", function()
   vim.cmd("update")
 end, { desc = "Save file" })
 

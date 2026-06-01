@@ -6,8 +6,11 @@ return {
       require("lint").linters_by_ft = {
         javascript = { "eslint_d" },
         typescript = { "eslint_d" },
+        javascriptreact = { "eslint_d" },
+        typescriptreact = { "eslint_d" },
       }
       vim.api.nvim_create_autocmd("BufWritePost", {
+        group = vim.api.nvim_create_augroup("user_lint", { clear = true }),
         callback = function()
           require("lint").try_lint()
         end,
@@ -40,8 +43,9 @@ return {
         local map = function(mode, lhs, rhs)
           vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true })
         end
-        map("n", "<leader>rn", vim.lsp.buf.rename)
+        map("n", "<leader>cr", vim.lsp.buf.rename)
         map("n", "<leader>ca", vim.lsp.buf.code_action)
+        map("n", "<leader>cd", vim.diagnostic.open_float)
       end
       require("mason-lspconfig").setup({
         ensure_installed = { "lua_ls", "ts_ls", "astro" },

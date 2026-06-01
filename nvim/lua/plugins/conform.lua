@@ -24,7 +24,7 @@ return {
       -- Web
       html = { "prettier" },
       css = { "prettier" },
-      astro = { "prettiert" },
+      astro = { "prettier" },
       scss = { "prettier" },
       json = { "prettier" },
       yaml = { "prettier" },
