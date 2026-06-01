@@ -5,7 +5,7 @@
     "spacing": 1,
     "margin": 0,
     "modules-left": ["hyprland/workspaces", "custom/playerctl"],
-    "modules-center": [ "hyprland/window"],                                                                           //battery   //disk     // uptime      //updates        // systray
+    "modules-center": [ "hyprland/window"],
     "modules-right": ["pulseaudio", "network", "cpu", "memory", "temperature", "disk","clock", "tray"],
 
 
@@ -90,7 +90,7 @@
         "max-length": 40,
         "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{artist}} - {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
         "on-click": "playerctl play-pause",
-        "on-click-right": "playerctl next",
+        "on-click-right": "playerctl next"
     },
 
           "clock": {

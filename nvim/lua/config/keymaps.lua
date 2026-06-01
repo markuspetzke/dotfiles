@@ -19,7 +19,11 @@ map("n", "<leader>w|", "<C-W>v", { desc = "Split window right" })
 
 map("n", "<leader>xl", vim.diagnostic.setloclist, { desc = "Diagnostic location list" })
 map("n", "<leader>xq", vim.diagnostic.setqflist, { desc = "Diagnostic quickfix list" })
-map("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+map("n", "]d", function()
+  vim.diagnostic.jump({ count = 1, float = true })
+end, { desc = "Next diagnostic" })
+map("n", "[d", function()
+  vim.diagnostic.jump({ count = -1, float = true })
+end, { desc = "Previous diagnostic" })
 
 map("t", "<esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
