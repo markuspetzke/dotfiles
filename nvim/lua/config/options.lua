@@ -26,13 +26,24 @@ vim.opt.termguicolors = true
 vim.opt.title = false
 vim.opt.laststatus = 3
 vim.opt.ruler = false
+vim.opt.signcolumn = "yes"
+vim.opt.cursorline = true
 vim.opt.scrolloff = 10
+vim.opt.sidescrolloff = 8
 vim.opt.smoothscroll = true
 vim.opt.linebreak = true
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.winminwidth = 5
+vim.opt.pumheight = 10
+vim.opt.list = true
+vim.opt.listchars = { tab = "  ", trail = "·", nbsp = "␣" }
 
 -- Indentation
+vim.opt.expandtab = true
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
 vim.opt.smartindent = true
 vim.opt.shiftround = true
 
@@ -44,6 +55,7 @@ vim.opt.foldtext = ""
 -- Search
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+vim.opt.inccommand = "split"
 
 -- Performance
 vim.opt.swapfile = false
@@ -62,6 +74,21 @@ vim.opt.confirm = true
 
 -- Diagnostics
 vim.diagnostic.config({
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
   virtual_text = false,
   virtual_lines = false,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "E",
+      [vim.diagnostic.severity.WARN] = "W",
+      [vim.diagnostic.severity.INFO] = "I",
+      [vim.diagnostic.severity.HINT] = "H",
+    },
+  },
+  float = {
+    border = "rounded",
+    source = "if_many",
+  },
 })
