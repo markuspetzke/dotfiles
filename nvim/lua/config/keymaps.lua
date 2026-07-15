@@ -26,4 +26,14 @@ map("n", "[d", function()
   vim.diagnostic.jump({ count = -1, float = true })
 end, { desc = "Previous diagnostic" })
 
-map("t", "<esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
+  callback = function()
+    local buf_name = vim.api.nvim_buf_get_name(0)
+    if vim.bo.filetype == "lazygit" or buf_name:match("lazygit") then
+      vim.keymap.set("t", "<Esc>", "<cmd>close<CR>", { buffer = true, silent = true })
+    else
+      vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { buffer = true, desc = "Exit terminal mode" })
+    end
+  end,
+})
