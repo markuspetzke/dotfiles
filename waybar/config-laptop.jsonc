@@ -1,0 +1,12 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "spacing": 1,
+    "margin": 0,
+    "include": ["~/.config/waybar/modules.jsonc"],
+
+    "modules-left": ["hyprland/workspaces", "custom/playerctl"],
+    "modules-center": ["hyprland/window"],
+    "modules-right": ["custom/monitor-profile", "custom/power-profile", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network#wifi", "battery", "cpu", "memory", "clock", "tray"]
+}

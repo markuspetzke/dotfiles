@@ -4,23 +4,51 @@ return {
   lazy = false,
   ---@type snacks.Config
   opts = {
-    animate = {
-      enabled = false,
-    },
+    animate = { enabled = true },
 
     bigfile = {
       enabled = true,
       notify = true,
       size = 1.5 * 1024 * 1024, -- 1.5MB
-      setup = function(ctx)
-        vim.cmd([[NoMatchParen]])
-        vim.schedule(function()
-          vim.bo[ctx.buf].syntax = ctx.ft
-        end)
-      end,
     },
 
-    dashboard = { enabled = false },
+    dashboard = {
+      enabled = true,
+      width = 60,
+      preset = {
+        header = table.concat({
+          "███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
+          "████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║",
+          "██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║",
+          "██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║",
+          "██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║",
+          "╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝",
+        }, "\n"),
+        keys = {
+          { icon = " ", key = "f", desc = "Find File", action = ":lua require('fzf-lua').files()" },
+          { icon = " ", key = "r", desc = "Recent Files", action = ":lua require('fzf-lua').oldfiles()" },
+          { icon = " ", key = "s", desc = "Restore Session", action = ":lua require('persistence').load()" },
+          { icon = " ", key = "g", desc = "Find Word", action = ":lua require('fzf-lua').live_grep()" },
+          { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+          { icon = " ", key = "e", desc = "Explorer", action = ":lua Snacks.explorer()" },
+          {
+            icon = " ",
+            key = "c",
+            desc = "Config",
+            action = ":lua require('fzf-lua').files({ cwd = vim.fn.stdpath('config'), prompt = 'Config Files❯ ' })",
+          },
+          { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
+          { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+        },
+      },
+      sections = {
+        { section = "header" },
+        { section = "keys", gap = 1, padding = 1 },
+        { icon = " ", title = "Recent Files", section = "recent_files", cwd = true, indent = 2, padding = 1 },
+        { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+        { section = "startup" },
+      },
+    },
 
     explorer = {
       enabled = true,
@@ -53,11 +81,11 @@ return {
 
     indent = { enabled = true },
 
-    input = {
-      enabled = false,
-    },
+    input = { enabled = true },
 
-    picker = { enabled = false },
+    -- Der Explorer laeuft auf dem Picker, deshalb bleibt der an; nur die
+    -- vim.ui.select-Uebernahme ist hier nicht erwuenscht.
+    picker = { enabled = true, ui_select = false },
 
     notifier = {
       enabled = true,
@@ -80,18 +108,15 @@ return {
 
     quickfile = { enabled = true },
 
-    scope = {
-      enabled = false,
-    },
+    lazygit = { enabled = true },
 
-    scroll = {
-      enabled = false,
-    },
+    scope = { enabled = true },
 
-    -- Statuscolumn (Zeilen-Nummern, Signs, Folds)
-    statuscolumn = {
-      enabled = false,
-    },
+    scroll = { enabled = true },
+
+    -- Statuscolumn: aus -- reserviert zusaetzliche Spalten links und macht
+    -- den Rand unnoetig breit. Signcolumn + Zeilennummern reichen.
+    statuscolumn = { enabled = false },
 
     -- Zen Mode (optional, sehr nützlich!)
     zen = {
@@ -102,9 +127,6 @@ return {
     styles = {
       notification = {
         wo = { wrap = true },
-        border = "rounded",
-      },
-      input = {
         border = "rounded",
       },
     },
@@ -122,9 +144,37 @@ return {
     {
       "<leader>e",
       function()
-        Snacks.explorer({ cwd = vim.fn.expand("%:p:h") })
+        -- Terminal-/Scratch-Buffer haben kein echtes Verzeichnis -> cwd nehmen.
+        local dir = vim.fn.expand("%:p:h")
+        if vim.bo.buftype ~= "" or vim.fn.isdirectory(dir) == 0 then
+          dir = vim.fn.getcwd()
+        end
+        Snacks.explorer({ cwd = dir })
       end,
       desc = "Explorer (Current File)",
+    },
+
+    -- Git
+    {
+      "<leader>gg",
+      function()
+        Snacks.lazygit()
+      end,
+      desc = "Lazygit",
+    },
+    {
+      "<leader>gl",
+      function()
+        Snacks.lazygit.log()
+      end,
+      desc = "Lazygit Log",
+    },
+    {
+      "<leader>gf",
+      function()
+        Snacks.lazygit.log_file()
+      end,
+      desc = "Lazygit Current File History",
     },
 
     -- Notifier

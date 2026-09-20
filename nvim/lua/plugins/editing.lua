@@ -6,8 +6,9 @@ return {
   },
   {
     "folke/todo-comments.nvim",
-    event = "BufReadPost",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {},
     keys = {
       {
         "]t",
@@ -29,7 +30,6 @@ return {
   {
     "rachartier/tiny-inline-diagnostic.nvim",
     event = "LspAttach",
-    priority = 1000,
     config = function()
       require("tiny-inline-diagnostic").setup({
         options = {
@@ -42,7 +42,6 @@ return {
           },
         },
       })
-      vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostics
     end,
   },
 }

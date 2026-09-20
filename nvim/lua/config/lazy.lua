@@ -23,7 +23,7 @@ require("lazy").setup({
     lazy = true,
     version = false,
   },
-  install = { colorscheme = { "kanso" } },
+  install = { colorscheme = { "tokyonight", "kanso" } },
   checker = { enabled = true, notify = false },
   change_detection = { notify = false },
   performance = {

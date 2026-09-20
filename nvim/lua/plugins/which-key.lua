@@ -2,9 +2,6 @@ return {
   "folke/which-key.nvim",
   event = "VeryLazy",
   opts = {
-    triggers = {
-      { "<auto>", mode = "nso" },
-    },
     preset = "modern",
     delay = 300,
     icons = {
@@ -16,38 +13,25 @@ return {
       border = "rounded",
       padding = { 1, 2 },
     },
-  },
-  config = function(_, opts)
-    local wk = require("which-key")
-    wk.setup(opts)
-
-    wk.add({
-      -- [fzf-lua]
-      { "<leader>f", group = "Find " },
-
-      { "<leader>c", group = "LSP/Code" },
-      { "<leader>cr", desc = "Rename" },
-      { "<leader>ca", desc = "Code Action" },
-      { "<leader>cd", desc = "Diagnostics" },
-
-      -- [LazyGit]
+    -- Nur Gruppen; die einzelnen Keys beschreiben sich ueber ihre `desc` selbst.
+    spec = {
+      { "<leader>f", group = "Find" },
+      { "<leader>c", group = "Code" },
       { "<leader>g", group = "Git" },
-      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
-
+      { "<leader>gt", group = "Toggle" },
       { "<leader>s", group = "Search" },
-      { "<leader>ss", desc = "Search String" },
-      { "<leader>sw", desc = "Search Word" },
-      { "<leader>sr", desc = "Search & Replace" },
-
       { "<leader>w", group = "Window", proxy = "<c-w>" },
       { "<leader>q", group = "Quit/Session" },
+      { "<leader>o", group = "Tasks" },
       { "<leader>x", group = "Diagnostics/Quickfix" },
-
-      -- [Buffer]
       { "<leader>b", group = "Buffer" },
-
+      { "<leader>d", group = "Debug" },
       { "<leader>u", group = "UI/Toggle" },
-      { "<leader>n", group = "Notifications" },
-    })
-  end,
+      { "<leader>n", group = "Notifications/Messages" },
+      { "[", group = "prev" },
+      { "]", group = "next" },
+      { "g", group = "goto" },
+      { "z", group = "fold" },
+    },
+  },
 }

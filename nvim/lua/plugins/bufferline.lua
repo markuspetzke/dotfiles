@@ -6,8 +6,20 @@ return {
   keys = {
     { "<S-h>", "<cmd>bprevious<cr>", desc = "Prev Buffer" },
     { "<S-l>", "<cmd>bnext<cr>", desc = "Next Buffer" },
-    { "<leader>bd", "<cmd>bdelete<cr>", desc = "Delete Buffer" },
-    { "<leader>bD", "<cmd>bdelete!<cr>", desc = "Delete Buffer (Force)" },
+    {
+      "<leader>bd",
+      function()
+        Snacks.bufdelete()
+      end,
+      desc = "Delete Buffer",
+    },
+    {
+      "<leader>bD",
+      function()
+        Snacks.bufdelete({ force = true })
+      end,
+      desc = "Delete Buffer (Force)",
+    },
   },
   opts = {
     options = {
@@ -46,16 +58,4 @@ return {
       always_show_bufferline = false,
     },
   },
-  config = function(_, opts)
-    require("bufferline").setup(opts)
-    vim.api.nvim_create_autocmd("BufAdd", {
-      callback = function()
-        vim.schedule(function()
-          pcall(function()
-            require("bufferline.commands").refresh()
-          end)
-        end)
-      end,
-    })
-  end,
 }

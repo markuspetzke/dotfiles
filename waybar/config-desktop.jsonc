@@ -1,4 +1,3 @@
-// Fallback ohne -c: Desktop-Profil. Hyprland startet waybar mit config-<host>.jsonc.
 {
     "layer": "top",
     "position": "top",

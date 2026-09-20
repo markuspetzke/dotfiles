@@ -1,6 +1,7 @@
 *
 !nvim/
 !nvim/**
+nvim/Session.vim
 !hypr/
 !hypr/**
 !kitty/

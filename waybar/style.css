@@ -1,181 +1,169 @@
-/* Gruvbox Dark Colors */
-@define-color background #282828;
-@define-color background-light #3c3836;
-@define-color foreground #ebdbb2;
-@define-color black #32302f;
-@define-color red #cc241d;
-@define-color green #98971a;
-@define-color yellow #d79921;
-@define-color blue #458588;
-@define-color magenta #b16286;
-@define-color cyan #689d6a;
-@define-color white #ebdbb2;
-@define-color orange #d65d0e;
-
-/* Module-specific colors */
-@define-color workspaces-color @foreground;
-@define-color workspaces-focused-bg @green;
-@define-color workspaces-focused-fg @cyan;
-@define-color workspaces-urgent-bg @red;
-@define-color workspaces-urgent-fg @black;
-
-/* Text and border colors for modules */
-@define-color mode-color @orange;
-@define-color mpd-color @magenta;
-@define-color playerctl-color @magenta;
-@define-color clock-color @blue;
-@define-color cpu-color @green;
-@define-color memory-color @magenta;
-@define-color temperature-color @yellow;
-@define-color temperature-critical-color @red;
-@define-color network-color @blue;
-@define-color network-disconnected-color @red;
-@define-color pulseaudio-color @orange;
-@define-color pulseaudio-muted-color @red;
-@define-color disk-color @cyan;
+/* TokyoNight Moon — gleiche Palette wie Neovim, Kitty und Hyprland */
+@define-color background #222436;
+@define-color background-light #2f334d;
+@define-color background-hover #3b4161;
+@define-color foreground #c8d3f5;
+@define-color black #1b1d2b;
+@define-color red #ff757f;
+@define-color green #c3e88d;
+@define-color yellow #ffc777;
+@define-color blue #82aaff;
+@define-color magenta #c099ff;
+@define-color cyan #86e1fc;
+@define-color orange #ff966c;
+@define-color comment #636da6;
 
 * {
-    /* Base styling for all modules */
     border: none;
     border-radius: 0;
-    font-family: "Fira Nerd Font";
-    font-size: 14px;
+    font-family: "FiraCode Nerd Font";
+    font-size: 13px;
+    font-weight: normal;
     min-height: 0;
 }
 
 window#waybar {
-    background-color: @background;
+    background: transparent;
     color: @foreground;
 }
-/* Common module styling with border-bottom */
-#mode, #mpd,  #custom-playerctl, #clock, #cpu,
-#memory, #temperature,  #network, #pulseaudio,
- #disk, #tray {
-    padding: 0 10px;
-    margin: 0 2px;
-    border-bottom: 2px solid transparent;
-    background-color: transparent;
+
+/* Eine ruhige, abgesetzte Leiste statt einzelner harter Rahmen. */
+#waybar > .box {
+    background: @background;
+    border: 1px solid alpha(@foreground, 0.08);
+    border-radius: 12px;
+    margin: 6px 9px 0;
+    padding: 2px 5px;
 }
 
-/* Workspaces styling */
+#workspaces {
+    background: @background-light;
+    border-radius: 8px;
+    margin: 2px 4px 2px 2px;
+    padding: 0 2px;
+}
+
 #workspaces button {
-    padding: 0 10px;
-    background-color: transparent;
-    color: @workspaces-color;
-    margin: 0;
+    background: transparent;
+    border-radius: 6px;
+    color: @comment;
+    margin: 2px;
+    padding: 0 9px;
+    transition: background 150ms ease, color 150ms ease;
 }
 
 #workspaces button:hover {
-    background: @background-light;
-    box-shadow: inherit;
+    background: @background-hover;
+    color: @foreground;
 }
 
 #workspaces button.active,
 #workspaces button.focused {
-    box-shadow: inset 0 -2px @workspaces-focused-fg;
-    color: @workspaces-focused-fg;
-    font-weight: 900;
+    background: @blue;
+    color: @black;
+    font-weight: bold;
 }
 
 #workspaces button.urgent {
-    background-color: @workspaces-urgent-bg;
-    color: @workspaces-urgent-fg;
+    background: @red;
+    color: @black;
 }
 
-/* Module-specific styling */
-#mode {
-    color: @mode-color;
-    border-bottom-color: @mode-color;
-}
-
-#mpd {
-    color: @mpd-color;
-    border-bottom-color: @mpd-color;
-}
-
-#mpd.disconnected,
-#mpd.stopped {
+#window {
     color: @foreground;
-    border-bottom-color: transparent;
+    font-weight: bold;
+    padding: 0 12px;
+}
+
+/* Gemeinsame Modulform: kompakte farbige pills. */
+#custom-playerctl,
+#custom-monitor-profile,
+#custom-power-profile,
+#idle_inhibitor,
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#temperature,
+#disk,
+#battery,
+#backlight,
+#bluetooth,
+#clock,
+#tray {
+    background: @background-light;
+    border-radius: 7px;
+    margin: 2px 2px;
+    padding: 0 9px;
 }
 
 #custom-playerctl {
-    color: @playerctl-color;
-    border-bottom-color: @playerctl-color;
+    color: @magenta;
+    margin-left: 2px;
 }
 
-#custom-playerctl.Playing {
-    color: @cyan;
-    border-bottom-color: @cyan;
-}
+#custom-playerctl.Playing { color: @cyan; }
+#custom-playerctl.Paused { color: @orange; }
 
-#custom-playerctl.Paused {
-    color: @orange;
-    border-bottom-color: @orange;
-}
+#custom-monitor-profile { color: @blue; }
+#custom-monitor-profile.presentation { color: @orange; }
 
-#clock {
-    color: @clock-color;
-    border-bottom-color: @clock-color;
-}
+#custom-power-profile { color: @green; }
+#custom-power-profile.performance { color: @red; }
+#custom-power-profile.power-saver { color: @yellow; }
+#custom-power-profile.unavailable { color: @comment; }
 
-#cpu {
-    color: @cpu-color;
-    border-bottom-color: @cpu-color;
-}
+#idle_inhibitor { color: @comment; }
+#idle_inhibitor.activated { color: @yellow; }
 
-#memory {
-    color: @memory-color;
-    border-bottom-color: @memory-color;
-}
+#pulseaudio { color: @orange; }
+#pulseaudio.muted { color: @red; }
 
-#temperature {
-    color: @temperature-color;
-    border-bottom-color: @temperature-color;
-}
+#network { color: @blue; }
+#network.disconnected { color: @red; }
 
+#cpu { color: @green; }
+#memory { color: @magenta; }
+#temperature { color: @yellow; }
 #temperature.critical {
-    color: @temperature-critical-color;
-    border-bottom-color: @temperature-critical-color;
+    color: @red;
+    animation: blink 1s linear infinite alternate;
 }
 
-#network {
-    color: @network-color;
-    border-bottom-color: @network-color;
+#disk { color: @cyan; }
+#clock { color: @blue; font-weight: bold; }
+
+#battery { color: @green; }
+#battery.charging,
+#battery.plugged { color: @cyan; }
+#battery.warning:not(.charging) { color: @orange; }
+#battery.critical:not(.charging) {
+    color: @red;
+    animation: blink 1s linear infinite alternate;
 }
 
-#network.disconnected {
-    color: @network-disconnected-color;
-    border-bottom-color: @network-disconnected-color;
-}
-
-#pulseaudio {
-    color: @pulseaudio-color;
-    border-bottom-color: @pulseaudio-color;
-}
-
-#pulseaudio.muted {
-    color: @pulseaudio-muted-color;
-    border-bottom-color: @pulseaudio-muted-color;
-}
-
-#disk {
-    color: @disk-color;
-    border-bottom-color: @disk-color;
-}
+#backlight { color: @yellow; }
+#bluetooth { color: @blue; }
+#bluetooth.disabled { color: @comment; }
 
 #tray {
-    background-color: transparent;
-    padding: 0 10px;
-    margin: 0 2px;
+    padding: 0 7px;
+    margin-right: 2px;
 }
 
-#tray > .passive {
-    -gtk-icon-effect: dim;
-}
-
+#tray > .passive { -gtk-icon-effect: dim; }
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
     color: @red;
-    border-bottom-color: @red;
+}
+
+tooltip {
+    background: @background;
+    border: 1px solid alpha(@blue, 0.35);
+    border-radius: 8px;
+    color: @foreground;
+}
+
+@keyframes blink {
+    to { color: @foreground; }
 }
