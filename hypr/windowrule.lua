@@ -1,11 +1,4 @@
 hl.window_rule({
-	name = "opengl blackbox",
-	match = { title = "Test Title" },
-
-	float = true,
-})
-
-hl.window_rule({
 	name = "Picture-in-Picture",
 	match = { title = "Picture-in-Picture" },
 
@@ -49,4 +42,15 @@ hl.window_rule({
 	-- Source engine crasht gerne, wenn der Compositor ihm einen Fullscreen-Wechsel meldet
 	-- (SDL macht dann einen Video-Mode-Reset). Fullscreen nur intern in Hyprland umschalten.
 	sync_fullscreen = false,
+})
+
+-- hyprlauncher: halbtransparenter Hintergrund (hyprtoolkit.conf) bekommt Blur,
+-- der Rest des Bildschirms wird leicht abgedunkelt.
+hl.layer_rule({
+	name = "hyprlauncher",
+	match = { namespace = "^hyprlauncher$" },
+
+	blur = true,
+	ignore_alpha = 0.3,
+	dim_around = true,
 })

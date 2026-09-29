@@ -1,0 +1,4 @@
+[Unit]
+Description=Hyprland user session services
+Wants=hypridle.service hyprpaper.service hyprsunset.service dunst.service waybar.service cliphist-text.service cliphist-image.service power-profile.service headset.service hyprpolkitagent.service
+After=graphical-session-pre.target

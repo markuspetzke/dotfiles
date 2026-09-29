@@ -20,6 +20,10 @@ has_battery() {
   return 1
 }
 
+# Profil nur beim Start und beim Wechsel Netzteil <-> Akku setzen. Dazwischen
+# bleibt eine manuelle Wahl (Waybar-Klick) erhalten, statt alle 30 s ueberschrieben
+# zu werden.
+last=""
 while :; do
   desired=balanced
   # Desktops have no battery and should stay balanced even when no AC
@@ -27,9 +31,9 @@ while :; do
   if has_battery && ! on_ac_power; then
     desired=power-saver
   fi
-  current=$(powerprofilesctl get 2>/dev/null || true)
-  if [[ "$current" != "$desired" ]]; then
+  if [[ "$desired" != "$last" ]]; then
     powerprofilesctl set "$desired" || true
+    last=$desired
   fi
   sleep 30
 done

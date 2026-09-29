@@ -1,5 +1,5 @@
--- Hardwareprofil: HYPR_PROFILE=desktop/laptop gewinnt; danach wird ein Akku
--- erkannt. Der Hostname bleibt als Rueckwaertskompatibilitaet erhalten.
+-- Hardwareprofil kommt aus scripts/hypr-profile.sh, damit Hyprland, hypridle und
+-- waybar dieselbe Erkennung nutzen (HYPR_PROFILE > Akku > Hostname).
 local M = { name = "unknown", profile = nil, is_desktop = false, is_laptop = false }
 
 local f = io.open("/etc/hostname", "r")
@@ -8,19 +8,15 @@ if f then
 	f:close()
 end
 
-local override = os.getenv("HYPR_PROFILE")
-if override == "desktop" or override == "laptop" then
-	M.profile = override
-else
-	for i = 0, 9 do
-		local battery = io.open("/sys/class/power_supply/BAT" .. i .. "/type", "r")
-		if battery then
-			M.profile = "laptop"
-			battery:close()
-			break
-		end
-	end
-	M.profile = M.profile or (M.name == "GLaDOS" and "desktop" or "laptop")
+local home = os.getenv("HOME") or ""
+local p = io.popen('"' .. home .. '/.config/hypr/scripts/hypr-profile.sh" 2>/dev/null')
+if p then
+	M.profile = (p:read("*l") or ""):gsub("%s+$", "")
+	p:close()
+end
+-- Skript fehlt oder liefert Unsinn: Desktop ist der sichere Default (keine Laptop-Monitorlogik).
+if M.profile ~= "desktop" and M.profile ~= "laptop" then
+	M.profile = "desktop"
 end
 
 M.is_laptop = M.profile == "laptop"

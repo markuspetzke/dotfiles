@@ -3,7 +3,7 @@ local M = {}
 
 if host.is_desktop then
 	-- # Main Monitor
-	hl.monitor({ output = "DP-2", mode = "1920x1080@160", position = "1920x0", scale = 1 })
+	hl.monitor({ output = "DP-2", mode = "1920x1080@165", position = "1920x0", scale = 1 })
 	-- # second Monitor
 	hl.monitor({ output = "DP-3", mode = "1920x1080@144", position = "0x0", scale = 1 })
 
@@ -11,6 +11,16 @@ if host.is_desktop then
 	hl.workspace_rule({ workspace = "2", monitor = "DP-3", default = true })
 	hl.workspace_rule({ workspace = "3", monitor = "DP-2" })
 	hl.workspace_rule({ workspace = "4", monitor = "DP-2" })
+
+	-- Rival 3: ohne Beschleunigung (1 cm Mausweg = immer gleiche Strecke).
+	-- DPI/Polling stehen in der Maus selbst (rivalcfg).
+	hl.device({
+		name = "steelseries-steelseries-rival-3",
+		accel_profile = "flat",
+		-- Nur Desktop-Zeiger: bei "flat" = Faktor 1 + sensitivity (hier 1,5x).
+		-- Spiele mit Raw-Input bekommen die unbeschleunigten Werte.
+		sensitivity = 0.5,
+	})
 
 	-- Tablet device block
 	hl.device({

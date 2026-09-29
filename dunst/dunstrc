@@ -1,0 +1,76 @@
+# dunst -- tokyonight moon, gleiche Palette wie hypr/theme.lua
+
+[global]
+    monitor = 0
+    follow = mouse
+
+    width = 360
+    height = (0, 200)
+    origin = top-right
+    offset = (16, 16)
+    gap_size = 8
+    corner_radius = 8
+
+    progress_bar = true
+    progress_bar_height = 8
+    progress_bar_corner_radius = 4
+
+    transparency = 0
+    frame_width = 2
+    frame_color = "#82aaff"
+    separator_color = frame
+
+    font = FiraCode Nerd Font 10
+    line_height = 2
+    markup = full
+    format = "<b>%s</b>\n%b"
+    alignment = left
+    vertical_alignment = center
+    show_age_threshold = 60
+    ellipsize = middle
+    ignore_newline = no
+    stack_duplicates = true
+    hide_duplicate_count = false
+    show_indicators = yes
+
+    icon_position = left
+    min_icon_size = 32
+    max_icon_size = 48
+    # Papirus ist auf diesem System nicht installiert; Adwaita ist vorhanden.
+    icon_theme = Adwaita
+    enable_recursive_icon_lookup = true
+
+    sort = yes
+    idle_threshold = 120
+    notification_limit = 5
+    indicate_hidden = yes
+    sticky_history = yes
+    history_length = 40
+
+    dmenu = hyprlauncher -m
+    # Eigene systemd-Unit: sonst erbt der Browser die Limits von dunst.service.
+    browser = uwsm app -- xdg-open
+    always_run_script = true
+
+    # Maus: links = Aktion/schliessen, Mitte = alle schliessen, rechts = schliessen
+    mouse_left_click = do_action, close_current
+    mouse_middle_click = close_all
+    mouse_right_click = close_current
+
+[urgency_low]
+    background = "#1e2030"
+    foreground = "#828bb8"
+    frame_color = "#636da6"
+    timeout = 5
+
+[urgency_normal]
+    background = "#222436"
+    foreground = "#c8d3f5"
+    frame_color = "#82aaff"
+    timeout = 8
+
+[urgency_critical]
+    background = "#222436"
+    foreground = "#c8d3f5"
+    frame_color = "#ff757f"
+    timeout = 0

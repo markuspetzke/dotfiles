@@ -1,0 +1,21 @@
+[Unit]
+Description=Hyprland idle and power management
+PartOf=hypr-session.target
+After=hypr-session.target
+
+[Service]
+# Keine Sandbox-Optionen: hypridle startet hyprlock, und hyprlock prueft das
+# Passwort ueber das setuid-Programm unix_chkpwd. In einer User-Unit
+# implizieren LockPersonality/RestrictSUIDSGID/RestrictRealtime NoNewPrivileges,
+# und PrivateTmp/ProtectSystem/ProtectKernel*/ProtectControlGroups laufen in
+# einem User-Namespace -- beides verhindert, dass unix_chkpwd /etc/shadow liest.
+# Die Limits gelten auch fuer hyprlock.
+ExecStart=%h/.config/hypr/scripts/run-hypridle.sh
+Restart=on-failure
+RestartSec=2
+TimeoutStopSec=5
+MemoryMax=512M
+TasksMax=256
+
+[Install]
+WantedBy=hypr-session.target

@@ -1,0 +1,16 @@
+[Unit]
+Description=Arctis 7: Mithoerton und Auto-Aus setzen
+PartOf=hypr-session.target
+After=hypr-session.target
+ConditionPathExists=/usr/bin/headsetcontrol
+
+[Service]
+Type=oneshot
+# Nur auf dem Desktop; auf dem Laptop wird das Headset nicht genutzt.
+ExecCondition=/usr/bin/sh -c '[ "$(%h/.config/hypr/scripts/hypr-profile.sh)" = desktop ]'
+# Sidetone 0-128 (leise), nach 30 Minuten ohne Ton ausschalten.
+# Schlaegt still fehl, wenn das Headset beim Login aus ist.
+ExecStart=-/usr/bin/headsetcontrol -s 32 -i 30
+
+[Install]
+WantedBy=hypr-session.target

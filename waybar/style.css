@@ -77,15 +77,14 @@ window#waybar {
 
 /* Gemeinsame Modulform: kompakte farbige pills. */
 #custom-playerctl,
-#custom-monitor-profile,
 #custom-power-profile,
+#custom-headset,
 #idle_inhibitor,
 #pulseaudio,
 #network,
 #cpu,
 #memory,
 #temperature,
-#disk,
 #battery,
 #backlight,
 #bluetooth,
@@ -105,13 +104,14 @@ window#waybar {
 #custom-playerctl.Playing { color: @cyan; }
 #custom-playerctl.Paused { color: @orange; }
 
-#custom-monitor-profile { color: @blue; }
-#custom-monitor-profile.presentation { color: @orange; }
-
 #custom-power-profile { color: @green; }
 #custom-power-profile.performance { color: @red; }
 #custom-power-profile.power-saver { color: @yellow; }
 #custom-power-profile.unavailable { color: @comment; }
+#custom-headset { color: @blue; }
+#custom-headset.warning { color: @yellow; }
+#custom-headset.critical { color: @red; }
+#custom-headset.charging { color: @green; }
 
 #idle_inhibitor { color: @comment; }
 #idle_inhibitor.activated { color: @yellow; }
@@ -130,7 +130,6 @@ window#waybar {
     animation: blink 1s linear infinite alternate;
 }
 
-#disk { color: @cyan; }
 #clock { color: @blue; font-weight: bold; }
 
 #battery { color: @green; }

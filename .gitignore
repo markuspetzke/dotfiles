@@ -2,6 +2,7 @@
 !nvim/
 !nvim/**
 nvim/Session.vim
+nvim/nvim.log
 !hypr/
 !hypr/**
 !kitty/
@@ -10,5 +11,15 @@ nvim/Session.vim
 !rivalcfg/**
 !waybar/
 !waybar/**
+!dunst/
+!dunst/**
+# User-Services der Hyprland-Session (Units + Drop-ins). *.wants/ sind lokale
+# Aktivierungs-Symlinks und bleiben draussen.
+!systemd/
+!systemd/user/
+!systemd/user/**
+systemd/user/*.wants/
+# Laufzeitzustand des Laptop-Monitorprofils
+hypr/.monitor-profile
 
 !.gitignore

@@ -4,7 +4,7 @@ return {
     "mason-org/mason.nvim",
     opts = {
       PATH = "append",
-      ensure_installed = { "codelldb", "stylua", "prettier", "shfmt" },
+      ensure_installed = { "codelldb", "stylua", "prettierd", "prettier", "shfmt" },
       ui = {
         icons = {
           package_installed = "✓",
@@ -13,9 +13,6 @@ return {
         },
       },
     },
-  },
-  {
-    "mason-org/mason.nvim",
     -- mason.nvim selbst kennt kein ensure_installed; Formatter/Debugger hier nachinstallieren.
     config = function(_, opts)
       require("mason").setup(opts)

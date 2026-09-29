@@ -1,0 +1,24 @@
+[Unit]
+Description=Waybar panel
+PartOf=hypr-session.target
+After=hypr-session.target
+
+[Service]
+ExecStart=%h/.config/hypr/scripts/run-waybar.sh
+Restart=on-failure
+RestartSec=2
+TimeoutStopSec=5
+MemoryMax=256M
+TasksMax=256
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+
+[Install]
+WantedBy=hypr-session.target

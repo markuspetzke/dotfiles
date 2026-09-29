@@ -1,7 +1,8 @@
 // Gemeinsame Modul-Definitionen fuer Desktop und Laptop.
 {
-    "hyprland/window" : {
-      "separate-outputs" : true
+    "hyprland/window": {
+        "separate-outputs": true,
+        "max-length": 60
     },
     "hyprland/workspaces": {
         "disable-scroll": true,
@@ -14,13 +15,13 @@
 
     "pulseaudio": {
         "format": "{icon} {volume}%",
-        "format-muted": "󰝟 ",
+        "format-muted": "󰝟",
         "format-icons": {
-            "headphone": "󰋋 ",
-            "headset": "󰋎 ",
-            "default": ["󰕿 ", "󰖀 ", "󰕾 "]
+            "headphone": "󰋋",
+            "headset": "󰋎",
+            "default": ["󰕿", "󰖀", "󰕾"]
         },
-        "on-click": "pavucontrol",
+        "on-click": "uwsm app -- pavucontrol",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +2%",
         "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -2%"
@@ -28,25 +29,27 @@
 
 
     "network": {
-        "format-ethernet": "󰈀  {ifname}",
-        "format-linked": "󰈀  {ifname} (No IP)",
-        "format-disconnected": "󰖪 Disconnected",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}",
-        "tooltip-format": "{ifname}: {ipaddr}",
-        "on-click": "kitty -e nmtui"
+        "format-ethernet": "󰈀",
+        "format-linked": "󰈀",
+        "format-disconnected": "󰖪",
+        "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}",
+        "tooltip-format-linked": "{ifname}: verbunden, keine IP",
+        "tooltip-format-disconnected": "Keine Verbindung",
+        "on-click": "uwsm app -- kitty -e nmtui"
     },
 
-"cpu": {
-        "format": "󰘚  {usage}%",
-        "tooltip": true,
-        "interval": 1,
-        "on-click": "kitty -e htop"
+    "cpu": {
+        "format": "󰘚 {usage}%",
+        "interval": 2,
+        "tooltip-format": "Last: {load}",
+        "on-click": "uwsm app -- kitty -e htop"
     },
 
     "memory": {
-        "format": "󰍛 {}%",
-        "interval": 1,
-        "on-click": "kitty -e htop"
+        "format": "󰍛 {percentage}%",
+        "interval": 5,
+        "tooltip-format": "RAM: {used:0.1f} / {total:0.1f} GiB\nSwap: {swapUsed:0.1f} / {swapTotal:0.1f} GiB",
+        "on-click": "uwsm app -- kitty -e htop"
     },
 
     "temperature": {
@@ -54,34 +57,36 @@
         "critical-threshold": 80,
         "format": "{icon} {temperatureC}°C",
         "format-icons": ["󱃃", "󰔏", "󱃂"],
-        "on-click": "kitty -e s-tui"
+        "on-click": "uwsm app -- kitty -e s-tui"
     },
 
     "custom/playerctl": {
-        "format": "󰐊 {}",
+        "format": "{icon} {text}",
+        "format-icons": { "Playing": "󰐊", "Paused": "󰏤", "default": "󰐊" },
         "return-type": "json",
         "max-length": 40,
-        "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{artist}} - {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
+        "exec": "playerctl -a metadata --format '{\"text\": \"{{markup_escape(artist)}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}}: {{markup_escape(artist)}} - {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
         "on-click": "playerctl play-pause",
         "on-click-right": "playerctl next"
     },
 
-          "clock": {
+    "clock": {
         "format": "󰥔 {:%H:%M}",
-        "format-alt": "󰃮 {:%Y-%m-%d}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": "󰃮 {:%a, %d.%m.%Y}",
+        "locale": "de_AT.UTF-8",
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
         "calendar": {
-            "mode"          : "month",
-            "mode-mon-col"  : 3,
-            "weeks-pos"     : "right",
-            "on-scroll"     : 1,
-            "on-click-right": "mode",
+            "mode": "month",
+            "mode-mon-col": 3,
+            "weeks-pos": "right",
+            "on-scroll": 1,
+            // TokyoNight-Moon-Farben wie der Rest der Leiste
             "format": {
-                "months":     "<span color='#d3c6aa'><b>{}</b></span>",
-                "days":       "<span color='#e67e80'>{}</span>",
-                "weeks":      "<span color='#a7c080'><b>W{}</b></span>",
-                "weekdays":   "<span color='#7fbbb3'><b>{}</b></span>",
-                "today":      "<span color='#dbbc7f'><b><u>{}</u></b></span>"
+                "months":   "<span color='#c8d3f5'><b>{}</b></span>",
+                "days":     "<span color='#c8d3f5'>{}</span>",
+                "weeks":    "<span color='#636da6'><b>KW{}</b></span>",
+                "weekdays": "<span color='#82aaff'><b>{}</b></span>",
+                "today":    "<span color='#ffc777'><b><u>{}</u></b></span>"
             }
         },
         "actions": {
@@ -91,15 +96,6 @@
             "on-scroll-up": "shift_up",
             "on-scroll-down": "shift_down"
         }
-    },
-
-
-
-   "disk": {
-        "interval": 30,
-        "format": "󰋊 {percentage_used}%",
-        "path": "/",
-        "on-click": "kitty -e gdu /"
     },
 
     "tray": {
@@ -118,14 +114,14 @@
         "return-type": "json",
         "interval": 30,
         "on-click": "bash ~/.config/hypr/scripts/waybar-power-profile.sh toggle",
-        "on-click-right": "kitty -e powerprofilesctl"
+        "on-click-right": "uwsm app -- kitty -e powerprofilesctl"
     },
 
-    "custom/monitor-profile": {
-        "exec": "bash ~/.config/hypr/scripts/waybar-monitor-profile.sh",
+    "custom/headset": {
+        "exec": "bash ~/.config/hypr/scripts/waybar-headset.sh",
         "return-type": "json",
-        "interval": 5,
-        "signal": 8
+        "interval": 60,
+        "on-click": "uwsm app -- pavucontrol"
     },
 
     "battery": {
@@ -151,16 +147,17 @@
         "tooltip-format": "{controller_alias}\t{controller_address}",
         "tooltip-format-connected": "{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        "on-click": "kitty -e bluetuith"
+        "on-click": "uwsm app -- kitty -e bluetuith"
     },
 
     "network#wifi": {
         "interface": "wl*",
-        "format-wifi": "󰤨 {essid}",
-        "format-disconnected": "󰤭 Offline",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}",
-        "tooltip-format": "{ifname}: {ipaddr} ({signalStrength}%)",
-        "on-click": "kitty -e nmtui"
+        "format-wifi": "{icon}",
+        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+        "format-disconnected": "󰤭",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ifname}: {ipaddr}/{cidr}",
+        "tooltip-format-disconnected": "Kein WLAN",
+        "on-click": "uwsm app -- kitty -e nmtui"
     }
 
 }

@@ -16,7 +16,7 @@ hl.on("hyprland.start", function()
 	-- Wayland-Umgebung importieren, dann ueber systemd genau eine
 	-- Dienstgruppe starten. Dadurch gibt es nach Reloads keine Duplikate.
 	hl.exec_cmd(
-		"systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE; "
+		"systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE GTK_THEME ELECTRON_OZONE_PLATFORM_HINT; "
 			.. "systemctl --user start hypr-session.target"
 	)
 end)
@@ -27,6 +27,11 @@ end)
 
 -- hl.env("XCURSOR_SIZE", "24")
 -- hl.env("HYPRCURSOR_SIZE", "24")
+
+-- Dark Mode fuer GTK-Apps (z. B. Thunar)
+hl.env("GTK_THEME", "Adwaita:dark")
+-- Electron-Apps (Discord, VS Code, ...) nativ unter Wayland statt XWayland.
+hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 
 
 -----------------------
@@ -131,6 +136,20 @@ hl.config({
 		focus_on_activate = true,
 		-- Kein Einfuegen per Mittelklick -- auf dem Desktop meist nur versehentlich.
 		middle_click_paste = false,
+		-- VRR/FreeSync nur fuer Vollbild (Spiele); auf dem Desktop kein Flackern.
+		vrr = 2,
+		-- Von hypridle abgeschaltete Bildschirme per Taste/Maus wieder aufwecken.
+		key_press_enables_dpms = true,
+		mouse_move_enables_dpms = true,
+	},
+	-- Vollbild-Spiele direkt an den Monitor geben (weniger Latenz); 2 = nur fuer Spiele.
+	render = {
+		direct_scanout = 2,
+	},
+	-- Keine News-/Spenden-Popups nach Hyprland-Updates.
+	ecosystem = {
+		no_update_news = true,
+		no_donation_nag = true,
 	},
 })
 
@@ -145,6 +164,9 @@ hl.config({
 		kb_model = "",
 		kb_options = "",
 		kb_rules = "",
+		-- Gehaltene Taste: nach 300 ms mit 40 Zeichen/s wiederholen (Standard 600/25).
+		repeat_delay = 300,
+		repeat_rate = 40,
 
 		follow_mouse = 1,
 		sensitivity = 0,

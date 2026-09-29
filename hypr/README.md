@@ -55,13 +55,14 @@ ohne Lid aber wirkungslos.
 
 ### Inaktivitaet
 
-Der Laptop verwendet `hypridle-laptop.conf`: Nach 10 Minuten werden die
-Displays abgeschaltet, nach 15 Minuten wird die Sitzung vor dem Hibernate
-gesperrt und das System geht in Hibernate. Waerend Medienwiedergabe laeuft,
+Der Laptop verwendet `hypridle-laptop.conf`: Nach 10 Minuten wird gesperrt,
+30 Sekunden spaeter werden die Displays abgeschaltet, nach 15 Minuten geht das
+System in Hibernate. Waerend Medienwiedergabe laeuft,
 werden diese Aktionen durch `playerctl` unterdrueckt.
 
-Der Desktop verwendet weiterhin `hypridle.conf` mit 10 Minuten DPMS, 20 Minuten
-Sperre und 60 Minuten Suspend.
+Der Desktop verwendet `hypridle.conf` mit 10 Minuten Sperre, 10,5 Minuten DPMS
+und 60 Minuten Suspend. Gesperrt wird vor dem Abschalten, damit hyprlock einen
+echten Screenshot als Hintergrund bekommt.
 
 ### Automatische Monitore und Power-Profile
 
@@ -99,6 +100,15 @@ Die eigenen Dienste haben Speicher-/Prozesslimits und laufen mit reduzierten
 Systemrechten. Die Paketeinheiten von Dunst und hyprpolkitagent erhalten diese
 Regeln ueber User-Drop-ins unter `systemd/user/*.service.d/`.
 
+Wegen `NoNewPrivileges` und der Limits erbt alles, was ein Dienst startet, diese
+Einschraenkungen (z.B. funktioniert dort kein `sudo`). Programme, die aus Waybar
+oder dunst gestartet werden, laufen deshalb ueber `uwsm app --` als eigene Unit.
+`hypridle.service` hat bewusst gar keine Sandbox-Optionen: hyprlock braucht das
+setuid-Programm `unix_chkpwd` fuer die Passwortpruefung, und in User-Units
+blockieren sowohl `NoNewPrivileges` (auch implizit ueber `LockPersonality`,
+`RestrictSUIDSGID`, `RestrictRealtime`) als auch die Namespace-Optionen
+(`PrivateTmp`, `ProtectSystem`, `ProtectKernel*`, `ProtectControlGroups`) das.
+
 ### Waybar-Status
 
 Rechts zeigt Waybar zusaetzlich das Monitorprofil, das Power-Profil und den
@@ -111,7 +121,7 @@ verfuegbar.
 
 `hyprsunset.conf` stellt ab 21:00 auf 4500 K und ab 07:30 auf unveraenderte
 Tagesfarben um. Helligkeit/Gamma bleiben bei 100 %.
-Autostart erfolgt ueber `scripts/start-hyprsunset.sh`, das doppelte Instanzen vermeidet.
+Autostart erfolgt ueber `hyprsunset.service` (`scripts/run-hyprsunset.sh`).
 
 Auf diesem Rechner liegt hyprsunset 0.4.0 unter `~/.local/bin/hyprsunset`,
 aus dem signaturgeprueften offiziellen Arch-Paket `hyprsunset-0.4.0-3`.

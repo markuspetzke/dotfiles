@@ -8,7 +8,7 @@
 
     "modules-left": ["hyprland/workspaces", "custom/playerctl"],
     "modules-center": ["hyprland/window"],
-    "modules-right": ["custom/monitor-profile", "custom/power-profile", "idle_inhibitor", "pulseaudio", "network", "cpu", "memory", "temperature", "disk", "clock", "tray"],
+    "modules-right": ["custom/power-profile", "idle_inhibitor", "custom/headset", "pulseaudio", "network", "cpu", "memory", "temperature", "clock", "tray"],
 
     "temperature": {
         "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",

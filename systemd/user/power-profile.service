@@ -1,0 +1,25 @@
+[Unit]
+Description=Automatic power profile for AC and battery
+PartOf=hypr-session.target
+After=hypr-session.target
+ConditionPathExists=/usr/bin/powerprofilesctl
+
+[Service]
+ExecStart=%h/.config/hypr/scripts/run-power-profile.sh
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=5
+MemoryMax=32M
+TasksMax=32
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+
+[Install]
+WantedBy=hypr-session.target

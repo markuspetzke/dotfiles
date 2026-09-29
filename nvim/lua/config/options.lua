@@ -10,7 +10,6 @@ vim.api.nvim_create_autocmd("ColorScheme", {
       fg = "#c8d3f5",
       comment = "#636da6",
       blue = "#82aaff",
-      cyan = "#86e1fc",
       magenta = "#c099ff",
       green = "#c3e88d",
       yellow = "#ffc777",
@@ -31,7 +30,6 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     vim.api.nvim_set_hl(0, "Visual", { bg = "#3b4161" })
     vim.api.nvim_set_hl(0, "Search", { fg = colors.bg, bg = colors.yellow })
     vim.api.nvim_set_hl(0, "IncSearch", { fg = colors.bg, bg = colors.orange or colors.yellow })
-    vim.api.nvim_set_hl(0, "MatchParen", { fg = colors.cyan, bg = colors.bg_highlight, bold = true })
     vim.api.nvim_set_hl(0, "Folded", { fg = colors.comment, bg = colors.bg_dark, italic = true })
 
     vim.api.nvim_set_hl(0, "SnacksPickerGitStatusUntracked", { fg = "#27D797" })
@@ -137,7 +135,7 @@ vim.opt.grepformat = "%f:%l:%c:%m"
 -- Performance
 vim.opt.swapfile = false
 vim.opt.undofile = true
-vim.opt.updatetime = 100
+vim.opt.updatetime = 250 -- CursorHold -> LSP documentHighlight
 
 -- Clipboard
 vim.opt.clipboard = vim.env.SSH_CONNECTION and "" or "unnamedplus"
