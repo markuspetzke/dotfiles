@@ -1,10 +1,11 @@
 # Hyprland
 
-Lua-Konfiguration fuer Hyprland 0.56. Das Profil wird ueber `HYPR_PROFILE`
-(`desktop` oder `laptop`), Akku-Erkennung oder als letzter Fallback ueber den
-Hostnamen bestimmt.
+Lua-Konfiguration fuer Hyprland 0.56, gestartet ueber uwsm. Das Profil wird ueber
+`HYPR_PROFILE` (`desktop` oder `laptop`) oder die Akku-Erkennung bestimmt: ein
+Systemakku ergibt `laptop`, alles andere `desktop` (`scripts/hypr-profile.sh`).
 
-Zum expliziten Umschalten vor Hyprland: `HYPR_PROFILE=laptop Hyprland`.
+Zum expliziten Festlegen `export HYPR_PROFILE=laptop` in `~/.config/uwsm/env`
+eintragen. Dort stehen auch die uebrigen Session-Variablen.
 
 ## Tastenkombinationen
 
@@ -71,8 +72,8 @@ Auf Laptops wird beim Start automatisch zwischen `mobile` (nur `eDP-1`) und
 Profile ebenfalls automatisch um; die manuellen `Super+Ctrl+F1/F2/F3`-Shortcuts
 bleiben verfuegbar. `presentation` ist weiterhin ein manueller Override.
 
-`power-profile.service` waehlt bei Netzbetrieb `balanced` und auf Akku
-`power-saver`. Dafuer muss `power-profiles-daemon` installiert sein:
+`power-profile.service` laeuft nur im Laptop-Profil und waehlt bei Netzbetrieb
+`balanced` und auf Akku `power-saver`. Dafuer muss `power-profiles-daemon` installiert sein:
 
 ```sh
 sudo pacman -S power-profiles-daemon
@@ -84,8 +85,16 @@ Ohne das Paket bleibt der Dienst deaktiviert und veraendert nichts.
 ### Dienste
 
 Waybar, hypridle, hyprpaper, hyprsunset, dunst und beide Clipboard-Watcher
-laufen als User-Services unter `systemd --user`. Hyprland importiert beim Start
-nur noch die Wayland-Umgebung und aktiviert `hypr-session.target`.
+laufen als User-Services unter `systemd --user`. Hyprland ruft beim Start nur
+`uwsm finalize` auf; sobald uwsm die Session als bereit meldet, startet
+`graphical-session.target` das `hypr-session.target` und damit alle Dienste.
+Die Dienste haengen ausschliesslich ueber `Wants=` am Target.
+
+Auf jedem Rechner einmalig:
+
+```sh
+systemctl --user enable hypr-session.target
+```
 
 Nach dem Installieren oder Ändern der Units:
 

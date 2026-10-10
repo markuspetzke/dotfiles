@@ -16,6 +16,3 @@ RestartSec=2
 TimeoutStopSec=5
 MemoryMax=512M
 TasksMax=256
-
-[Install]
-WantedBy=hypr-session.target

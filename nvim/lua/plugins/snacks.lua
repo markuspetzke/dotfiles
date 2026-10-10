@@ -85,7 +85,15 @@ return {
 
     -- Der Explorer laeuft auf dem Picker, deshalb bleibt der an; nur die
     -- vim.ui.select-Uebernahme ist hier nicht erwuenscht.
-    picker = { enabled = true, ui_select = false },
+    picker = {
+      enabled = true,
+      ui_select = false,
+      sources = {
+        -- Datei unter dem Cursor im Explorer gleich im Hauptfenster anzeigen (Vorschau,
+        -- kein echtes Oeffnen). Mit "P" im Explorer ein-/ausschalten.
+        explorer = { layout = { preset = "sidebar", preview = "main" } },
+      },
+    },
 
     notifier = {
       enabled = true,

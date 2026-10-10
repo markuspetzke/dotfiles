@@ -3,6 +3,8 @@ local M = {}
 
 if host.is_desktop then
 	-- # Main Monitor
+	-- VRAM bleibt mit zwei Monitoren auf 875 MHz (~35 W Leerlauf), auch wenn beide auf
+	-- 144 Hz laufen (getestet 2026-10-02) -- runterstellen spart also nichts.
 	hl.monitor({ output = "DP-2", mode = "1920x1080@165", position = "1920x0", scale = 1 })
 	-- # second Monitor
 	hl.monitor({ output = "DP-3", mode = "1920x1080@144", position = "0x0", scale = 1 })

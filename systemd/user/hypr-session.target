@@ -1,4 +1,13 @@
 [Unit]
 Description=Hyprland user session services
+# Einzige Stelle, an der die Dienste haengen (sie selbst haben kein [Install]).
 Wants=hypridle.service hyprpaper.service hyprsunset.service dunst.service waybar.service cliphist-text.service cliphist-image.service power-profile.service headset.service hyprpolkitagent.service
-After=graphical-session-pre.target
+After=graphical-session-pre.target graphical-session.target
+# Mit der uwsm-Session stoppen, und zwar bevor Hyprland (wayland-wm@, Before=graphical-session.target)
+# beendet wird - sonst verlieren waybar/hyprpaper/hyprsunset beim Logout das Display und crashen.
+PartOf=graphical-session.target
+
+[Install]
+# Startet, sobald uwsm die Session als bereit meldet (uwsm finalize in hyprland.lua).
+# Pro Rechner einmalig: systemctl --user enable hypr-session.target
+WantedBy=graphical-session.target

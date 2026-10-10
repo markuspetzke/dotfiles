@@ -42,6 +42,11 @@ hl.window_rule({
 	-- Source engine crasht gerne, wenn der Compositor ihm einen Fullscreen-Wechsel meldet
 	-- (SDL macht dann einen Video-Mode-Reset). Fullscreen nur intern in Hyprland umschalten.
 	sync_fullscreen = false,
+	-- Ausserhalb von Fullscreen nicht kacheln: eine kleinere Fenstergroesse laesst die
+	-- Vulkan-Swapchain haengen (Spiel friert ein). Schwebend in Monitorgroesse bleibt alles gleich.
+	float = true,
+	size = "monitor_w monitor_h",
+	move = "0 0",
 })
 
 -- hyprlauncher: halbtransparenter Hintergrund (hyprtoolkit.conf) bekommt Blur,

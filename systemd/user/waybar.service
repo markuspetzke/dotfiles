@@ -13,12 +13,9 @@ TasksMax=256
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=full
-ProtectKernelTunables=true
+# Kein ProtectKernelTunables/RestrictSUIDSGID: beides blockiert bwrap, mit dem der
+# glycin-Bildlader von gdk-pixbuf laeuft -> Tray-Icons (z.B. Steam) fehlen sonst.
 ProtectKernelModules=true
 ProtectControlGroups=true
 LockPersonality=true
-RestrictSUIDSGID=true
 RestrictRealtime=true
-
-[Install]
-WantedBy=hypr-session.target

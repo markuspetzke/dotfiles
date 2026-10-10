@@ -4,6 +4,7 @@
 
 local host = require("./host.lua")
 require("./theme.lua")
+require("./bind-usage.lua") -- muss vor binds.lua stehen (zaehlt Bind-Nutzung)
 require("./binds.lua")
 require("./monitors.lua")
 require("./windowrule.lua")
@@ -13,25 +14,19 @@ require("./windowrule.lua")
 -------------------
 
 hl.on("hyprland.start", function()
-	-- Wayland-Umgebung importieren, dann ueber systemd genau eine
-	-- Dienstgruppe starten. Dadurch gibt es nach Reloads keine Duplikate.
-	hl.exec_cmd(
-		"systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE GTK_THEME ELECTRON_OZONE_PLATFORM_HINT; "
-			.. "systemctl --user start hypr-session.target"
-	)
+	-- uwsm: WAYLAND_DISPLAY, DISPLAY und HYPRLAND_INSTANCE_SIGNATURE an systemd geben und
+	-- die Compositor-Unit als bereit melden. Damit ist graphical-session.target erreicht,
+	-- und das zieht hypr-session.target (WantedBy) nach -- kein manueller Start noetig.
+	hl.exec_cmd("uwsm finalize")
 end)
 
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
 -------------------------------
 
--- hl.env("XCURSOR_SIZE", "24")
--- hl.env("HYPRCURSOR_SIZE", "24")
-
--- Dark Mode fuer GTK-Apps (z. B. Thunar)
-hl.env("GTK_THEME", "Adwaita:dark")
--- Electron-Apps (Discord, VS Code, ...) nativ unter Wayland statt XWayland.
-hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
+-- Session-Variablen stehen in ~/.config/uwsm/env: uwsm gibt sie Hyprland und allen
+-- systemd-Diensten gleichermassen mit. Dark Mode kommt aus gsettings (gtk-theme fuer
+-- GTK3, color-scheme fuer GTK4/libadwaita), nicht aus GTK_THEME.
 
 
 -----------------------
@@ -136,15 +131,16 @@ hl.config({
 		focus_on_activate = true,
 		-- Kein Einfuegen per Mittelklick -- auf dem Desktop meist nur versehentlich.
 		middle_click_paste = false,
-		-- VRR/FreeSync nur fuer Vollbild (Spiele); auf dem Desktop kein Flackern.
-		vrr = 2,
+		-- VRR/FreeSync aus: mit 2 (nur Vollbild) schaltet FreeSync bei jedem Vollbild-Fenster
+		-- um und die Monitore werden dabei kurz schwarz.
+		vrr = 0,
 		-- Von hypridle abgeschaltete Bildschirme per Taste/Maus wieder aufwecken.
 		key_press_enables_dpms = true,
 		mouse_move_enables_dpms = true,
 	},
-	-- Vollbild-Spiele direkt an den Monitor geben (weniger Latenz); 2 = nur fuer Spiele.
+	-- Direct Scanout aus: verursachte sporadische Blackscreens in Vollbild-Spielen (TF2 via XWayland).
 	render = {
-		direct_scanout = 2,
+		direct_scanout = 0,
 	},
 	-- Keine News-/Spenden-Popups nach Hyprland-Updates.
 	ecosystem = {

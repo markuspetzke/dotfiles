@@ -5,6 +5,8 @@ After=hypr-session.target
 ConditionPathExists=/usr/bin/powerprofilesctl
 
 [Service]
+# Nur auf dem Laptop; der Desktop bleibt auf dem Standardprofil.
+ExecCondition=/usr/bin/sh -c '[ "$(%h/.config/hypr/scripts/hypr-profile.sh)" = laptop ]'
 ExecStart=%h/.config/hypr/scripts/run-power-profile.sh
 Restart=on-failure
 RestartSec=10
@@ -20,6 +22,3 @@ ProtectControlGroups=true
 LockPersonality=true
 RestrictSUIDSGID=true
 RestrictRealtime=true
-
-[Install]
-WantedBy=hypr-session.target

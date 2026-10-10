@@ -1,0 +1,7 @@
+# Von uwsm beim Session-Start gesourct und an Hyprland und systemd --user exportiert.
+
+# Electron-Apps (Discord, VS Code, ...) nativ unter Wayland statt XWayland.
+export ELECTRON_OZONE_PLATFORM_HINT=auto
+
+# Hardwareprofil erzwingen, falls die Akku-Erkennung danebenliegt (desktop|laptop).
+# export HYPR_PROFILE=laptop

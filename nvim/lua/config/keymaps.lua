@@ -17,8 +17,8 @@ map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = t
 -- Cursor mittig halten beim Suchen/Scrollen
 map("n", "n", "nzzzv", { desc = "Next match" })
 map("n", "N", "Nzzzv", { desc = "Prev match" })
-map("n", "<C-d>", "<C-d>zz", { desc = "Half page down" })
-map("n", "<C-u>", "<C-u>zz", { desc = "Half page up" })
+-- <C-d>/<C-u> bewusst ohne "zz": das Nachzentrieren kollidiert mit der Scroll-Animation
+-- von snacks.scroll, dann "verschluckt" sich ab und zu ein Tastendruck.
 
 -- Zeilen verschieben
 map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move line down" })

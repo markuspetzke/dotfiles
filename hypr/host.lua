@@ -1,5 +1,5 @@
 -- Hardwareprofil kommt aus scripts/hypr-profile.sh, damit Hyprland, hypridle und
--- waybar dieselbe Erkennung nutzen (HYPR_PROFILE > Akku > Hostname).
+-- waybar dieselbe Erkennung nutzen (HYPR_PROFILE > Systemakku, sonst desktop).
 local M = { name = "unknown", profile = nil, is_desktop = false, is_laptop = false }
 
 local f = io.open("/etc/hostname", "r")

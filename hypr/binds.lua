@@ -9,7 +9,10 @@ local host = require("./host.lua")
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
 hl.bind("ALT + Tab", hl.dsp.window.cycle_next())
 hl.bind(mainMod .. " + W", hl.dsp.window.close())
-hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
+-- Vollbild nur in Hyprland (internal 2), dem Programm wird nichts gemeldet (client 0):
+-- Browser behalten Tab- und Adressleiste. Video-Vollbild (z.B. YouTube "f") fordert das
+-- Programm selbst an und funktioniert unabhaengig davon.
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen_state({ internal = 2, client = 0, action = "toggle" }))
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen_state({ internal = 0, client = 2 }))
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
