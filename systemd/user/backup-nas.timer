@@ -1,0 +1,10 @@
+[Unit]
+Description=Monatliches Backup storageD -> NAS
+
+[Timer]
+# Erster Sonntag im Monat, eine Stunde nach dem storageD-Backup
+OnCalendar=Sun *-*-01..07 20:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

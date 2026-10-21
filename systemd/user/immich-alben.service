@@ -1,0 +1,6 @@
+[Unit]
+Description=Immich: Alben aus Ordnern ergänzen (nach dem Sonntags-Scan)
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/immich-ordner-alben

@@ -1,0 +1,15 @@
+[Unit]
+Description=Backup /mnt/storageD -> NAS
+# Läuft nach dem wöchentlichen Lauf, falls beide gleichzeitig nachgeholt werden
+After=backup-storaged.service
+# NAS schläft -> alle 2 h neu versuchen, höchstens 6x am Tag
+StartLimitIntervalSec=1d
+StartLimitBurst=6
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/backup-documents nas
+Restart=on-failure
+RestartSec=2h
+Nice=10
+IOSchedulingClass=idle
