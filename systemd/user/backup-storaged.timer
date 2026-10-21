@@ -1,0 +1,10 @@
+[Unit]
+Description=Wöchentliches Backup ~/Documents -> storageD
+
+[Timer]
+OnCalendar=Sun *-*-01..07 19:00
+# PC war aus -> beim nächsten Login nachholen
+Persistent=true
+
+[Install]
+WantedBy=timers.target

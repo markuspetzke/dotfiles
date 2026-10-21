@@ -1,0 +1,16 @@
+[Unit]
+Description=Backup NAS -> Hetzner (restic)
+# Schlägt fehl, wenn die NAS nicht aufwacht -> stündlich neu, höchstens 6x am Tag
+StartLimitIntervalSec=1d
+StartLimitBurst=6
+
+[Service]
+Type=oneshot
+# Fortschritt einmal pro Minute ins Journal (journalctl --user -u backup-hetzner -f)
+Environment=RESTIC_PROGRESS_FPS=0.016666
+# Kein Ruhezustand während des Backups (sonst reißt die SFTP-Verbindung ab und restic hängt)
+ExecStart=/usr/bin/systemd-inhibit --what=sleep:idle --who=backup-hetzner --why="Backup NAS -> Hetzner läuft" %h/.local/bin/backup-hetzner
+Restart=on-failure
+RestartSec=1h
+Nice=10
+IOSchedulingClass=idle
