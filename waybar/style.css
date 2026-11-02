@@ -22,17 +22,17 @@
     min-height: 0;
 }
 
+/* Hintergrund und Kante direkt am Fenster: "#waybar > .box" greift in aktuellen
+   Waybar-Versionen nicht, die Leiste waere sonst durchsichtig. */
 window#waybar {
-    background: transparent;
+    background: @background;
+    border-bottom: 2px solid @surface2;
     color: @foreground;
 }
 
-/* Durchgehende Leiste mit Bernstein-Kante unten, wie eine alte Menueleiste. */
-#waybar > .box {
-    background: @background;
-    border-bottom: 2px solid @surface2;
-    margin: 0;
-    padding: 3px 6px;
+/* Innenabstand der Leiste. */
+window#waybar > box {
+    padding: 0 6px;
 }
 
 #workspaces {
