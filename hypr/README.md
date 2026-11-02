@@ -12,22 +12,21 @@ eintragen. Dort stehen auch die uebrigen Session-Variablen.
 | Tasten | Aktion |
 | --- | --- |
 | `Super+Escape` | Bildschirm sperren |
-| `Super+Pfeiltasten` | Fensterfokus verschieben |
 | `Super+H/J/K/L` | Fokus links/unten/oben/rechts |
-| `Super+Shift+Pfeiltasten` oder `H/J/K/L` | Fenster verschieben |
-| `Super+Ctrl+Pfeiltasten` oder `H/J/K/L` | Fenster groesser/kleiner machen |
-| `Super+Ctrl+,` | Master-Breite auf 55 % |
-| `Super+Ctrl+.` | Master-Breite auf 70 % |
+| `Super+Shift+H/J/K/L` | Fenster verschieben |
+| `Super+Ctrl+H/J/K/L` | Fenster groesser/kleiner machen |
+| `Super+1..4` / `Super+Shift+1..4` | Workspace wechseln / Fenster dorthin schieben |
+| `Super+Return` | Fenster mit Master tauschen |
 | `Super+Ctrl+F1` | Laptop: nur internes Display |
 | `Super+Ctrl+F2` | Laptop: externe Displays rechts erweitern |
 | `Super+Ctrl+F3` | Laptop: internes Display auf externe spiegeln |
 | `Super` loslassen | Launcher |
 | `Super+V` | Clipboard-Verlauf |
 | `Super+Shift+S` | Bereich als Screenshot in Zwischenablage |
-| `Print` | Bereich als Datei im Bilderverzeichnis und in Zwischenablage |
+| `Super+X` / `Shift` / `Ctrl` | Desktop: Todeszaehler +1 / -1 / 0 (Stream) |
+| `Super+C` | Desktop: letzte 60 s aus dem OBS-Replay-Puffer speichern |
 
 `Alt+Pfeiltasten` und `Alt+H/J/K/L` bleiben fuer Anwendungen frei.
-`Super+Shift+L` verschiebt jetzt, wie die anderen Shift-Richtungstasten, ein Fenster nach rechts.
 Auf der Neo65 sperrt auch `Super+code:49` als Fallback fuer QMK Grave-Escape.
 
 ## Laptop-Monitore

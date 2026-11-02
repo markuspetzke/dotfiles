@@ -1,0 +1,110 @@
+#!/usr/bin/env python3
+"""Minimaler obs-websocket-v5-Client, nur Python-Standardbibliothek.
+
+    obs-ws <RequestType> ['<requestData als JSON>']
+
+Port und Passwort kommen aus der OBS-Config. Gibt responseData als JSON aus.
+Exit 0 = ok, 1 = OBS-Fehler (Code + Kommentar auf stderr), 2 = OBS nicht erreichbar.
+"""
+import base64
+import hashlib
+import json
+import os
+import socket
+import struct
+import sys
+
+CFG = os.path.expanduser("~/.config/obs-studio/plugin_config/obs-websocket/config.json")
+
+
+def ws_send(sock, text):
+    data = text.encode()
+    head = bytearray([0x81])  # FIN + Textframe
+    n = len(data)
+    if n < 126:
+        head.append(0x80 | n)
+    elif n < 1 << 16:
+        head += bytes([0x80 | 126]) + struct.pack("!H", n)
+    else:
+        head += bytes([0x80 | 127]) + struct.pack("!Q", n)
+    mask = os.urandom(4)  # Client-Frames muessen maskiert sein
+    sock.sendall(bytes(head) + mask + bytes(b ^ mask[i % 4] for i, b in enumerate(data)))
+
+
+def recv_exact(sock, n):
+    buf = b""
+    while len(buf) < n:
+        chunk = sock.recv(n - len(buf))
+        if not chunk:
+            raise ConnectionError("Verbindung geschlossen")
+        buf += chunk
+    return buf
+
+
+def ws_recv(sock):
+    while True:
+        b1, b2 = recv_exact(sock, 2)
+        n = b2 & 0x7F
+        if n == 126:
+            n = struct.unpack("!H", recv_exact(sock, 2))[0]
+        elif n == 127:
+            n = struct.unpack("!Q", recv_exact(sock, 8))[0]
+        payload = recv_exact(sock, n)
+        op = b1 & 0x0F
+        if op == 0x8:
+            code = struct.unpack("!H", payload[:2])[0] if len(payload) >= 2 else 0
+            raise ConnectionError(f"OBS hat die Verbindung geschlossen ({code} {payload[2:].decode(errors='replace')})")
+        if op == 0x1:
+            return json.loads(payload)
+
+
+def main():
+    if len(sys.argv) < 2:
+        sys.exit(__doc__)
+    req_type = sys.argv[1]
+    req_data = json.loads(sys.argv[2]) if len(sys.argv) > 2 else {}
+
+    cfg = json.load(open(CFG))
+    try:
+        sock = socket.create_connection(("127.0.0.1", cfg.get("server_port", 4455)), timeout=5)
+    except OSError:
+        print("OBS laeuft nicht (oder WebSocket-Server aus)", file=sys.stderr)
+        sys.exit(2)
+
+    key = base64.b64encode(os.urandom(16)).decode()
+    sock.sendall((
+        "GET / HTTP/1.1\r\nHost: 127.0.0.1\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n"
+        f"Sec-WebSocket-Key: {key}\r\nSec-WebSocket-Version: 13\r\n"
+        "Sec-WebSocket-Protocol: obswebsocket.json\r\n\r\n").encode())
+    resp = b""
+    while b"\r\n\r\n" not in resp:
+        resp += recv_exact(sock, 1)
+    if b" 101 " not in resp.split(b"\r\n", 1)[0]:
+        sys.exit("WebSocket-Handshake fehlgeschlagen")
+
+    hello = ws_recv(sock)["d"]
+    identify = {"rpcVersion": 1, "eventSubscriptions": 0}
+    if "authentication" in hello:
+        a = hello["authentication"]
+        secret = base64.b64encode(hashlib.sha256((cfg["server_password"] + a["salt"]).encode()).digest())
+        identify["authentication"] = base64.b64encode(
+            hashlib.sha256(secret + a["challenge"].encode()).digest()).decode()
+    ws_send(sock, json.dumps({"op": 1, "d": identify}))
+    if ws_recv(sock)["op"] != 2:
+        sys.exit("Anmeldung bei OBS fehlgeschlagen")
+
+    ws_send(sock, json.dumps({"op": 6, "d": {"requestType": req_type, "requestId": "1", "requestData": req_data}}))
+    while True:
+        msg = ws_recv(sock)
+        if msg["op"] == 7:
+            break
+    sock.close()
+    st = msg["d"]["requestStatus"]
+    if not st["result"]:
+        print(f"{st['code']} {st.get('comment', '')}", file=sys.stderr)
+        sys.exit(1)
+    print(json.dumps(msg["d"].get("responseData", {}), ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    main()

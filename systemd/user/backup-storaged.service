@@ -1,5 +1,9 @@
 [Unit]
 Description=Backup ~/Documents -> /mnt/storageD
+# Nur auf dem Desktop (GLaDOS). Auf dem Laptop sind die Timer ohnehin nicht aktiviert; das ist die Absicherung.
+ConditionHost=GLaDOS
+# Danach direkt storageD -> NAS (statt eigenem Timer, der nur per Uhrzeit hinterherlief).
+OnSuccess=backup-nas.service
 
 [Service]
 Type=oneshot

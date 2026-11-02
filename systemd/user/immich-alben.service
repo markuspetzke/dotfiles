@@ -1,5 +1,7 @@
 [Unit]
 Description=Immich: Alben aus Ordnern ergänzen (nach dem Sonntags-Scan)
+# Nur auf dem Desktop (GLaDOS). Auf dem Laptop sind die Timer ohnehin nicht aktiviert; das ist die Absicherung.
+ConditionHost=GLaDOS
 
 [Service]
 Type=oneshot

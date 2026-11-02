@@ -19,6 +19,3 @@ ProtectControlGroups=true
 LockPersonality=true
 RestrictSUIDSGID=true
 RestrictRealtime=true
-
-[Install]
-WantedBy=hypr-session.target

@@ -37,24 +37,40 @@ return {
       },
       disabled_filetypes = disabled_fts,
     },
+    config = function(_, opts)
+      require("hardtime").setup(opts)
+
+      -- Als Snacks-Toggle, damit which-key den Zustand anzeigt wie bei den anderen <leader>u-Schaltern.
+      -- vim.g.learning_mode liest lualine fuer die Anzeige in der Statusleiste.
+      Snacks.toggle
+        .new({
+          id = "learning_mode",
+          name = "Learning Mode",
+          get = function()
+            return vim.g.learning_mode == true
+          end,
+          set = function(state)
+            local hardtime = require("hardtime")
+            local precognition = require("precognition")
+            vim.g.learning_mode = state
+            -- snacks.scroll animiert <C-d>/<C-u> in vielen Einzelschritten; precognition
+            -- rechnet bei jedem CursorMoved neu -> Scrollen wird zaeh. Daher im
+            -- Learning Mode die Scroll-Animation aus.
+            if state then
+              hardtime.enable()
+              precognition.show()
+              Snacks.scroll.disable()
+            else
+              hardtime.disable()
+              precognition.hide()
+              Snacks.scroll.enable()
+            end
+          end,
+        })
+        :map("<leader>uH")
+    end,
     keys = {
-      {
-        "<leader>uH",
-        function()
-          local hardtime = require("hardtime")
-          local precognition = require("precognition")
-          if hardtime.is_plugin_enabled then
-            hardtime.disable()
-            precognition.hide()
-            vim.notify("Learning mode disabled")
-          else
-            hardtime.enable()
-            precognition.show()
-            vim.notify("Learning mode enabled")
-          end
-        end,
-        desc = "Toggle learning mode",
-      },
+      { "<leader>uR", "<cmd>Hardtime report<cr>", desc = "Hardtime report" },
     },
   },
 }

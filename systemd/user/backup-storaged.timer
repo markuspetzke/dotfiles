@@ -1,5 +1,5 @@
 [Unit]
-Description=Wöchentliches Backup ~/Documents -> storageD
+Description=Monatliches Backup ~/Documents -> storageD -> NAS
 
 [Timer]
 OnCalendar=Sun *-*-01..07 19:00

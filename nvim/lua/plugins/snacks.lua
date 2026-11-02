@@ -238,6 +238,24 @@ return {
         Snacks.toggle.inlay_hints():map("<leader>uh")
         Snacks.toggle.indent():map("<leader>ug")
         Snacks.toggle.dim():map("<leader>uD")
+
+        -- Dim nur im aktiven Fenster; andere Splits bleiben voll sichtbar.
+        local dim_on_win = Snacks.dim.on_win
+        Snacks.dim.on_win = function(win, ...)
+          if win == vim.api.nvim_get_current_win() then
+            return dim_on_win(win, ...)
+          end
+        end
+        vim.api.nvim_create_autocmd("WinEnter", {
+          group = vim.api.nvim_create_augroup("snacks_dim_active", { clear = true }),
+          callback = function()
+            if Snacks.dim.enabled then
+              for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+                Snacks.util.redraw(w)
+              end
+            end
+          end,
+        })
       end,
     })
   end,

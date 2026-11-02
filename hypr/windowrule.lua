@@ -1,3 +1,5 @@
+local host = require("./host.lua")
+
 hl.window_rule({
 	name = "Picture-in-Picture",
 	match = { title = "Picture-in-Picture" },
@@ -38,6 +40,9 @@ hl.window_rule({
 	name = "tf2",
 	match = { class = "tf_linux64" },
 
+	-- Immer auf dem 165-Hz-Hauptmonitor (sonst landet TF2 auf dem Monitor mit der Maus,
+	-- z. B. links, wenn Steam dort offen ist). Nur Desktop, der Laptop hat kein DP-2.
+	monitor = host.is_desktop and "DP-2" or nil,
 	fullscreen = true,
 	-- Source engine crasht gerne, wenn der Compositor ihm einen Fullscreen-Wechsel meldet
 	-- (SDL macht dann einen Video-Mode-Reset). Fullscreen nur intern in Hyprland umschalten.
