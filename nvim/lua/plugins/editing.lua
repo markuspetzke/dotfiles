@@ -33,6 +33,9 @@ return {
     config = function()
       require("tiny-inline-diagnostic").setup({
         options = {
+          -- Ist rechts neben der Zeile weniger Platz als das, kommt die Meldung
+          -- unter die Zeile statt in eine schmale Spalte gequetscht.
+          softwrap = 60,
           show_source = {
             enabled = true,
             if_many = false,

@@ -4,7 +4,6 @@
 
 local host = require("./host.lua")
 require("./theme.lua")
-require("./bind-usage.lua") -- muss vor binds.lua stehen (zaehlt Bind-Nutzung)
 require("./binds.lua")
 require("./monitors.lua")
 require("./windowrule.lua")

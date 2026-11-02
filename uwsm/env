@@ -5,3 +5,7 @@ export ELECTRON_OZONE_PLATFORM_HINT=auto
 
 # Hardwareprofil erzwingen, falls die Akku-Erkennung danebenliegt (desktop|laptop).
 # export HYPR_PROFILE=laptop
+
+# Mauszeiger (Wii Pointer, liegt in ~/.local/share/icons; Varianten P1-P4 = Spielerfarben).
+export XCURSOR_THEME=Wii-Pointer-P1
+export XCURSOR_SIZE=24

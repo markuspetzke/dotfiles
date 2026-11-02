@@ -124,7 +124,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
     -- Conform uebernimmt das Formatieren; ESLint-Fixes bleiben manuell ueber
     -- Code Actions verfuegbar und blockieren dadurch kein `:wq`.
     -- Inlay Hints (Typen/Parameternamen im Code) standardmaessig an; <leader>uh toggelt.
-    if client and client:supports_method("textDocument/inlayHint") then
+    -- Ausnahme: Buffer mit Blockman an (vertraegt sich nicht mit Inlay Hints, siehe ui.lua).
+    if client and client:supports_method("textDocument/inlayHint") and not vim.b[args.buf].block_on then
       vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
     end
     if client and client:supports_method("textDocument/documentHighlight") then

@@ -1,5 +1,7 @@
 [Unit]
 Description=Backup NAS -> Hetzner (restic)
+# Nur auf dem Desktop (GLaDOS). Auf dem Laptop sind die Timer ohnehin nicht aktiviert; das ist die Absicherung.
+ConditionHost=GLaDOS
 # Schlägt fehl, wenn die NAS nicht aufwacht -> stündlich neu, höchstens 6x am Tag
 StartLimitIntervalSec=1d
 StartLimitBurst=6

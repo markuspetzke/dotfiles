@@ -15,6 +15,9 @@ nvim/nvim.log
 !dunst/**
 !uwsm/
 !uwsm/**
+# Eigene Skripte; per Symlink nach ~/.local/bin (siehe bin/README.md)
+!bin/
+!bin/**
 # User-Services der Hyprland-Session (Units + Drop-ins). *.wants/ sind lokale
 # Aktivierungs-Symlinks und bleiben draussen.
 !systemd/

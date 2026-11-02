@@ -76,7 +76,17 @@ return {
     { "<leader>fk", fzf("keymaps"), desc = "Keymaps" },
     { "<leader>f:", fzf("command_history"), desc = "Command History" },
     { "<leader>fR", fzf("resume"), desc = "Resume Last Picker" },
-    { "<leader>uC", fzf("colorschemes"), desc = "Colorscheme (Preview)" },
+    {
+      "<leader>uC",
+      function()
+        -- Colorschemes sind lazy; ohne Laden fehlen sie in der Auswahl.
+        require("lazy").load({
+          plugins = { "tokyonight.nvim", "catppuccin", "rose-pine", "kanagawa.nvim", "kanso", "gruvbox.nvim" },
+        })
+        require("fzf-lua").colorschemes()
+      end,
+      desc = "Colorscheme (Preview)",
+    },
     { "<leader>fs", fzf("lsp_document_symbols"), desc = "Document Symbols" },
     { "<leader>fS", fzf("lsp_live_workspace_symbols"), desc = "Workspace Symbols" },
     { "<leader>fd", fzf("diagnostics_document"), desc = "Document Diagnostics" },

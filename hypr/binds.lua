@@ -8,7 +8,16 @@ local host = require("./host.lua")
 -- Applications & Windows
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
 hl.bind("ALT + Tab", hl.dsp.window.cycle_next())
-hl.bind(mainMod .. " + W", hl.dsp.window.close())
+-- Das OBS-Hauptfenster nie per SUPER+W schliessen (Stream/Aufnahme koennte laufen);
+-- OBS-Dialoge (Einstellungen, Eigenschaften) schliessen weiter normal.
+hl.bind(mainMod .. " + W", function()
+	local w = hl.get_active_window()
+	if w and w.class == "com.obsproject.Studio" and w.title:match("^OBS %d") then
+		hl.exec_cmd('notify-send -t 2500 "OBS" "SUPER+W ist für OBS gesperrt – über Datei → Beenden schließen"')
+		return
+	end
+	hl.dispatch(hl.dsp.window.close())
+end)
 -- Vollbild nur in Hyprland (internal 2), dem Programm wird nichts gemeldet (client 0):
 -- Browser behalten Tab- und Adressleiste. Video-Vollbild (z.B. YouTube "f") fordert das
 -- Programm selbst an und funktioniert unabhaengig davon.
@@ -24,11 +33,10 @@ hl.bind(mainMod .. " + code:49", hl.dsp.exec_cmd("loginctl lock-session"), {
 })
 hl.bind(mainMod .. " + SUPER_L", hl.dsp.exec_cmd(menu), { release = true })
 
--- Screenshot: SUPER+SHIFT+S = Bereich in Zwischenablage, Print = Bereich als Datei + Zwischenablage
+-- Screenshot: Bereich in Zwischenablage
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd('bash "$HOME/.config/hypr/scripts/screenshot.sh" clipboard'))
-hl.bind("Print", hl.dsp.exec_cmd('bash "$HOME/.config/hypr/scripts/screenshot.sh" file'))
 
--- Fokus / Fenster verschieben / Groesse (Pfeiltasten und HJKL)
+-- Fokus / Fenster verschieben / Groesse (HJKL)
 local directions = {
 	{ "left", "h", -50, 0 },
 	{ "right", "l", 50, 0 },
@@ -37,32 +45,25 @@ local directions = {
 }
 
 for _, d in ipairs(directions) do
-	local arrow, vimkey, dx, dy = d[1], d[2], d[3], d[4]
-	for _, key in ipairs({ arrow, vimkey }) do
-		hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ direction = arrow }))
-		hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ direction = arrow }))
-		-- relative = true, sonst wird der Wert als absolute Groesse gelesen
-		hl.bind(
-			mainMod .. " + CTRL + " .. key,
-			hl.dsp.window.resize({ x = dx, y = dy, relative = true }),
-			{ repeating = true }
-		)
-	end
+	local dir, key, dx, dy = d[1], d[2], d[3], d[4]
+	hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ direction = dir }))
+	hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ direction = dir }))
+	-- relative = true, sonst wird der Wert als absolute Groesse gelesen
+	hl.bind(
+		mainMod .. " + CTRL + " .. key,
+		hl.dsp.window.resize({ x = dx, y = dy, relative = true }),
+		{ repeating = true }
+	)
 end
 
--- Workspaces (1-10)
-for i = 1, 10 do
-	local key = i % 10 -- 10 entspricht Taste 0
-	hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
-	hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+-- Workspaces (1-4; 5-10 wurden nie benutzt)
+for i = 1, 4 do
+	hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
+	hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
 end
 
 -- Master-Layout
 hl.bind(mainMod .. " + Return", hl.dsp.layout("swapwithmaster"))
-hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.layout("focusmaster"))
-hl.bind(mainMod .. " + O", hl.dsp.layout("orientationcycle left top"))
-hl.bind(mainMod .. " + CTRL + comma", hl.dsp.layout("mfact exact 0.55"))
-hl.bind(mainMod .. " + CTRL + period", hl.dsp.layout("mfact exact 0.70"))
 
 -- Laptop-Profile: mobil, erweitert, Praesentation.
 if host.is_laptop then
@@ -78,23 +79,11 @@ if host.is_laptop then
 	end)
 end
 
--- Scratchpad (Special Workspace)
-hl.bind(mainMod .. " + minus", hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mainMod .. " + SHIFT + minus", hl.dsp.window.move({ workspace = "special:magic" }))
-
 -- Notifications (dunst)
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("dunstctl close-all"))
-hl.bind(mainMod .. " + SHIFT + D", hl.dsp.exec_cmd("dunstctl history-pop"))
 
 -- Clipboard-History (cliphist, Auswahl ueber hyprlauncher im dmenu-Modus)
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd('bash "$HOME/.config/hypr/scripts/clipboard.sh"'))
-
--- Workspaces mit Mausrad durchschalten
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
-
--- Pin (Fenster auf allen Workspaces sichtbar)
-hl.bind(mainMod .. " + SHIFT + P", hl.dsp.window.pin())
 
 -- Media Controls
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("playerctl next"), { locked = true })
@@ -134,3 +123,12 @@ hl.bind(
 -- Mouse Binds (drag und resize)
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
+
+-- Stream (nur Desktop): OBS-Hotkeys greifen unter Wayland nur mit Fokus auf OBS,
+-- daher ueber Hyprland. Skripte liegen in ~/.config/bin (nach ~/.local/bin verlinkt).
+if host.is_desktop then
+	hl.bind(mainMod .. " + X", hl.dsp.exec_cmd("stream-tode +"))
+	hl.bind(mainMod .. " + SHIFT + X", hl.dsp.exec_cmd("stream-tode -"))
+	hl.bind(mainMod .. " + CTRL + X", hl.dsp.exec_cmd("stream-tode 0"))
+	hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("stream-clip"))
+end

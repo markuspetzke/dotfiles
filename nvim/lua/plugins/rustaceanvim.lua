@@ -1,6 +1,6 @@
 return {
   "mrcjkb/rustaceanvim",
-  version = "^6",
+  version = "^9",
   ft = { "rust" },
   opts = {
     -- Debugging ueber codelldb aus Mason (:MasonInstall codelldb).
@@ -14,6 +14,26 @@ return {
       end,
     },
     server = {
+      -- rust-analyzer meldet Zusatztipps (z. B. "prefix it with an underscore") doppelt:
+      -- als relatedInformation der Warnung UND als eigene Hint-Diagnose, die mit
+      -- "original diagnostic" auf die Warnung zurueckverweist. Die Hint-Kopien verwerfen,
+      -- damit jeder Fehler nur einmal (mit ↳-Tipp) angezeigt wird.
+      handlers = {
+        ["textDocument/publishDiagnostics"] = function(err, result, ctx)
+          if result and result.diagnostics then
+            result.diagnostics = vim.tbl_filter(function(d)
+              local rel = d.relatedInformation
+              return not (
+                d.severity == vim.lsp.protocol.DiagnosticSeverity.Hint
+                and rel
+                and rel[1]
+                and rel[1].message == "original diagnostic"
+              )
+            end, result.diagnostics)
+          end
+          return vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx)
+        end,
+      },
       on_attach = function(_, bufnr)
         -- Inlay Hints schaltet bereits das globale LspAttach ein. Hier nur die
         -- Rust-spezifischen Varianten, die die LSP-Defaults ueberschreiben.

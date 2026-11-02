@@ -1,19 +1,34 @@
 return {
 
-  -- Colorschemes. Alle geladen (kostet fast nichts, nur rtp), der aktive wird in
-  -- config/options.lua gesetzt; <leader>uC zeigt die Auswahl mit Live-Preview.
-  { "folke/tokyonight.nvim", lazy = false, priority = 1000, opts = { style = "moon" } },
-  { "catppuccin/nvim", name = "catppuccin", lazy = false, priority = 1000, opts = { flavour = "mocha" } },
-  { "rose-pine/neovim", name = "rose-pine", lazy = false, priority = 1000, opts = { variant = "moon" } },
-  { "rebelot/kanagawa.nvim", lazy = false, priority = 1000, opts = {} },
-  { "webhooked/kanso.nvim", name = "kanso", lazy = false, priority = 1000 },
-  { "ellisonleao/gruvbox.nvim", lazy = false, priority = 1000, opts = {} },
+  -- Colorschemes: lazy. Das aktive laedt lazy.nvim automatisch bei :colorscheme
+  -- (config/options.lua); <leader>uC laedt vorher alle fuer die Live-Preview.
+  { "folke/tokyonight.nvim", lazy = true, opts = { style = "moon" } },
+  { "catppuccin/nvim", name = "catppuccin", lazy = true, opts = { flavour = "mocha" } },
+  { "rose-pine/neovim", name = "rose-pine", lazy = true, opts = { variant = "moon" } },
+  { "rebelot/kanagawa.nvim", lazy = true, opts = {} },
+  { "webhooked/kanso.nvim", name = "kanso", lazy = true },
+  { "ellisonleao/gruvbox.nvim", lazy = true, opts = {} },
 
   {
     -- Blockman-Port: verschachtelte Bloecke als abgestufte Hintergrundflaechen.
     "HampusHauffman/block.nvim",
     cmd = { "Block", "BlockOn", "BlockOff" },
-    keys = { { "<leader>uB", "<cmd>Block<cr>", desc = "Toggle Block (Blockman)" } },
+    keys = {
+      {
+        "<leader>uB",
+        function()
+          -- block.nvim polstert ab einer festen Bildschirmspalte und kennt keine Inlay
+          -- Hints -> die verschieben den Text, das Polster ueberdeckt das Zeilenende.
+          -- Deshalb Hints im Buffer aus, solange Block an ist.
+          local buf = vim.api.nvim_get_current_buf()
+          local on = not vim.b[buf].block_on
+          vim.b[buf].block_on = on
+          vim.cmd(on and "BlockOn" or "BlockOff")
+          vim.lsp.inlay_hint.enable(not on, { bufnr = buf })
+        end,
+        desc = "Toggle Block (Blockman)",
+      },
+    },
     opts = {
       percent = 0.85, -- Aufhellung/Abdunklung pro Ebene (naeher an 1 = subtiler)
       depth = 4, -- Anzahl der Farbstufen
@@ -55,6 +70,15 @@ return {
             { "filename", path = 1, symbols = { modified = "●", readonly = "", unnamed = "" } },
           },
           lualine_x = {
+            {
+              function()
+                return "󰑴 learn"
+              end,
+              cond = function()
+                return vim.g.learning_mode == true
+              end,
+              color = { fg = "#9ece6a" },
+            },
             {
               function()
                 return require("noice").api.status.mode.get()
@@ -122,6 +146,8 @@ return {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
           ["vim.lsp.util.stylize_markdown"] = true,
         },
+        -- Signature Help kommt von blink.cmp, sonst erscheint das Popup doppelt.
+        signature = { enabled = false },
       },
       routes = {
         -- "written"-Meldungen und Suchtreffer-Zaehler nicht als Notification.
