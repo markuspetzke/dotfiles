@@ -1,0 +1,63 @@
+/* Windows-3.1: Abweichungen von waybar/base.css (wird zuletzt geladen). */
+/* Windows-3.1-Bevel: helle Oberkante, dunkle Unterkante. */
+window#waybar {
+    border-top: 2px solid #ffffff;
+    border-bottom: 2px solid #808080;
+}
+
+#workspaces button.active,
+#workspaces button.focused,
+#clock {
+    color: #ffffff;
+}
+
+/* Workspaces als erhabene 3D-Knoepfe (hell oben/links, dunkel unten/rechts). */
+#workspaces button {
+    background: @background;
+    color: @foreground;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-bottom: 2px solid #808080;
+    border-right: 2px solid #808080;
+    margin: 2px 2px;
+    padding: 0 8px;
+}
+
+#workspaces button:hover {
+    background: @surface;
+    color: @foreground;
+}
+
+/* Aktiver Workspace: gedrueckt (Bevel umgekehrt) und Navy. */
+#workspaces button.active,
+#workspaces button.focused {
+    background: @accent;
+    color: #ffffff;
+    border-top: 2px solid #404040;
+    border-left: 2px solid #404040;
+    border-bottom: 2px solid #ffffff;
+    border-right: 2px solid #ffffff;
+}
+
+/* Module durch eingelassene Trennkanten statt Linien. */
+#custom-power-profile, #idle_inhibitor, #custom-headset, #pulseaudio, #network,
+#cpu, #memory, #temperature, #tray {
+    border-left: 1px solid #808080;
+    box-shadow: inset 1px 0 #ffffff;
+}
+
+/* Uhr: eingelassenes Feld wie in einer Statusleiste. */
+#clock {
+    background: @background;
+    color: @foreground;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-bottom: 2px solid #ffffff;
+    border-right: 2px solid #ffffff;
+    margin: 2px 2px 2px 6px;
+}
+
+tooltip {
+    background: #ffffe1;
+    border: 1px solid #000000;
+}

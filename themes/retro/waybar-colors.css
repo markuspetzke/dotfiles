@@ -1,0 +1,12 @@
+/* Bernstein-CRT: Farben fuer waybar/base.css */
+@define-color background #1b1a16;
+@define-color background-dark #141310;
+@define-color surface #2a2822;
+@define-color surface2 #36332b;
+@define-color foreground #e6dcc3;
+@define-color muted #8a8370;
+@define-color accent #e8a33d;
+@define-color olive #8f9a5b;
+@define-color teal #5fa8a3;
+@define-color orange #d97a3a;
+@define-color red #c8553d;

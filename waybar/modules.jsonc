@@ -80,7 +80,7 @@
             "mode-mon-col": 3,
             "weeks-pos": "right",
             "on-scroll": 1,
-            // Bernstein-CRT-Farben wie der Rest der Leiste
+            // Standardfarben; die Themes ueberschreiben sie (themes/<name>/waybar-modules.jsonc)
             "format": {
                 "months":   "<span color='#e6dcc3'><b>{}</b></span>",
                 "days":     "<span color='#e6dcc3'>{}</span>",

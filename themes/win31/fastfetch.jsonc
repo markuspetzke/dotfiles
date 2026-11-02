@@ -1,0 +1,67 @@
+// fastfetch -- Windows-3.1, gleiche Palette wie hypr/theme.lua.
+// Logo: Roehrenmonitor mit DOS-Prompt (logo.txt, $1-$4 = Farben unten).
+// Nur Module mit Inhalt; was auf einem Rechner nichts findet (z. B. Akku am Desktop),
+// wird ausgeblendet (showErrors = false). Keine lokale IP, damit Screenshots harmlos sind.
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "file",
+    "source": "~/.config/theme-current/fastfetch-logo.txt",
+    "color": {
+      "1": "38;2;170;170;170", // Gehaeuse: Grau
+      "2": "38;2;255;255;85", // Prompt: Gelb
+      "3": "38;2;85;255;255", // Verzeichnisse: Cyan
+      "4": "38;2;255;255;255" // Text: Weiss
+    },
+    "padding": { "top": 1, "left": 1, "right": 3 }
+  },
+  "display": {
+    "separator": "  ",
+    "showErrors": false,
+    "color": {
+      "keys": "38;2;255;255;85",
+      "title": "38;2;255;255;85",
+      "output": "38;2;192;192;192",
+      "separator": "38;2;128;128;128"
+    },
+    "key": { "width": 10 },
+    "size": { "binaryPrefix": "iec", "ndigits": 1 },
+    "percent": {
+      "type": ["num", "bar"],
+      "color": { "green": "38;2;0;170;0", "yellow": "38;2;255;255;85", "red": "38;2;170;0;0" }
+    },
+    "bar": {
+      "width": 10,
+      "char": { "elapsed": "█", "total": "░" },
+      "border": { "left": "", "right": "" },
+      "color": { "total": "38;2;85;85;85" }
+    }
+  },
+  "modules": [
+    "break",
+    { "type": "title", "format": "C:\\USERS\\{user-name}> " },
+    { "type": "separator", "string": "═", "outputColor": "38;2;46;46;46" },
+    { "type": "os", "key": "OS", "format": "{pretty-name} {arch}" },
+    { "type": "kernel", "key": "KERNEL", "format": "{release}" },
+    { "type": "uptime", "key": "UPTIME" },
+    { "type": "packages", "key": "PAKETE" },
+    "break",
+    { "type": "wm", "key": "WM", "format": "{pretty-name} {version}" },
+    { "type": "terminal", "key": "TERMINAL", "format": "{pretty-name}" },
+    { "type": "shell", "key": "SHELL", "format": "{pretty-name} {version}" },
+    { "type": "display", "key": "DISPLAY", "format": "{width}x{height} @ {refresh-rate} Hz" },
+    "break",
+    { "type": "cpu", "key": "CPU", "format": "{name} ({cores-logical})", "temp": false },
+    { "type": "gpu", "key": "GPU", "format": "{name}", "hideType": "integrated", "driverSpecific": false },
+    { "type": "memory", "key": "RAM", "format": "{percentage-bar}  {used} / {total}" },
+    { "type": "disk", "key": "DISK", "folders": "/", "format": "{size-percentage-bar}  {size-used} / {size-total}" },
+    { "type": "battery", "key": "AKKU" },
+    "break",
+    {
+      "type": "colors",
+      "symbol": "block",
+      "paddingLeft": 0,
+      "block": { "range": [0, 7] }
+    }
+  ]
+}

@@ -17,6 +17,9 @@ nvim/nvim.log
 !uwsm/**
 !fastfetch/
 !fastfetch/**
+# Desktop-Themes; das aktive (theme-current) ist ein lokaler Symlink und bleibt draussen
+!themes/
+!themes/**
 # Eigene Skripte; per Symlink nach ~/.local/bin (siehe bin/README.md)
 !bin/
 !bin/**

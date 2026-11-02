@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Desktop-Theme wechseln (Hyprland, Waybar, Dunst, Hyprlock, Launcher, Kitty, Neovim, fastfetch).
+#
+#   theme            # verfuegbare Themes, aktives markiert
+#   theme <name>     # aktivieren und alles neu laden
+#
+# Themes liegen in ~/.config/themes/<name>/. Aktiv ist, worauf der Symlink
+# ~/.config/theme-current zeigt (nicht im Git, also pro Rechner).
+set -euo pipefail
+
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
+themes="$cfg/themes"
+link="$cfg/theme-current"
+current=$(basename "$(readlink "$link" 2>/dev/null || true)")
+
+list() {
+	for d in "$themes"/*/; do
+		n=$(basename "$d")
+		[[ $n == "$current" ]] && echo "* $n" || echo "  $n"
+	done
+}
+
+if (($# == 0)); then
+	list
+	exit 0
+fi
+
+name=$1
+if [[ ! -f $themes/$name/palette.lua ]]; then
+	echo "Unbekanntes Theme: $name" >&2
+	list >&2
+	exit 1
+fi
+
+# Relativer Symlink: funktioniert unabhaengig vom Home-Pfad
+ln -sfn "themes/$name" "$link"
+
+# Neovim: Colorscheme fuer neue Instanzen merken ...
+cs=$(sed -n 's/^ *colorscheme = "\(.*\)",$/\1/p' "$themes/$name/nvim.lua" | head -1)
+if [[ -n $cs ]]; then
+	state="${XDG_STATE_HOME:-$HOME/.local/state}/nvim"
+	mkdir -p "$state" && printf '%s' "$cs" >"$state/colorscheme"
+fi
+# ... und laufende Instanzen ueber ihren Socket umstellen (ohne Tastendruecke)
+for sock in "${XDG_RUNTIME_DIR:-/run/user/$UID}"/nvim.*.0; do
+	[[ -S $sock ]] || continue
+	timeout 2 nvim --server "$sock" --remote-expr 'luaeval("require(\"config.theme\").reload()")' >/dev/null 2>&1 || true
+done
+
+# Nur in einer laufenden Hyprland-Sitzung neu laden
+if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
+	hyprctl reload >/dev/null
+	systemctl --user restart hyprpaper.service waybar.service dunst.service
+	pkill -USR1 -x kitty || true
+	notify-send -t 2000 "Theme" "$name ist aktiv"
+fi
+echo "Theme: $name"

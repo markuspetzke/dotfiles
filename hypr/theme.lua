@@ -1,19 +1,23 @@
--- Gemeinsame Palette "Bernstein-CRT": warmes Schwarz, Papier-Creme, Bernstein als
--- einziger Akzent; Oliv/Teal nur fuer Status. Gleiche Werte in waybar/style.css,
--- kitty.conf, hyprlock.conf, hyprtoolkit.conf, dunstrc und Neovim (gruvbox-Overrides).
-local theme = {
-	bg = "#1b1a16",
-	bg_dark = "#141310",
-	surface = "#2a2822",
-	surface2 = "#36332b",
-	fg = "#e6dcc3",
-	muted = "#8a8370",
-	amber = "#e8a33d",
-	olive = "#8f9a5b",
-	teal = "#5fa8a3",
-	orange = "#d97a3a",
-	red = "#c8553d",
-}
+-- Laedt das aktive Theme (~/.config/theme-current -> themes/<name>, gesetzt mit `theme <name>`)
+-- und setzt Rahmen-/Gruppenfarben sowie Theme-Eigenheiten (Rahmenbreite, Abdunkeln).
+-- Fehlt der Symlink, gilt themes/retro.
+local home = os.getenv("HOME") or ""
+
+local function load_theme(path)
+	local f = io.open(path, "r")
+	if not f then
+		return nil
+	end
+	local src = f:read("a")
+	f:close()
+	local chunk = load(src, "@" .. path)
+	return chunk and chunk() or nil
+end
+
+local t = load_theme(home .. "/.config/theme-current/palette.lua")
+	or load_theme(home .. "/.config/themes/retro/palette.lua")
+local c = t.colors
+local opt = t.hypr or {}
 
 -- "#rrggbb" + Alpha (0-255) -> "rgba(rrggbbaa)"
 local function rgba(hex, alpha)
@@ -22,26 +26,31 @@ end
 
 hl.config({
 	general = {
+		border_size = opt.border_size or 2,
 		col = {
 			-- Eine Akzentfarbe, kein Verlauf
-			active_border = rgba(theme.amber),
-			inactive_border = rgba(theme.surface2),
+			active_border = rgba(c.accent),
+			inactive_border = rgba(c.surface2),
 		},
+	},
+	decoration = {
+		dim_inactive = opt.dim_inactive or false,
+		dim_strength = opt.dim_strength or 0.25,
 	},
 	group = {
 		col = {
-			border_active = rgba(theme.amber),
-			border_inactive = rgba(theme.surface2),
+			border_active = rgba(c.accent),
+			border_inactive = rgba(c.surface2),
 		},
 		groupbar = {
 			col = {
-				active = rgba(theme.amber),
-				inactive = rgba(theme.surface),
+				active = rgba(c.accent),
+				inactive = rgba(c.surface),
 			},
-			text_color = theme.bg,
+			text_color = c.bg,
 			font_family = "DepartureMono Nerd Font",
 		},
 	},
 })
 
-return theme
+return c
