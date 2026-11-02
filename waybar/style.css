@@ -1,23 +1,23 @@
-/* TokyoNight Moon — gleiche Palette wie Neovim, Kitty und Hyprland */
-@define-color background #222436;
-@define-color background-light #2f334d;
-@define-color background-hover #3b4161;
-@define-color foreground #c8d3f5;
-@define-color black #1b1d2b;
-@define-color red #ff757f;
-@define-color green #c3e88d;
-@define-color yellow #ffc777;
-@define-color blue #82aaff;
-@define-color magenta #c099ff;
-@define-color cyan #86e1fc;
-@define-color orange #ff966c;
-@define-color comment #636da6;
+/* Bernstein-CRT -- gleiche Palette wie hypr/theme.lua, Kitty, Neovim, Hyprlock.
+   Regel: eine Akzentfarbe (Bernstein), Rahmen 1-2px, keine Rundungen, keine Schatten.
+   Departure Mono ist auf 11px gerastert -> font-size 11px bleibt pixelscharf. */
+@define-color background #1b1a16;
+@define-color background-dark #141310;
+@define-color surface #2a2822;
+@define-color surface2 #36332b;
+@define-color foreground #e6dcc3;
+@define-color muted #8a8370;
+@define-color amber #e8a33d;
+@define-color olive #8f9a5b;
+@define-color teal #5fa8a3;
+@define-color orange #d97a3a;
+@define-color red #c8553d;
 
 * {
     border: none;
     border-radius: 0;
-    font-family: "FiraCode Nerd Font";
-    font-size: 13px;
+    font-family: "DepartureMono Nerd Font";
+    font-size: 11px;
     font-weight: normal;
     min-height: 0;
 }
@@ -27,55 +27,48 @@ window#waybar {
     color: @foreground;
 }
 
-/* Eine ruhige, abgesetzte Leiste statt einzelner harter Rahmen. */
+/* Durchgehende Leiste mit Bernstein-Kante unten, wie eine alte Menueleiste. */
 #waybar > .box {
     background: @background;
-    border: 1px solid alpha(@foreground, 0.08);
-    border-radius: 12px;
-    margin: 6px 9px 0;
-    padding: 2px 5px;
+    border-bottom: 2px solid @surface2;
+    margin: 0;
+    padding: 3px 6px;
 }
 
 #workspaces {
-    background: @background-light;
-    border-radius: 8px;
-    margin: 2px 4px 2px 2px;
-    padding: 0 2px;
+    margin: 0 6px 0 0;
 }
 
 #workspaces button {
     background: transparent;
-    border-radius: 6px;
-    color: @comment;
-    margin: 2px;
-    padding: 0 9px;
-    transition: background 150ms ease, color 150ms ease;
+    color: @muted;
+    margin: 0 1px;
+    padding: 0 8px;
 }
 
 #workspaces button:hover {
-    background: @background-hover;
+    background: @surface;
     color: @foreground;
+    box-shadow: none;
 }
 
 #workspaces button.active,
 #workspaces button.focused {
-    background: @blue;
-    color: @black;
-    font-weight: bold;
+    background: @amber;
+    color: @background-dark;
 }
 
 #workspaces button.urgent {
     background: @red;
-    color: @black;
+    color: @background-dark;
 }
 
 #window {
     color: @foreground;
-    font-weight: bold;
     padding: 0 12px;
 }
 
-/* Gemeinsame Modulform: kompakte farbige pills. */
+/* Module: flach, nur durch senkrechte Trennlinien abgesetzt. */
 #custom-playerctl,
 #custom-power-profile,
 #custom-headset,
@@ -90,65 +83,53 @@ window#waybar {
 #bluetooth,
 #clock,
 #tray {
-    background: @background-light;
-    border-radius: 7px;
-    margin: 2px 2px;
-    padding: 0 9px;
+    background: transparent;
+    color: @foreground;
+    border-left: 1px solid @surface2;
+    margin: 0;
+    padding: 0 10px;
 }
 
-#custom-playerctl {
-    color: @magenta;
-    margin-left: 2px;
-}
+#custom-playerctl { color: @muted; border-left: none; }
+#custom-playerctl.Playing { color: @foreground; }
+#custom-playerctl.Paused { color: @muted; }
 
-#custom-playerctl.Playing { color: @cyan; }
-#custom-playerctl.Paused { color: @orange; }
-
-#custom-power-profile { color: @green; }
-#custom-power-profile.performance { color: @red; }
-#custom-power-profile.power-saver { color: @yellow; }
-#custom-power-profile.unavailable { color: @comment; }
-#custom-headset { color: @blue; }
-#custom-headset.warning { color: @yellow; }
+#custom-power-profile.performance { color: @orange; }
+#custom-power-profile.power-saver { color: @olive; }
+#custom-power-profile.unavailable { color: @muted; }
+#custom-headset.warning { color: @orange; }
 #custom-headset.critical { color: @red; }
-#custom-headset.charging { color: @green; }
+#custom-headset.charging { color: @olive; }
 
-#idle_inhibitor { color: @comment; }
-#idle_inhibitor.activated { color: @yellow; }
+#idle_inhibitor { color: @muted; }
+#idle_inhibitor.activated { color: @amber; }
 
-#pulseaudio { color: @orange; }
-#pulseaudio.muted { color: @red; }
+#pulseaudio.muted { color: @muted; }
 
-#network { color: @blue; }
 #network.disconnected { color: @red; }
 
-#cpu { color: @green; }
-#memory { color: @magenta; }
-#temperature { color: @yellow; }
 #temperature.critical {
     color: @red;
-    animation: blink 1s linear infinite alternate;
+    animation: blink 1s steps(2) infinite;
 }
 
-#clock { color: @blue; font-weight: bold; }
+/* Uhr als Akzent: invertiert wie ein Statusfeld. */
+#clock {
+    background: @amber;
+    color: @background-dark;
+    border-left: none;
+    margin-left: 6px;
+}
 
-#battery { color: @green; }
 #battery.charging,
-#battery.plugged { color: @cyan; }
+#battery.plugged { color: @olive; }
 #battery.warning:not(.charging) { color: @orange; }
 #battery.critical:not(.charging) {
     color: @red;
-    animation: blink 1s linear infinite alternate;
+    animation: blink 1s steps(2) infinite;
 }
 
-#backlight { color: @yellow; }
-#bluetooth { color: @blue; }
-#bluetooth.disabled { color: @comment; }
-
-#tray {
-    padding: 0 7px;
-    margin-right: 2px;
-}
+#bluetooth.disabled { color: @muted; }
 
 #tray > .passive { -gtk-icon-effect: dim; }
 #tray > .needs-attention {
@@ -157,12 +138,17 @@ window#waybar {
 }
 
 tooltip {
-    background: @background;
-    border: 1px solid alpha(@blue, 0.35);
-    border-radius: 8px;
+    background: @background-dark;
+    border: 2px solid @amber;
+    border-radius: 0;
     color: @foreground;
 }
 
+tooltip label {
+    color: @foreground;
+}
+
+/* Hartes Blinken wie ein Terminal-Cursor statt weichem Fade. */
 @keyframes blink {
-    to { color: @foreground; }
+    to { color: @background; }
 }

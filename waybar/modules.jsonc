@@ -80,13 +80,13 @@
             "mode-mon-col": 3,
             "weeks-pos": "right",
             "on-scroll": 1,
-            // TokyoNight-Moon-Farben wie der Rest der Leiste
+            // Bernstein-CRT-Farben wie der Rest der Leiste
             "format": {
-                "months":   "<span color='#c8d3f5'><b>{}</b></span>",
-                "days":     "<span color='#c8d3f5'>{}</span>",
-                "weeks":    "<span color='#636da6'><b>KW{}</b></span>",
-                "weekdays": "<span color='#82aaff'><b>{}</b></span>",
-                "today":    "<span color='#ffc777'><b><u>{}</u></b></span>"
+                "months":   "<span color='#e6dcc3'><b>{}</b></span>",
+                "days":     "<span color='#e6dcc3'>{}</span>",
+                "weeks":    "<span color='#8a8370'><b>KW{}</b></span>",
+                "weekdays": "<span color='#8f9a5b'><b>{}</b></span>",
+                "today":    "<span color='#e8a33d'><b><u>{}</u></b></span>"
             }
         },
         "actions": {

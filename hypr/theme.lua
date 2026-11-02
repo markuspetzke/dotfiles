@@ -1,18 +1,18 @@
--- Gemeinsame Palette (tokyonight-moon), passend zum Neovim-Theme.
--- Wird von hyprland.lua geladen; waybar/kitty/hyprlock nutzen dieselben Werte.
+-- Gemeinsame Palette "Bernstein-CRT": warmes Schwarz, Papier-Creme, Bernstein als
+-- einziger Akzent; Oliv/Teal nur fuer Status. Gleiche Werte in waybar/style.css,
+-- kitty.conf, hyprlock.conf, hyprtoolkit.conf, dunstrc und Neovim (gruvbox-Overrides).
 local theme = {
-	bg = "#222436",
-	bg_dark = "#1e2030",
-	fg = "#c8d3f5",
-	comment = "#636da6",
-	blue = "#82aaff",
-	cyan = "#86e1fc",
-	magenta = "#c099ff",
-	purple = "#fca7ea",
-	green = "#c3e88d",
-	yellow = "#ffc777",
-	orange = "#ff966c",
-	red = "#ff757f",
+	bg = "#1b1a16",
+	bg_dark = "#141310",
+	surface = "#2a2822",
+	surface2 = "#36332b",
+	fg = "#e6dcc3",
+	muted = "#8a8370",
+	amber = "#e8a33d",
+	olive = "#8f9a5b",
+	teal = "#5fa8a3",
+	orange = "#d97a3a",
+	red = "#c8553d",
 }
 
 -- "#rrggbb" + Alpha (0-255) -> "rgba(rrggbbaa)"
@@ -23,25 +23,23 @@ end
 hl.config({
 	general = {
 		col = {
-			active_border = { colors = { rgba(theme.blue, 0xee), rgba(theme.magenta, 0xee) }, angle = 45 },
-			inactive_border = rgba(theme.comment, 0xaa),
+			-- Eine Akzentfarbe, kein Verlauf
+			active_border = rgba(theme.amber),
+			inactive_border = rgba(theme.surface2),
 		},
-	},
-	decoration = {
-		shadow = { color = rgba(theme.bg_dark, 0xee) },
 	},
 	group = {
 		col = {
-			border_active = { colors = { rgba(theme.blue, 0xee), rgba(theme.magenta, 0xee) }, angle = 45 },
-			border_inactive = rgba(theme.comment, 0xaa),
+			border_active = rgba(theme.amber),
+			border_inactive = rgba(theme.surface2),
 		},
 		groupbar = {
 			col = {
-				active = rgba(theme.blue, 0xcc),
-				inactive = rgba(theme.bg_dark, 0xcc),
+				active = rgba(theme.amber),
+				inactive = rgba(theme.surface),
 			},
-			text_color = theme.fg,
-			font_family = "FiraCode Nerd Font",
+			text_color = theme.bg,
+			font_family = "DepartureMono Nerd Font",
 		},
 	},
 })

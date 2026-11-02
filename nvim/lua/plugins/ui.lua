@@ -7,7 +7,37 @@ return {
   { "rose-pine/neovim", name = "rose-pine", lazy = true, opts = { variant = "moon" } },
   { "rebelot/kanagawa.nvim", lazy = true, opts = {} },
   { "webhooked/kanso.nvim", name = "kanso", lazy = true },
-  { "ellisonleao/gruvbox.nvim", lazy = true, opts = {} },
+  {
+    -- "Bernstein-CRT": gruvbox mit der Palette aus hypr/theme.lua.
+    "ellisonleao/gruvbox.nvim",
+    lazy = true,
+    opts = {
+      contrast = "hard",
+      palette_overrides = {
+        dark0_hard = "#1b1a16",
+        dark0 = "#1b1a16",
+        dark0_soft = "#2a2822",
+        dark1 = "#2a2822",
+        dark2 = "#36332b",
+        dark3 = "#4a463b",
+        dark4 = "#5a5546",
+        light0_hard = "#f4ecd8",
+        light0 = "#f4ecd8",
+        light1 = "#e6dcc3",
+        light2 = "#d5cbb2",
+        light3 = "#c9bfa6",
+        light4 = "#a89f88",
+        bright_red = "#c8553d",
+        bright_green = "#a9b56c",
+        bright_yellow = "#e8a33d",
+        bright_blue = "#7aa3bf",
+        bright_purple = "#bf8fa3",
+        bright_aqua = "#7cc2bd",
+        bright_orange = "#d97a3a",
+        gray = "#8a8370",
+      },
+    },
+  },
 
   {
     -- Blockman-Port: verschachtelte Bloecke als abgestufte Hintergrundflaechen.
@@ -77,7 +107,7 @@ return {
               cond = function()
                 return vim.g.learning_mode == true
               end,
-              color = { fg = "#9ece6a" },
+              color = { fg = "#8f9a5b" },
             },
             {
               function()
