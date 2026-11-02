@@ -51,7 +51,7 @@ hl.config({
 		gaps_in = 4,
 		gaps_out = 8,
 
-		border_size = 2,
+		-- border_size kommt aus dem Theme (hypr/theme.lua)
 
 		-- Farben kommen aus theme.lua
 

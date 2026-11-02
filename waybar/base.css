@@ -1,0 +1,143 @@
+/* Gemeinsames Leisten-Layout aller Themes. Farben (@background, @accent, ...) kommen aus
+   themes/<name>/waybar-colors.css, Abweichungen aus themes/<name>/waybar.css (style.css).
+   Regel: eine Akzentfarbe, Rahmen 1-2px, keine Rundungen, keine Schatten.
+   Departure Mono ist auf 11px gerastert -> font-size 11px bleibt pixelscharf. */
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "DepartureMono Nerd Font";
+    font-size: 11px;
+    font-weight: normal;
+    min-height: 0;
+}
+
+/* Hintergrund und Kante direkt am Fenster: "#waybar > .box" greift in aktuellen
+   Waybar-Versionen nicht, die Leiste waere sonst durchsichtig. */
+window#waybar {
+    background: @background;
+    border-bottom: 2px solid @surface2;
+    color: @foreground;
+}
+
+/* Innenabstand der Leiste. */
+window#waybar > box {
+    padding: 0 6px;
+}
+
+#workspaces {
+    margin: 0 6px 0 0;
+}
+
+#workspaces button {
+    background: transparent;
+    color: @muted;
+    margin: 0 1px;
+    padding: 0 8px;
+}
+
+#workspaces button:hover {
+    background: @surface;
+    color: @foreground;
+    box-shadow: none;
+}
+
+#workspaces button.active,
+#workspaces button.focused {
+    background: @accent;
+    color: @background-dark;
+}
+
+#workspaces button.urgent {
+    background: @red;
+    color: @background-dark;
+}
+
+#window {
+    color: @foreground;
+    padding: 0 12px;
+}
+
+/* Module: flach, nur durch senkrechte Trennlinien abgesetzt. */
+#custom-playerctl,
+#custom-power-profile,
+#custom-headset,
+#idle_inhibitor,
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#temperature,
+#battery,
+#backlight,
+#bluetooth,
+#clock,
+#tray {
+    background: transparent;
+    color: @foreground;
+    border-left: 1px solid @surface2;
+    margin: 0;
+    padding: 0 10px;
+}
+
+#custom-playerctl { color: @muted; border-left: none; }
+#custom-playerctl.Playing { color: @foreground; }
+#custom-playerctl.Paused { color: @muted; }
+
+#custom-power-profile.performance { color: @orange; }
+#custom-power-profile.power-saver { color: @olive; }
+#custom-power-profile.unavailable { color: @muted; }
+#custom-headset.warning { color: @orange; }
+#custom-headset.critical { color: @red; }
+#custom-headset.charging { color: @olive; }
+
+#idle_inhibitor { color: @muted; }
+#idle_inhibitor.activated { color: @accent; }
+
+#pulseaudio.muted { color: @muted; }
+
+#network.disconnected { color: @red; }
+
+#temperature.critical {
+    color: @red;
+    animation: blink 1s steps(2) infinite;
+}
+
+/* Uhr als Akzent: invertiert wie ein Statusfeld. */
+#clock {
+    background: @accent;
+    color: @background-dark;
+    border-left: none;
+    margin-left: 6px;
+}
+
+#battery.charging,
+#battery.plugged { color: @olive; }
+#battery.warning:not(.charging) { color: @orange; }
+#battery.critical:not(.charging) {
+    color: @red;
+    animation: blink 1s steps(2) infinite;
+}
+
+#bluetooth.disabled { color: @muted; }
+
+#tray > .passive { -gtk-icon-effect: dim; }
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    color: @red;
+}
+
+tooltip {
+    background: @background-dark;
+    border: 2px solid @accent;
+    border-radius: 0;
+    color: @foreground;
+}
+
+tooltip label {
+    color: @foreground;
+}
+
+/* Hartes Blinken wie ein Terminal-Cursor statt weichem Fade. */
+@keyframes blink {
+    to { color: @background; }
+}

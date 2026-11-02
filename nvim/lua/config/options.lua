@@ -16,18 +16,12 @@ vim.api.nvim_create_autocmd("ColorScheme", {
         yellow = "#ffc777",
         orange = "#ff966c",
       },
-      gruvbox = { -- Bernstein-CRT (hypr/theme.lua)
-        bg = "#1b1a16",
-        bg_dark = "#141310",
-        bg_highlight = "#2a2822",
-        visual = "#4a3a1e",
-        fg = "#e6dcc3",
-        comment = "#8a8370",
-        accent = "#e8a33d",
-        yellow = "#e8a33d",
-        orange = "#d97a3a",
-      },
     }
+    -- Palette des Desktop-Themes gilt fuer dessen Colorscheme (themes/<name>/nvim.lua).
+    local theme = require("config.theme").get()
+    if theme.colorscheme and theme.highlights then
+      palettes[theme.colorscheme] = theme.highlights
+    end
     local colors = palettes[(vim.g.colors_name or ""):match("^[^-]+")]
     if not colors then
       return
@@ -58,7 +52,8 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
 -- Colorscheme: Default hier, die zuletzt per <leader>uC gewaehlte wird in
 -- stdpath("state")/colorscheme gemerkt und beim naechsten Start bevorzugt.
-local default_colorscheme = "gruvbox" -- gruvbox (Bernstein-CRT), tokyonight, catppuccin, rose-pine, kanagawa, kanso, gruvbox
+-- Standard kommt vom Desktop-Theme (`theme <name>` schreibt es auch in den Zustand unten).
+local default_colorscheme = require("config.theme").get().colorscheme or "tokyonight"
 local colorscheme_file = vim.fs.joinpath(vim.fn.stdpath("state"), "colorscheme")
 
 local function read_saved_colorscheme()

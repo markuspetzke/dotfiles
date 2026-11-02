@@ -1,0 +1,42 @@
+// Wired: nur Abweichungen von waybar/modules.jsonc. Wird zuerst eingebunden,
+// Waybar fuehrt die Objekte zusammen (erste Datei gewinnt).
+{
+    "hyprland/window": {
+        "format": "> {title}"
+    },
+    "hyprland/workspaces": {
+        "format": "0{name}"
+    },
+    "pulseaudio": {
+        "format": "VOL {volume}%",
+        "format-muted": "VOL --"
+    },
+    "network": {
+        "format-ethernet": "NET",
+        "format-linked": "NET?",
+        "format-disconnected": "NET --"
+    },
+    "cpu": {
+        "format": "CPU {usage}%"
+    },
+    "memory": {
+        "format": "MEM {percentage}%"
+    },
+    "temperature": {
+        "format": "TMP {temperatureC}°C"
+    },
+    "clock": {
+        "format": "{:%H:%M:%S}",
+        "interval": 1,
+        "format-alt": "{:%Y-%m-%d}",
+        "calendar": {
+            "format": {
+                "months": "<span color='#c9d6c3'><b>{}</b></span>",
+                "days": "<span color='#c9d6c3'>{}</span>",
+                "weeks": "<span color='#6f7d6b'><b>KW{}</b></span>",
+                "weekdays": "<span color='#9d84d8'><b>{}</b></span>",
+                "today": "<span color='#7fd88f'><b><u>{}</u></b></span>"
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
-# dunst -- Bernstein-CRT, gleiche Palette wie hypr/theme.lua
+# dunst -- gemeinsamer Teil; Farben, Rahmen, Schrift und Format kommen vom aktiven Theme
+# (dunstrc.d/50-theme.conf -> themes/<name>/dunst.conf).
 
 [global]
     monitor = 0
@@ -9,21 +10,15 @@
     origin = top-right
     offset = (16, 16)
     gap_size = 8
-    corner_radius = 0
 
     progress_bar = true
     progress_bar_height = 8
-    progress_bar_corner_radius = 0
 
     transparency = 0
-    frame_width = 2
-    frame_color = "#e8a33d"
     separator_color = frame
 
-    font = DepartureMono Nerd Font 8.25
     line_height = 2
     markup = full
-    format = "<b>%s</b>\n%b"
     alignment = left
     vertical_alignment = center
     show_age_threshold = 60
@@ -58,19 +53,10 @@
     mouse_right_click = close_current
 
 [urgency_low]
-    background = "#141310"
-    foreground = "#8a8370"
-    frame_color = "#36332b"
     timeout = 5
 
 [urgency_normal]
-    background = "#1b1a16"
-    foreground = "#e6dcc3"
-    frame_color = "#e8a33d"
     timeout = 8
 
 [urgency_critical]
-    background = "#1b1a16"
-    foreground = "#e6dcc3"
-    frame_color = "#c8553d"
     timeout = 0

@@ -1,0 +1,12 @@
+/* Wired: Farben fuer waybar/base.css */
+@define-color background #0c0e0c;
+@define-color background-dark #070807;
+@define-color surface #161a16;
+@define-color surface2 #232a23;
+@define-color foreground #c9d6c3;
+@define-color muted #6f7d6b;
+@define-color accent #7fd88f;
+@define-color olive #9d84d8;
+@define-color teal #6fb3c8;
+@define-color orange #d8c060;
+@define-color red #d8607a;

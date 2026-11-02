@@ -5,7 +5,8 @@
     "height": 30,
     "spacing": 1,
     "margin": 0,
-    "include": ["~/.config/waybar/modules.jsonc"],
+    // Theme-Module zuerst: bei gleichen Schluesseln gewinnt die zuerst eingebundene Datei.
+    "include": ["~/.config/theme-current/waybar-modules.jsonc", "~/.config/waybar/modules.jsonc"],
 
     "modules-left": ["hyprland/workspaces", "custom/playerctl"],
     "modules-center": ["hyprland/window"],

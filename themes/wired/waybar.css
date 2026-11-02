@@ -1,0 +1,32 @@
+/* Wired: Abweichungen von waybar/base.css (wird zuletzt geladen). */
+/* Leiste: duenne dunkelgruene Phosphorlinie unten. */
+window#waybar {
+    border-bottom: 1px solid #2f5a37;
+}
+
+#window {
+    color: @muted;
+}
+
+/* Aktiver Workspace: leuchtende Schrift mit Unterstrich statt gefuelltem Feld. */
+#workspaces button.active,
+#workspaces button.focused {
+    background: transparent;
+    color: @accent;
+    box-shadow: inset 0 -2px @accent;
+    text-shadow: 0 0 6px alpha(@accent, 0.7);
+}
+
+/* Uhr: leuchtende Phosphorschrift statt invertiertem Feld. */
+#clock {
+    background: transparent;
+    color: @accent;
+    border-left: 1px solid @surface2;
+    margin: 0;
+    text-shadow: 0 0 6px alpha(@accent, 0.7);
+}
+
+/* Leichter Phosphor-Schimmer auf allen Werten. */
+#cpu, #memory, #temperature, #pulseaudio, #network, #custom-playerctl.Playing {
+    text-shadow: 0 0 4px alpha(@foreground, 0.35);
+}

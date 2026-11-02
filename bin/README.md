@@ -9,6 +9,7 @@ for f in ~/.config/bin/*; do [ "${f##*.}" = md ] || ln -sf "$f" ~/.local/bin/; d
 
 | Skript | Zweck |
 | --- | --- |
+| `theme` | Desktop-Theme wechseln (`theme`, `theme <name>`), siehe `themes/README.md` |
 | `stream-tode` | Todeszaehler fuer OBS (`Super+X`, `Super+Shift+X`, `Super+Ctrl+X`) |
 | `stream-clip` | Replay-Puffer von OBS speichern (`Super+C`) |
 | `obs-ws` | Minimaler obs-websocket-v5-Client (Python-Stdlib) |
