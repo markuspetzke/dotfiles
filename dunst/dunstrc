@@ -1,4 +1,4 @@
-# dunst -- tokyonight moon, gleiche Palette wie hypr/theme.lua
+# dunst -- Bernstein-CRT, gleiche Palette wie hypr/theme.lua
 
 [global]
     monitor = 0
@@ -9,18 +9,18 @@
     origin = top-right
     offset = (16, 16)
     gap_size = 8
-    corner_radius = 8
+    corner_radius = 0
 
     progress_bar = true
     progress_bar_height = 8
-    progress_bar_corner_radius = 4
+    progress_bar_corner_radius = 0
 
     transparency = 0
     frame_width = 2
-    frame_color = "#82aaff"
+    frame_color = "#e8a33d"
     separator_color = frame
 
-    font = FiraCode Nerd Font 10
+    font = DepartureMono Nerd Font 8.25
     line_height = 2
     markup = full
     format = "<b>%s</b>\n%b"
@@ -58,19 +58,19 @@
     mouse_right_click = close_current
 
 [urgency_low]
-    background = "#1e2030"
-    foreground = "#828bb8"
-    frame_color = "#636da6"
+    background = "#141310"
+    foreground = "#8a8370"
+    frame_color = "#36332b"
     timeout = 5
 
 [urgency_normal]
-    background = "#222436"
-    foreground = "#c8d3f5"
-    frame_color = "#82aaff"
+    background = "#1b1a16"
+    foreground = "#e6dcc3"
+    frame_color = "#e8a33d"
     timeout = 8
 
 [urgency_critical]
-    background = "#222436"
-    foreground = "#c8d3f5"
-    frame_color = "#ff757f"
+    background = "#1b1a16"
+    foreground = "#e6dcc3"
+    frame_color = "#c8553d"
     timeout = 0

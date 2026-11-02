@@ -3,46 +3,62 @@
 vim.api.nvim_create_autocmd("ColorScheme", {
   group = vim.api.nvim_create_augroup("user_highlights", { clear = true }),
   callback = function()
-    local colors = {
-      bg = "#222436",
-      bg_dark = "#1e2030",
-      bg_highlight = "#2f334d",
-      fg = "#c8d3f5",
-      comment = "#636da6",
-      blue = "#82aaff",
-      magenta = "#c099ff",
-      green = "#c3e88d",
-      yellow = "#ffc777",
-      orange = "#ff966c",
-      red = "#ff757f",
+    -- Eigene Ergaenzungen nur fuer Schemes mit bekannter Palette; andere bleiben unangetastet.
+    local palettes = {
+      tokyonight = {
+        bg = "#222436",
+        bg_dark = "#1e2030",
+        bg_highlight = "#2f334d",
+        visual = "#3b4161",
+        fg = "#c8d3f5",
+        comment = "#636da6",
+        accent = "#82aaff",
+        yellow = "#ffc777",
+        orange = "#ff966c",
+      },
+      gruvbox = { -- Bernstein-CRT (hypr/theme.lua)
+        bg = "#1b1a16",
+        bg_dark = "#141310",
+        bg_highlight = "#2a2822",
+        visual = "#4a3a1e",
+        fg = "#e6dcc3",
+        comment = "#8a8370",
+        accent = "#e8a33d",
+        yellow = "#e8a33d",
+        orange = "#d97a3a",
+      },
     }
+    local colors = palettes[(vim.g.colors_name or ""):match("^[^-]+")]
+    if not colors then
+      return
+    end
 
     vim.api.nvim_set_hl(0, "NormalFloat", { fg = colors.fg, bg = colors.bg_dark })
-    vim.api.nvim_set_hl(0, "FloatBorder", { fg = colors.blue, bg = colors.bg_dark })
+    vim.api.nvim_set_hl(0, "FloatBorder", { fg = colors.accent, bg = colors.bg_dark })
     vim.api.nvim_set_hl(0, "Pmenu", { fg = colors.fg, bg = colors.bg_dark })
-    vim.api.nvim_set_hl(0, "PmenuSel", { fg = colors.bg, bg = colors.blue, bold = true })
+    vim.api.nvim_set_hl(0, "PmenuSel", { fg = colors.bg, bg = colors.accent, bold = true })
     vim.api.nvim_set_hl(0, "PmenuSbar", { bg = colors.bg_highlight })
     vim.api.nvim_set_hl(0, "PmenuThumb", { bg = colors.comment })
     vim.api.nvim_set_hl(0, "CursorLine", { bg = colors.bg_highlight })
     vim.api.nvim_set_hl(0, "CursorLineNr", { fg = colors.yellow, bold = true })
     vim.api.nvim_set_hl(0, "LineNr", { fg = colors.comment })
     vim.api.nvim_set_hl(0, "WinSeparator", { fg = colors.comment })
-    vim.api.nvim_set_hl(0, "Visual", { bg = "#3b4161" })
+    vim.api.nvim_set_hl(0, "Visual", { bg = colors.visual })
     vim.api.nvim_set_hl(0, "Search", { fg = colors.bg, bg = colors.yellow })
-    vim.api.nvim_set_hl(0, "IncSearch", { fg = colors.bg, bg = colors.orange or colors.yellow })
+    vim.api.nvim_set_hl(0, "IncSearch", { fg = colors.bg, bg = colors.orange })
     vim.api.nvim_set_hl(0, "Folded", { fg = colors.comment, bg = colors.bg_dark, italic = true })
 
     vim.api.nvim_set_hl(0, "SnacksPickerGitStatusUntracked", { fg = "#27D797" })
     vim.api.nvim_set_hl(0, "SnacksPickerPathIgnored", { fg = "#5c6370" })
     vim.api.nvim_set_hl(0, "SnacksPickerPathHidden", { fg = "#5c6370" })
-    vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = "#61afef" })
-    vim.api.nvim_set_hl(0, "SnacksDashboardFooter", { fg = "#7c7c7c", italic = true })
+    vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = colors.accent })
+    vim.api.nvim_set_hl(0, "SnacksDashboardFooter", { fg = colors.comment, italic = true })
   end,
 })
 
 -- Colorscheme: Default hier, die zuletzt per <leader>uC gewaehlte wird in
 -- stdpath("state")/colorscheme gemerkt und beim naechsten Start bevorzugt.
-local default_colorscheme = "tokyonight" -- tokyonight, catppuccin, rose-pine, kanagawa, kanso, gruvbox
+local default_colorscheme = "gruvbox" -- gruvbox (Bernstein-CRT), tokyonight, catppuccin, rose-pine, kanagawa, kanso, gruvbox
 local colorscheme_file = vim.fs.joinpath(vim.fn.stdpath("state"), "colorscheme")
 
 local function read_saved_colorscheme()
