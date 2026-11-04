@@ -36,6 +36,7 @@ else
 	local config_root = os.getenv("XDG_CONFIG_HOME") or ((os.getenv("HOME") or ".") .. "/.config")
 	local state = config_root .. "/hypr/.monitor-profile"
 	local profiles = { mobile = true, extended = true, presentation = true }
+	-- Externer Monitor eingeschaltet
 	local function external_connected()
 		for _, monitor in ipairs(hl.get_monitors()) do
 			if monitor.name ~= "eDP-1" and not monitor.disabled then
@@ -44,10 +45,42 @@ else
 		end
 		return false
 	end
+	-- Externer Monitor angeschlossen, auch wenn gerade abgeschaltet (Profil "mobile")
+	local function external_present()
+		for _, monitor in ipairs(hl.get_monitors({ all = true })) do
+			if monitor.name ~= "eDP-1" then
+				return true
+			end
+		end
+		return false
+	end
+
+	-- Deckel zu? Beim Laden aus /proc gelesen, danach halten die Schalter-Binds unten den Wert aktuell.
+	local function read_lid_closed()
+		local p = io.popen("cat /proc/acpi/button/lid/*/state 2>/dev/null")
+		if not p then
+			return false
+		end
+		local s = p:read("a") or ""
+		p:close()
+		return s:match("closed") ~= nil
+	end
+	_G.hypr_lid_closed = read_lid_closed()
+
 	function M.apply(profile, quiet)
 		assert(profiles[profile], "Unknown monitor profile: " .. tostring(profile))
-		-- Interner Bildschirm bleibt in allen Profilen aktiv.
-		hl.monitor({ output = "eDP-1", mode = "preferred", position = "0x0", scale = 1, disabled = false, mirror = "" })
+		M.current = profile
+		-- Interner Bildschirm: an, ausser zugeklappt im Dock (sonst landen Maus, Fenster und
+		-- Workspaces auf dem unsichtbaren Display). "presentation" spiegelt eDP-1 und braucht ihn.
+		local internal_off = _G.hypr_lid_closed and profile == "extended" and external_present()
+		hl.monitor({
+			output = "eDP-1",
+			mode = "preferred",
+			position = "0x0",
+			scale = 1,
+			disabled = internal_off,
+			mirror = "",
+		})
 		hl.monitor({
 			output = "",
 			mode = "preferred",
@@ -95,6 +128,31 @@ else
 			M.apply("mobile")
 		end
 	end)
+
+	-- Deckel ("Lid Switch", siehe hyprctl devices). Ob der Laptop schlaeft oder nur sperrt,
+	-- entscheidet logind (hypr/logind/laptop.conf); hier geht es nur um die Bildschirme.
+	-- Zu im Dock: eDP-1 aus. Zu ohne externen Monitor: nur das Panel aus (am Netzteil sperrt
+	-- logind bloss). Auf: Profil neu anwenden, Panel an.
+	local function on_lid(closed)
+		_G.hypr_lid_closed = closed
+		-- DPMS nicht direkt im Bind schalten (Hyprland-Wiki), daher kurz verzoegert
+		hl.timer(function()
+			if closed and not external_connected() then
+				hl.dispatch(hl.dsp.dpms({ monitor = "eDP-1", action = "off" }))
+				return
+			end
+			M.apply(M.current or "extended", true)
+			if not closed then
+				hl.dispatch(hl.dsp.dpms({ monitor = "eDP-1", action = "on" }))
+			end
+		end, { timeout = 500, type = "oneshot" })
+	end
+	hl.bind("switch:on:Lid Switch", function()
+		on_lid(true)
+	end, { locked = true })
+	hl.bind("switch:off:Lid Switch", function()
+		on_lid(false)
+	end, { locked = true })
 end
 
 return M
