@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# hypridle.service: hypridle with the config of the hardware profile
+# (hypridle-laptop.conf on the laptop, hypridle.conf otherwise).
 set -euo pipefail
 
 profile=$("$HOME/.config/hypr/scripts/hypr-profile.sh")

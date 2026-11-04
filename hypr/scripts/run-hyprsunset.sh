@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# hyprsunset.service: the package if installed, otherwise a copy in ~/.local/bin.
 set -euo pipefail
 
 if [[ -x /usr/bin/hyprsunset ]]; then

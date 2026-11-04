@@ -1,6 +1,5 @@
 """XP style icons for the start menu (own drawings) -> icons/<name>.png at 64 px.
 Drawn at 4x size and scaled down (smooth edges). python3 icons.py"""
-import math
 import os
 
 from PIL import Image, ImageDraw

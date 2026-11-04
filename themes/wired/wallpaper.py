@@ -3,7 +3,6 @@
   python3 wallpaper.py <phase> <out>
 Renders 480x270, scaled 4x (nearest) to 1920x1080, with scanlines.
 Which phase applies when: wallpaper-phases (bin/theme-wallpaper)."""
-import math
 import random
 import sys
 

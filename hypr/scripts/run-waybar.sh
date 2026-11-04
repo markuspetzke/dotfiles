@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# waybar.service: Waybar with the config of the hardware profile (waybar/config-<profile>.jsonc).
 set -euo pipefail
 
 profile=$("$HOME/.config/hypr/scripts/hypr-profile.sh")

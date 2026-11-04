@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Clipboard history (Super+V): pick an entry from cliphist in hyprlauncher and copy it back.
 set -euo pipefail
 umask 077
 

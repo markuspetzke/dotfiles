@@ -36,7 +36,7 @@ On the laptop (profile `laptop`) the shader and the animated border are off by d
 | `greeter.toml` | login screen colors (sysc-greet); once `sudo ~/.config/bin/greeter-setup` |
 | `thunar.css` | Thunar windows (included through `gtk-3.0/gtk.css`); Thunar reads it only at startup, `theme` quits a Thunar without open windows |
 | `(private/)icon-theme/<Name>/` | icon theme (gsettings), e.g. XP folders in Thunar; Adwaita otherwise |
-| `themes/spicetify/color.ini` (section `[<name>]`) | Spotify colors through Spicetify (theme `DesktopTheme`); applies after restarting Spotify |
+| `themes/spicetify/color.ini` (section `[<name>]`), `user.css` | Spotify colors through Spicetify (theme `DesktopTheme`); applies after restarting Spotify |
 | `hyprtoolkit.conf` | symlink `hypr/hyprtoolkit.conf` (launcher) |
 | `dunst.conf` | symlink `dunst/dunstrc.d/50-theme.conf` |
 | `fastfetch.jsonc`, `fastfetch-logo.txt` | symlink `fastfetch/config.jsonc` |
@@ -54,15 +54,18 @@ On the laptop (profile `laptop`) the shader and the animated border are off by d
 | `wallpaper-rotate` + `wallpapers/*.png` | cycle through wallpapers (interval in seconds) | tokyonight (hourly) |
 | `wallpaper-phases` + `wallpapers/<phase>.png` | wallpaper by time of day (`theme-wallpaper.timer`, every 10 min) | winxp (day/evening/night), office (day/evening/night), retro (moving sun), wired (day/dusk/night) |
 | `sounds/{notify,lock,unlock}.wav` (+ `sounds.py`), optionally `critical`, `startup`, `shutdown` | sounds for notifications (dunst; `critical` for high urgency), lock/unlock (`bin/theme-lock`), session start (`theme --session`) and shutdown in the start menu; your own files in `private/sounds/` take precedence | winxp (ding, chord), office (phone, stamp, typing + ding), retro (relay, tube on/off), wired (modem), win31 (bell, chord) |
-| `cursor/<Name>/` (+ `cursor.py`) | own pointer arrow, everything else inherited from the Wii pointer | winxp (arrow with shadow), office (white arrow), retro (amber arrow), wired (crosshair), win31 (arrow) |
+| `cursor/<Name>/` (+ `cursor.py`, writer: `themes/xcursor.py`) | own pointer arrow, everything else inherited from the Wii pointer | winxp (arrow with shadow), office (white arrow), retro (amber arrow), wired (crosshair), win31 (arrow) |
 | `screensaver.py` | screensaver after 9 min (`bin/screensaver`, hypridle) | winxp (pipes), office (conference room note), retro (wandering clock), wired (hex rain), win31 (starfield) |
 | `nvim.lua`: `dashboard_header` | header of the Neovim start screen | winxp ("Welcome" window), office (memo), retro (sun + READY.), wired, win31 |
 | `browser.json` | colors for Helium; `bin/theme-browser` builds `~/.local/share/theme-browser` from it (load once as an unpacked extension, see `bin/theme-browser`; applies after restarting Helium) | all |
 | `hyprtoolkit.conf` | launcher (hyprlauncher); `theme` restarts the daemon | all |
 | `startmenu.py` | own start menu instead of hyprlauncher (Super key, start button; `bin/menu`) | winxp (XP start menu) |
+| `icons.py` + `icons/*.png` | start menu icons (own drawings); originals in `private/icons/` take precedence | winxp |
+| `private/logo.png` (+ `logo.conf`) | own logo on the lock screen and as the fastfetch logo; `logo.conf` sets position and size | winxp, office |
+| `quotes.txt` | random quote in fastfetch, on the lock screen and in the tooltip of the quitting-time counter | office |
 | `kitty-scanlines.png` | scanline texture in the terminal | wired |
 | `kitty.conf`: `cursor_trail` | phosphor afterglow behind the cursor | retro |
-| `waybar-modules.jsonc` | own module formats, e.g. segment bars `CPU ▮▮▯▯▯` (retro), text labels (wired) | retro, wired, office (rooms as workspaces, quitting-time counter) |
+| `waybar-modules.jsonc` | own module formats, e.g. segment bars `CPU ▮▮▯▯▯` (retro), text labels (wired) | retro, wired, office (rooms as workspaces, quitting-time counter `quitting-time.sh`) |
 
 The generators (`wallpaper.py`, `sounds.py`, `cursor.py`) recreate the files, e.g. after
 changing colors: `python3 themes/wired/wallpaper.py`.

@@ -156,6 +156,26 @@ back to a copy in `~/.local/bin/hyprsunset`, which gets no updates.
 - `hyprctl hyprsunset identity`: normal colors until the next profile change.
 - `hyprctl hyprsunset temperature 4500`: warm colors right away.
 
+## Scripts
+
+Helpers in `scripts/`, started by services, key bindings or hypridle:
+
+| Script | Purpose |
+| --- | --- |
+| `hypr-profile.sh` | prints the hardware profile (`desktop`/`laptop`): `HYPR_PROFILE`, otherwise a system battery decides |
+| `run-waybar.sh`, `run-hypridle.sh` | Waybar and hypridle with the config of the profile (`waybar.service`, `hypridle.service`) |
+| `run-hyprsunset.sh` | night light (`hyprsunset.service`), see above |
+| `run-power-profile.sh` | laptop only: `power-saver` on battery, `balanced` on AC (`power-profile.service`) |
+| `power-source.sh` | prints `ac` or `battery` (also when charging over USB-C) |
+| `media-watch.sh` | holds an idle inhibitor while media plays and runs `video-tags` (`media-watch.service`) |
+| `sleep-allowed.sh` | hypridle `condition_cmd`: no suspend while a program blocks sleep |
+| `idle-sleep.sh` | laptop: suspend-then-hibernate if hibernation is set up, plain suspend otherwise |
+| `backlight.sh` | laptop idle: dim to 10 % and turn the keyboard backlight off, restore on activity |
+| `lock-media.sh` | current track on the lock screen |
+| `waybar-headset.sh` | Waybar: battery level of the Arctis 7 (headsetcontrol) |
+| `screenshot.sh` | screenshot of an area (`Super+Shift+S`) to the clipboard; `file` also saves it to `~/Pictures/Screenshots` |
+| `clipboard.sh` | clipboard history (`Super+V`): pick an entry from cliphist in the launcher |
+
 ## Checks
 
 `dotfiles-check` checks the whole repo and also runs before every commit. For Hyprland

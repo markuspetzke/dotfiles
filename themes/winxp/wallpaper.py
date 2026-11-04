@@ -55,9 +55,6 @@ def render(phase, seed=4):
     sky = sky * (1 - clouds * 0.9) + np.array(cloud_col) * clouds * 0.9
 
     # Hills: soft curves, a lighter slope in front, a second, slightly darker one behind
-    def ridge(base, amp, freq, phase_):
-        return base - amp * np.sin(x * np.pi * freq + phase_) - amp * 0.35 * np.sin(x * np.pi * freq * 2.3 + 1.7)
-
     img = sky.copy()
     hills = (
         # back, flat hill on the right

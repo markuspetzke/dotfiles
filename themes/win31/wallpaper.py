@@ -1,5 +1,8 @@
 """Pixel wallpaper "win31-desktop": teal desktop with an own, subtle diamond pattern.
-Renders 480x270 (16px tile), scaled 4x (nearest) to 1920x1080."""
+Renders 480x270 (16px tile), scaled 4x (nearest) to 1920x1080.
+  python3 wallpaper.py          -> wallpaper.png
+  python3 wallpaper.py <out>"""
+import os
 import sys
 
 from PIL import Image
@@ -24,5 +27,6 @@ for y in range(H):
         elif d == 3 and tx in (8, 5, 11) and ty in (8, 5, 11):
             px[x, y] = LIGHT
 
-img.resize((W * SCALE, H * SCALE), Image.NEAREST).save(sys.argv[1], optimize=True)
+out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "wallpaper.png")
+img.resize((W * SCALE, H * SCALE), Image.NEAREST).save(out, optimize=True)
 print("ok")

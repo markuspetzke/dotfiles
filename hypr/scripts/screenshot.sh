@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Screenshot of a selected area (Super+Shift+S) to the clipboard; "file" also saves it
+# to ~/Pictures/Screenshots.
+#   screenshot.sh [clipboard|file]
 set -euo pipefail
 umask 077
 

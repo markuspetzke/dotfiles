@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# power-profile.service (laptop only): power-saver on battery, balanced on AC.
 set -euo pipefail
 
 if ! command -v powerprofilesctl >/dev/null; then
