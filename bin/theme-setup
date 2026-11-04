@@ -1,20 +1,103 @@
 #!/usr/bin/env bash
-# Einrichtung der Themes auf einem neuen Rechner (z. B. Laptop) nach `git pull`:
-#   ~/.config/bin/theme-setup [theme]     # Standard: vorhandenes Theme behalten, sonst retro
-# Macht: Skripte nach ~/.local/bin verlinken, Pixelschrift (Departure Mono Nerd Font, OFL)
-# installieren falls sie fehlt, Wallpaper-Timer starten, Launcher aufraeumen, Theme setzen.
-# Danach optional einmalig: sudo ~/.config/bin/greeter-setup (Anmeldebildschirm).
+# Einrichtung auf einem neuen Rechner (z. B. Laptop) nach `git clone` bzw. `git pull`:
+#   ~/.config/bin/theme-setup [theme]   # Standard: vorhandenes Theme behalten, sonst retro
+#   ~/.config/bin/theme-setup --check   # nur pruefen (Programme, Systemschritte), nichts aendern
+# Macht: Skripte nach ~/.local/bin verlinken, Bash-Config und Commit-Pruefung einbinden,
+# Pixelschrift (Departure Mono Nerd Font, OFL) installieren falls sie fehlt,
+# Session-Dienste aktivieren, Launcher aufraeumen, Theme setzen.
+# Zum Schluss: fehlende Programme und die einmaligen sudo-Schritte (logind, Greeter, ...).
 set -euo pipefail
 cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
+profile=$("$cfg/hypr/scripts/hypr-profile.sh")
 
-echo "1/5 Skripte nach ~/.local/bin"
+# Programme, die Configs und Skripte aufrufen: "Befehl Arch-Paket"
+check_programs() {
+	local missing=() cmd pkg
+	while read -r cmd pkg; do
+		command -v "$cmd" >/dev/null || missing+=("$pkg")
+	done <<-EOT
+		hypridle hypridle
+		hyprlock hyprlock
+		hyprpaper hyprpaper
+		hyprsunset hyprsunset
+		hyprlauncher hyprlauncher
+		waybar waybar
+		dunst dunst
+		kitty kitty
+		thunar thunar
+		playerctl playerctl
+		wl-copy wl-clipboard
+		cliphist cliphist
+		grim grim
+		slurp slurp
+		notify-send libnotify
+		wpctl wireplumber
+		powerprofilesctl power-profiles-daemon
+		uwsm-app uwsm
+	EOT
+	systemctl --user cat hyprpolkitagent.service >/dev/null 2>&1 || missing+=(hyprpolkitagent)
+	python3 -c 'import PIL' 2>/dev/null || missing+=(python-pillow)
+	if [[ $profile == laptop ]] && ! command -v brightnessctl >/dev/null; then
+		missing+=(brightnessctl)
+	fi
+	if ((${#missing[@]})); then
+		echo "    FEHLT: sudo pacman -S --needed ${missing[*]}"
+	else
+		echo "    alles da"
+	fi
+}
+
+# Einmalige Schritte mit sudo, die das Skript nicht selbst machen kann
+check_system() {
+	local todo=()
+	if [[ $profile == laptop ]]; then
+		local dst=/etc/systemd/logind.conf.d/90-hypr-laptop.conf
+		cmp -s "$cfg/hypr/logind/laptop.conf" "$dst" ||
+			todo+=("sudo install -Dm644 $cfg/hypr/logind/laptop.conf $dst   # Zuklappen; wirkt nach Neustart")
+		local can
+		can=$(busctl call org.freedesktop.login1 /org/freedesktop/login1 \
+			org.freedesktop.login1.Manager CanSuspendThenHibernate 2>/dev/null || true)
+		[[ $can == 's "yes"' ]] ||
+			echo "    Hinweis: Hibernate nicht eingerichtet, Leerlauf und Zuklappen nutzen normalen Suspend"
+	fi
+	# power-profiles-daemon braucht kein enable: er startet bei Bedarf ueber D-Bus
+	if [[ -f /etc/greetd/hyprland-greeter-config.lua && ! -O /var/lib/sysc-greet/themes ]]; then
+		todo+=("sudo $cfg/bin/greeter-setup   # Anmeldebildschirm folgt dem Theme")
+	fi
+	if ((${#todo[@]})); then
+		printf '    %s\n' "${todo[@]}"
+	else
+		echo "    nichts offen"
+	fi
+}
+
+if [[ ${1:-} == --check ]]; then
+	echo "Profil: $profile"
+	echo "Programme"
+	check_programs
+	echo "Systemschritte (sudo)"
+	check_system
+	exit 0
+fi
+
+echo "1/7 Skripte nach ~/.local/bin"
 mkdir -p "$HOME/.local/bin"
 for f in "$cfg"/bin/*; do
 	[[ -x $f && ! -d $f ]] || continue
 	ln -sf "$f" "$HOME/.local/bin/$(basename "$f")"
 done
 
-echo "2/5 Schriften"
+echo "2/7 Bash und Git"
+# ~/.bashrc laedt die Bash-Config aus dem Repo (bash/bashrc); vorhandene Zeilen bleiben
+if ! grep -q 'config/bash/bashrc' "$HOME/.bashrc" 2>/dev/null; then
+	printf '\n# Bash-Config aus dem Dotfiles-Repo\n[[ -r ~/.config/bash/bashrc ]] && . ~/.config/bash/bashrc\n' >>"$HOME/.bashrc"
+	echo "    ~/.bashrc laedt jetzt ~/.config/bash/bashrc"
+fi
+# Vor jedem Commit pruefen (bin/dotfiles-check ueber .githooks/pre-commit)
+git -C "$cfg" config core.hooksPath .githooks
+git config --global user.name >/dev/null || echo "    Hinweis: Git-Name und -Mail fehlen (git config --global user.name/user.email)"
+
+echo "3/7 Schriften"
 if ! fc-list : family | grep -q "DepartureMono Nerd Font"; then
 	tmp=$(mktemp -d)
 	trap 'rm -rf "$tmp"' EXIT
@@ -31,8 +114,10 @@ for fam in "FiraCode Nerd Font" "Noto Sans"; do
 	fc-list : family | grep -q "$fam" || echo "    FEHLT: $fam (Paket ttf-firacode-nerd bzw. noto-fonts installieren)"
 done
 
-echo "3/5 systemd"
+echo "4/7 systemd"
 systemctl --user daemon-reload
+# Startet alle Session-Dienste mit Hyprland (der Link dafuer ist nicht im Git)
+systemctl --user enable --quiet hypr-session.target
 systemctl --user start theme-wallpaper.timer 2>/dev/null || true
 
 # Spotify: Spicetify-Theme verlinken (Farbschemata in themes/spicetify/color.ini)
@@ -42,16 +127,19 @@ if command -v spicetify >/dev/null; then
 	echo "    Spicetify: DesktopTheme verlinkt (einmalig noetig: spicetify backup apply)"
 fi
 
-echo "4/5 Launcher aufraeumen"
+echo "5/7 Launcher aufraeumen"
 "$cfg/bin/launcher-hide" >/dev/null || true
 
-echo "5/5 Theme"
+echo "6/7 Theme"
 current=$(basename "$(readlink "$cfg/theme-current" 2>/dev/null || true)")
 "$cfg/bin/theme" "${1:-${current:-retro}}"
+
+echo "7/7 Pruefen ($profile)"
+check_programs
+check_system
 
 cat <<EOT
 
 Fertig. Optional:
-  sudo ~/.config/bin/greeter-setup     # Anmeldebildschirm folgt dem Theme
   Helium: helium://extensions -> Entpackte Erweiterung laden -> ~/.local/share/theme-browser
 EOT

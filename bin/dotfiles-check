@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# Prueft die Dotfiles, damit keine kaputte Config auf GitHub (und von dort auf den Laptop) kommt.
+#   dotfiles-check            # alle Dateien im Repo
+#   dotfiles-check --staged   # nur die fuer den Commit vorgemerkten (Git-Hook .githooks/pre-commit)
+# Prueft: Lua (luacheck, sonst luac -p), Shell (bash -n/sh -n, dazu shellcheck falls installiert),
+# Python (Syntax), JSON und Waybar-JSONC, systemd-User-Units (systemd-analyze verify) und die
+# laufende Hyprland-Config (hyprctl configerrors; Hyprland laedt geaenderte Dateien sofort neu).
+# Exit 1 bei Fehlern, der Commit wird dann abgebrochen. Im Notfall: git commit --no-verify
+set -uo pipefail
+cd "$(git -C "${XDG_CONFIG_HOME:-$HOME/.config}" rev-parse --show-toplevel)" || exit 2
+
+if [[ ${1:-} == --staged ]]; then
+	mapfile -t files < <(git diff --cached --name-only --diff-filter=ACMR)
+else
+	mapfile -t files < <(git ls-files; git ls-files --others --exclude-standard)
+fi
+
+errors=0
+fail() { # fail <datei> <meldung...>
+	printf 'FEHLER %s\n%s\n' "$1" "$(printf '%s\n' "${@:2}" | sed 's/^/    /')"
+	errors=$((errors + 1))
+}
+
+lua=() shells=() pys=() jsons=() units=()
+for f in "${files[@]}"; do
+	[[ -f $f && ! -L $f ]] || continue
+	case $f in
+	*.lua) lua+=("$f") ;;
+	*.py) pys+=("$f") ;;
+	*.json | *.jsonc) jsons+=("$f") ;;
+	systemd/user/*.service | systemd/user/*.timer | systemd/user/*.target | systemd/user/*.socket) units+=("$f") ;;
+	bash/*) shells+=("$f") ;; # Bash-Config ohne Shebang
+	*)
+		first=$(head -n1 "$f" 2>/dev/null | tr -d '\0')
+		case $first in
+		'#!'*python*) pys+=("$f") ;;
+		'#!'*bash* | '#!'*/sh | '#!'*'env sh') shells+=("$f") ;;
+		esac
+		;;
+	esac
+done
+
+# Lua: Hyprland (hl), Neovim (vim, Snacks)
+if ((${#lua[@]})); then
+	if command -v luacheck >/dev/null; then
+		out=$(luacheck "${lua[@]}" --globals hl vim Snacks --no-max-line-length --codes -q --no-color 2>&1) ||
+			fail "Lua" "$(grep -v -E '^Total:' <<<"$out")"
+	else
+		for f in "${lua[@]}"; do out=$(luac -p "$f" 2>&1) || fail "$f" "$out"; done
+	fi
+fi
+
+# Shell: Syntax, bei installiertem shellcheck auch typische Fehler (ab Warnung)
+for f in "${shells[@]}"; do
+	sh=bash
+	head -n1 "$f" | grep -q -E '/sh$|env sh' && sh=sh
+	out=$($sh -n "$f" 2>&1) || { fail "$f" "$out"; continue; }
+	if command -v shellcheck >/dev/null; then
+		out=$(shellcheck -S warning -x "$f" 2>&1) || fail "$f" "$out"
+	fi
+done
+
+# Python: nur Syntax, ohne __pycache__ anzulegen
+for f in "${pys[@]}"; do
+	out=$(python3 -I -c 'import ast, sys; ast.parse(open(sys.argv[1], "rb").read(), sys.argv[1])' "$f" 2>&1) ||
+		fail "$f" "$(tail -n 3 <<<"$out")"
+done
+
+# JSON/JSONC: Kommentare (// und /* */ ausserhalb von Strings) entfernen, dann parsen
+for f in "${jsons[@]}"; do
+	out=$(python3 -I - "$f" 2>&1 <<-'EOF'
+		import json, sys
+		s = open(sys.argv[1], encoding="utf-8").read()
+		o, i, n, q = [], 0, len(s), False
+		while i < n:
+		    c = s[i]
+		    if q:
+		        o.append(c)
+		        if c == "\\": o.append(s[i + 1]); i += 1
+		        elif c == '"': q = False
+		    elif c == '"': q = True; o.append(c)
+		    elif s.startswith("//", i): i = s.find("\n", i); i = n if i < 0 else i; continue
+		    elif s.startswith("/*", i): j = s.find("*/", i + 2); i = n if j < 0 else j + 2; continue
+		    else: o.append(c)
+		    i += 1
+		json.loads("".join(o))
+	EOF
+	) || fail "$f" "$(tail -n 1 <<<"$out")"
+done
+
+# systemd-User-Units. Fehlende Programme ausserhalb des Repos (z. B. Backup-Skripte in
+# ~/.local/bin, die nur auf dem Desktop liegen) sind kein Fehler.
+if ((${#units[@]})); then
+	out=$(systemd-analyze --user verify "${units[@]}" 2>&1 | grep -v -E 'is not executable: No such file or directory|^$')
+	[[ -z $out ]] || fail "systemd-Units" "$out"
+fi
+
+# Laufende Hyprland-Config (nur wenn Lua-Dateien dabei sind und Hyprland laeuft)
+if ((${#lua[@]})) && [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
+	out=$(hyprctl configerrors 2>/dev/null | grep -v -E '^\s*$')
+	[[ -z $out ]] || fail "Hyprland (hyprctl configerrors)" "$out"
+fi
+
+total=$((${#lua[@]} + ${#shells[@]} + ${#pys[@]} + ${#jsons[@]} + ${#units[@]}))
+if ((errors)); then
+	echo "dotfiles-check: $errors Problem(e) in $total gepruefte(n) Datei(en)."
+	exit 1
+fi
+echo "dotfiles-check: $total Datei(en) ok (Lua ${#lua[@]}, Shell ${#shells[@]}, Python ${#pys[@]}, JSON ${#jsons[@]}, Units ${#units[@]})."

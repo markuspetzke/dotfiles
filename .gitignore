@@ -36,6 +36,23 @@ themes/*/private/
 systemd/user/*.wants/
 # Laufzeitzustand des Laptop-Monitorprofils
 hypr/.monitor-profile
+# makepkg: AUR-Builds mit allen Threads (nur diese Datei)
+!pacman/
+!pacman/makepkg.conf
+# Bash-Config (~/.bashrc laedt bash/bashrc)
+!bash/
+!bash/**
+# Git: Grundeinstellungen und globale Ignore-Liste (Name/Mail bleiben lokal in ~/.gitconfig)
+!git/
+!git/config
+!git/ignore
+# Pruefung vor jedem Commit (bin/dotfiles-check)
+!.githooks/
+!.githooks/**
+# Uebersicht und Screenshots fuer GitHub
+!README.md
+!docs/
+!docs/**
 
 !.gitignore
 !CLAUDE.md
