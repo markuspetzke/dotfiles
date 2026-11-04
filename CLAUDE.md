@@ -50,7 +50,8 @@ freigegeben werden, sonst landen sie nicht im Repo. Nie versioniert:
 - Programme aus Binds/Waybar/dunst ueber `uwsm-app --` starten.
 - Vor dem Commit `dotfiles-check` (laeuft auch als Hook). `Hyprland --verify-config` stuerzt mit
   der Lua-Config ab; fuer Hyprland `hyprctl configerrors` nutzen.
-- Screenshots fuer `docs/`: ohne `private/`-Inhalte (Copyright) und ohne Medientitel in der Leiste.
+- Screenshots fuer `docs/`: mit `private/`-Inhalten (so nutzt der User die Themes), aber ohne
+  Medientitel in der Leiste. Die `private/`-Dateien selbst kommen nie ins Repo.
 - Commits nur unter dem Namen des Users, ohne Co-Authored-By-Zeile und ohne Hinweis auf Claude.
   Nicht pushen, das macht der User selbst.
 - Schritte mit sudo (z. B. `bin/greeter-setup`) nicht selbst ausfuehren, sondern dem User nennen.
