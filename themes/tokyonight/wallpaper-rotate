@@ -1,2 +1,3 @@
-# Cycle through the wallpapers in private/wallpapers/ (or wallpapers/) every hour (like hyprpaper's old timeout = 3600).
+# Cycle through wallpapers/*.png every hour (like hyprpaper's old timeout = 3600);
+# own images in private/wallpapers/ take precedence.
 3600
