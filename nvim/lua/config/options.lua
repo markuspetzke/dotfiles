@@ -117,7 +117,6 @@ vim.opt.list = true
 vim.opt.listchars = { tab = "→ ", trail = "·", nbsp = "␣", extends = "›", precedes = "‹" }
 vim.opt.fillchars = { eob = " ", fold = "·", foldopen = "", foldclose = "", foldsep = " " }
 vim.opt.pumblend = 8
-vim.opt.winblend = 0
 vim.opt.splitkeep = "screen"
 vim.opt.winborder = "rounded"
 vim.opt.wildmode = "longest:full,full"
@@ -130,7 +129,6 @@ vim.opt.expandtab = true
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
-vim.opt.smartindent = false -- treesitter indent handles that
 vim.opt.shiftround = true
 
 -- Folding
@@ -143,8 +141,8 @@ vim.opt.foldtext = ""
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.inccommand = "split"
+-- The default adds -uu (hidden and ignored files); respect .gitignore instead.
 vim.opt.grepprg = "rg --vimgrep"
-vim.opt.grepformat = "%f:%l:%c:%m"
 
 -- Performance
 vim.opt.swapfile = false
@@ -157,7 +155,6 @@ vim.opt.clipboard = vim.env.SSH_CONNECTION and "" or "unnamedplus"
 -- Misc
 vim.opt.confirm = true
 vim.opt.mouse = "a"
-vim.opt.formatoptions:remove({ "o" }) -- no comment prefix on o/O
 vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
 
 -- Diagnostics
@@ -175,8 +172,5 @@ vim.diagnostic.config({
       [vim.diagnostic.severity.HINT] = " ",
     },
   },
-  float = {
-    border = "rounded",
-    source = "if_many",
-  },
+  float = { source = "if_many" }, -- border: 'winborder'
 })

@@ -29,7 +29,6 @@ return {
     branch = "main",
     lazy = false,
     build = ":TSUpdate",
-    dependencies = { "windwp/nvim-ts-autotag" },
     config = function()
       local ts = require("nvim-treesitter")
       ts.setup({})
@@ -72,9 +71,13 @@ return {
           attach()
         end,
       })
-
-      require("nvim-ts-autotag").setup()
     end,
+  },
+  {
+    -- Close and rename HTML/JSX tags; only loaded for filetypes with tags.
+    "windwp/nvim-ts-autotag",
+    ft = { "html", "xml", "javascript", "javascriptreact", "typescriptreact", "astro", "vue", "svelte", "markdown" },
+    opts = {},
   },
   {
     "nvim-treesitter/nvim-treesitter-textobjects",

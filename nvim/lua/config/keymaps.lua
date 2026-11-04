@@ -4,7 +4,7 @@ map("i", "jj", "<ESC>", { silent = true, desc = "Exit insert mode" })
 
 map("n", "<esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
 
-map({ "i", "n", "v", "x" }, "<C-s>", function()
+map({ "i", "n", "v" }, "<C-s>", function()
   vim.cmd("update")
 end, { desc = "Save file" })
 
@@ -56,11 +56,16 @@ map("n", "<leader>bn", "<cmd>enew<cr>", { desc = "New buffer" })
 map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit all" })
 map("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
+-- Built-in undotree (Neovim 0.12): moving the cursor in the tree walks through the undo states.
+map("n", "<leader>uu", function()
+  vim.cmd.packadd("nvim.undotree")
+  require("undotree").open()
+end, { desc = "Toggle undotree" })
+
 -- Diagnostics / Quickfix
 map("n", "<leader>xl", vim.diagnostic.setloclist, { desc = "Diagnostic location list" })
 map("n", "<leader>xq", vim.diagnostic.setqflist, { desc = "Diagnostic quickfix list" })
-map("n", "[q", "<cmd>cprev<cr>", { desc = "Previous quickfix" })
-map("n", "]q", "<cmd>cnext<cr>", { desc = "Next quickfix" })
+-- [q / ]q (quickfix), [l / ]l (location list), [b / ]b (buffers): Neovim defaults.
 map("n", "]d", function()
   vim.diagnostic.jump({ count = 1, float = true })
 end, { desc = "Next diagnostic" })

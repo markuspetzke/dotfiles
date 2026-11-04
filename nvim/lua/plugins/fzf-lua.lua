@@ -59,6 +59,19 @@ return {
     -- vim.ui.select (e.g. code actions) through fzf instead of the bare prompt.
     fzf_lua.register_ui_select()
   end,
+  init = function()
+    -- Also before fzf-lua was used once: the first vim.ui.select call loads the plugin,
+    -- whose config registers the real handler.
+    local builtin = vim.ui.select
+    local function stub(...)
+      require("lazy").load({ plugins = { "fzf-lua" } })
+      if vim.ui.select == stub then
+        vim.ui.select = builtin
+      end
+      return vim.ui.select(...)
+    end
+    vim.ui.select = stub
+  end,
   keys = {
     { "<leader><space>", fzf("files"), desc = "Find Files" },
     { "<leader>ff", fzf("files"), desc = "Find Files (Project)" },

@@ -37,7 +37,7 @@ vim.api.nvim_create_autocmd("VimResized", {
 -- Close help/list buffers with q
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("close_with_q"),
-  pattern = { "help", "qf", "man", "checkhealth", "lspinfo", "notify", "startuptime", "dap-float" },
+  pattern = { "help", "qf", "man", "checkhealth", "dap-float", "nvim-undotree" },
   callback = function(event)
     vim.bo[event.buf].buflisted = false
     vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true, desc = "Close" })
@@ -51,6 +51,15 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.opt_local.wrap = true
     vim.opt_local.spell = true
+  end,
+})
+
+-- No comment leader on o/O. The ftplugins add "o" back, so it is removed per buffer
+-- (the FileType autocmds of the ftplugins run before this one).
+vim.api.nvim_create_autocmd("FileType", {
+  group = augroup("formatoptions"),
+  callback = function()
+    vim.opt_local.formatoptions:remove({ "o" })
   end,
 })
 

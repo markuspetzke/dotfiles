@@ -46,7 +46,7 @@ return {
         "<leader>ol",
         function()
           local overseer = require("overseer")
-          local task = overseer.list_tasks({ recent_first = true })[1]
+          local task = overseer.list_tasks()[1] -- newest first
           if task then
             overseer.run_action(task, "restart")
           else

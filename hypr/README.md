@@ -176,6 +176,11 @@ Helpers in `scripts/`, started by services, key bindings or hypridle:
 | `screenshot.sh` | screenshot of an area (`Super+Shift+S`) to the clipboard; `file` also saves it to `~/Pictures/Screenshots` |
 | `clipboard.sh` | clipboard history (`Super+V`): pick an entry from cliphist in the launcher |
 
+## Editing
+
+`.luarc.json` points the Lua language server to the API stubs of the hyprland package
+(`/usr/share/hypr/stubs`, Lua 5.5): completion, docs and checks for `hl.*` in Neovim.
+
 ## Checks
 
 `dotfiles-check` checks the whole repo and also runs before every commit. For Hyprland

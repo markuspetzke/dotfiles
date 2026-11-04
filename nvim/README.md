@@ -6,6 +6,10 @@ Personal Neovim setup built on `lazy.nvim` (Neovim 0.12+).
 
 - `fzf-lua` for files, grep, buffers, help, symbols, diagnostics and `vim.ui.select`.
 - `nvim-lspconfig`, `mason.nvim` and `blink.cmp` for LSP and completion; per-server settings live in `lsp/<name>.lua`.
+  Servers: lua_ls, ts_ls, astro, eslint, tailwindcss, jsonls, yamlls, bashls (with shellcheck) and ruff
+  (Python linting only). Mason installs missing tools a few seconds after startup.
+- Lua under `~/.config/hypr` gets the Hyprland API (`hl.*`) from `hypr/.luarc.json`; lazydev
+  (Neovim API, Snacks types) skips workspaces with their own `.luarc.json`.
 - `nvim-treesitter` (`main` branch) for highlighting, indentation and textobjects.
 - `conform.nvim` for formatting (toggle autoformat with `<leader>uf`).
 - `snacks.nvim` for explorer, notifications, toggles, quickfile and zen mode.
@@ -14,7 +18,7 @@ Personal Neovim setup built on `lazy.nvim` (Neovim 0.12+).
 - `persistence.nvim` saves project sessions on exit, with separate sessions for Git branches.
   Restore explicitly with `<leader>qs` or `s` on the dashboard.
 - `overseer.nvim` runs tasks from Cargo, npm, Make and `.vscode/tasks.json`.
-- Precognition and Hardtime start disabled; `<leader>uH` toggles both as a learning mode.
+- Precognition and Hardtime start disabled and only load with the learning mode (`<leader>uH`).
 
 ## Useful Keys
 
@@ -37,6 +41,8 @@ Personal Neovim setup built on `lazy.nvim` (Neovim 0.12+).
 - `<leader>qd` stop saving the current session on exit
 - `<leader>or` select/run task, `<leader>ot` task list, `<leader>oa` task actions, `<leader>ol` restart last task
 - `<leader>uH` toggle learning mode
+- `<leader>uu` undotree (built into Neovim 0.12)
+- `an` / `in` in visual mode: grow / shrink the selection by treesitter node (built in)
 
 ## Formatting latency
 

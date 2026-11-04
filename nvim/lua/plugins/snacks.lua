@@ -17,14 +17,15 @@ return {
       width = 60,
       preset = {
         -- Header from the desktop theme (themes/<name>/nvim.lua: dashboard_header), otherwise NEOVIM
-        header = require("config.theme").get().dashboard_header or table.concat({
-          "███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
-          "████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║",
-          "██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║",
-          "██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║",
-          "██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║",
-          "╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝",
-        }, "\n"),
+        header = require("config.theme").get().dashboard_header
+          or table.concat({
+            "███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
+            "████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║",
+            "██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║",
+            "██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║",
+            "██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║",
+            "╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝",
+          }, "\n"),
         keys = {
           { icon = " ", key = "f", desc = "Find File", action = ":lua require('fzf-lua').files()" },
           { icon = " ", key = "r", desc = "Recent Files", action = ":lua require('fzf-lua').oldfiles()" },
@@ -51,34 +52,8 @@ return {
       },
     },
 
-    explorer = {
-      enabled = true,
-      win = {
-        position = "left",
-        width = 30,
-        border = "rounded",
-      },
-      filters = {
-        hidden = false,
-        custom = { "^%.git$", "^node_modules$", "^%.DS_Store$", "^dist$", "^target$" },
-      },
-      icons = {
-        folder_closed = "",
-        folder_open = "",
-        file = "",
-        symlink = "",
-      },
-      format = {
-        filename = {
-          width = 0, -- 0 = no limit
-          hl = "Normal",
-        },
-        indent = {
-          size = 2,
-          hl = "Comment",
-        },
-      },
-    },
+    -- The explorer is a picker source; its layout lives in picker.sources.explorer below.
+    explorer = { enabled = true },
 
     indent = { enabled = true },
 
@@ -127,10 +102,7 @@ return {
     -- the gutter needlessly wide. Signcolumn + line numbers are enough.
     statuscolumn = { enabled = false },
 
-    -- Zen mode (optional, very useful!)
-    zen = {
-      enabled = true, -- enable if you like
-    },
+    zen = { enabled = true },
 
     -- Styles for different windows
     styles = {
