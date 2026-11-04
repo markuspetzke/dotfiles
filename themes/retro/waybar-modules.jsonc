@@ -22,7 +22,7 @@
             "▮▮▮▮▯",
             "▮▮▮▮▮"
         ],
-        "tooltip-format": "CPU {usage}% · Last {load}"
+        "tooltip-format": "CPU {usage}% · Load {load}"
     },
     "memory": {
         "format": "MEM {icon}",

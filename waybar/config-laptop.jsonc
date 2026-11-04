@@ -1,13 +1,6 @@
+// Laptop bar. Shared bar settings and module definitions: modules.jsonc. Themes override
+// single keys in themes/<name>/waybar-modules.jsonc (included first: the first file wins).
 {
-    "layer": "top",
-    // "position" lives in modules.jsonc (default top), themes may override it
-    "height": 30,
-    // "spacing" lives in modules.jsonc (default 1), themes may override it
-    "margin": 0,
-    // Theme modules first: for identical keys the file included first wins.
     "include": ["~/.config/theme-current/waybar-modules.jsonc", "~/.config/waybar/modules.jsonc"],
-
-    "modules-left": ["image#start", "custom/start", "hyprland/workspaces", "custom/playerctl"],
-    "modules-center": ["hyprland/window"],
     "modules-right": ["power-profiles-daemon", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network#wifi", "battery", "cpu", "memory", "custom/uptime", "clock", "tray"]
 }

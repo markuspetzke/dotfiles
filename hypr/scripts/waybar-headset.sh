@@ -7,12 +7,19 @@ if ! command -v headsetcontrol >/dev/null 2>&1; then
     exit 0
 fi
 
-# "STATUS LEVEL MINUTES" from the first headset found, empty otherwise.
+# Battery of the first headset from the "KEY=value" output (no JSON parser needed).
 # When the headset is off, the dongle still reports BATTERY_AVAILABLE with level 0.
-read -r status level minutes < <(headsetcontrol -b -o json 2>/dev/null | python3 -c '
-import json, sys
-b = json.load(sys.stdin)["devices"][0]["battery"]
-print(b["status"], b["level"], b.get("time_to_empty_min", -1))' 2>/dev/null) || true
+status="" level=0 minutes=-1
+while IFS='=' read -r key value; do
+    value=${value//\"/}
+    case $key in
+        DEVICE_0_BATTERY_STATUS) status=$value ;;
+        DEVICE_0_BATTERY_LEVEL) level=$value ;;
+        DEVICE_0_BATTERY_TIME_TO_EMPTY_MIN) minutes=$value ;;
+    esac
+done < <(headsetcontrol -b -o env 2>/dev/null)
+[[ $level =~ ^-?[0-9]+$ ]] || level=0
+[[ $minutes =~ ^-?[0-9]+$ ]] || minutes=-1
 
 case "${status:-}" in
     BATTERY_CHARGING)

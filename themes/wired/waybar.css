@@ -27,7 +27,7 @@ window#waybar {
 }
 
 /* Slight phosphor shimmer on all values. */
-#cpu, #memory, #temperature, #pulseaudio, #network, #custom-playerctl.Playing {
+#cpu, #memory, #temperature, #pulseaudio, #network, #mpris.playing {
     text-shadow: 0 0 4px alpha(@foreground, 0.35);
 }
 

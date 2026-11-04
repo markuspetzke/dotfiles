@@ -58,7 +58,7 @@ window#waybar > box {
 }
 
 /* Modules: flat, separated only by vertical lines. */
-#custom-playerctl,
+#mpris,
 #power-profiles-daemon,
 #custom-headset,
 #custom-uptime,
@@ -80,9 +80,8 @@ window#waybar > box {
     padding: 0 10px;
 }
 
-#custom-playerctl { color: @muted; border-left: none; }
-#custom-playerctl.Playing { color: @foreground; }
-#custom-playerctl.Paused { color: @muted; }
+#mpris { color: @muted; border-left: none; }
+#mpris.playing { color: @foreground; }
 
 #power-profiles-daemon.performance { color: @orange; }
 #power-profiles-daemon.power-saver { color: @olive; }

@@ -1,5 +1,16 @@
-// Module definitions shared by desktop and laptop.
+// Bar settings and module definitions shared by desktop and laptop; the profile configs
+// (config-desktop.jsonc, config-laptop.jsonc) add the right-hand modules. Themes override
+// single keys in themes/<name>/waybar-modules.jsonc (included first: the first file wins).
 {
+    // Bar (themes may override these, e.g. winxp: bottom, no spacing)
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "margin": 0,
+    "spacing": 1,
+    "modules-left": ["image#start", "custom/start", "hyprland/workspaces", "mpris"],
+    "modules-center": ["hyprland/window"],
+
     "hyprland/window": {
         "separate-outputs": true,
         "max-length": 60
@@ -23,8 +34,8 @@
         },
         "on-click": "uwsm-app -- pavucontrol",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +2%",
-        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -2%"
+        // Built-in scrolling (no pactl call per step), capped at 100 % ("max-volume").
+        "scroll-step": 2
     },
 
 
@@ -60,19 +71,17 @@
         "on-click": "uwsm-app -- kitty -e s-tui"
     },
 
-    "custom/playerctl": {
-        "format": "{icon} {text}",
-        "format-icons": { "Playing": "󰐊", "Paused": "󰏤", "default": "󰐊" },
-        "return-type": "json",
+    // Media player through MPRIS (built in, no script): follows the most recently active
+    // player (playerctld). Click: play/pause, middle click: previous, right click: next track.
+    "mpris": {
+        "format": "{status_icon} {dynamic}",
+        "format-stopped": "",
+        "dynamic-order": ["artist", "title"],
+        // Cuts the whole label; "dynamic-len" would drop a long title entirely.
         "max-length": 40,
-        "exec": "playerctl -a metadata --format '{\"text\": \"{{markup_escape(artist)}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}}: {{markup_escape(artist)}} - {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
-        "on-click": "playerctl play-pause",
-        "on-click-right": "playerctl next"
+        "status-icons": { "playing": "󰐊", "paused": "󰏤" },
+        "tooltip-format": "{player}: {dynamic}"
     },
-
-    // Bar position and module spacing (themes may override them, e.g. winxp)
-    "position": "top",
-    "spacing": 1,
 
     // Start button image: only visible if the theme has private/start-icon.png (winxp)
     "image#start": {

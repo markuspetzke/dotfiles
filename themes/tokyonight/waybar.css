@@ -6,7 +6,7 @@ window#waybar {
 }
 
 /* Reset separators and field style from base.css */
-#custom-playerctl, #power-profiles-daemon, #custom-headset, #custom-uptime, #idle_inhibitor,
+#mpris, #power-profiles-daemon, #custom-headset, #custom-uptime, #idle_inhibitor,
 #pulseaudio, #network, #cpu, #memory, #temperature, #battery, #backlight, #bluetooth, #clock, #tray {
     border-left: none;
 }
@@ -69,7 +69,7 @@ window#waybar {
 }
 
 /* Shared module shape: compact colored pills. */
-#custom-playerctl,
+#mpris,
 #power-profiles-daemon,
 #custom-headset,
 #idle_inhibitor,
@@ -89,13 +89,13 @@ window#waybar {
     padding: 0 9px;
 }
 
-#custom-playerctl {
+#mpris {
     color: @magenta;
     margin-left: 2px;
 }
 
-#custom-playerctl.Playing { color: @cyan; }
-#custom-playerctl.Paused { color: @orange; }
+#mpris.playing { color: @cyan; }
+#mpris.paused { color: @orange; }
 
 #power-profiles-daemon { color: @green; }
 #power-profiles-daemon.performance { color: @red; }

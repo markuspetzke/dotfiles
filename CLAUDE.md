@@ -23,7 +23,7 @@ otherwise they do not end up in the repo. Never versioned:
 | `hypr/scripts/` | helper scripts, e.g. `hypr-profile.sh` (profile `desktop`/`laptop`: `HYPR_PROFILE` or battery detection) |
 | `themes/<name>/` | desktop themes (retro, wired, win31, winxp, office, tokyonight). Files and extras: `themes/README.md` |
 | `bin/` | own scripts, linked into `~/.local/bin`. Overview: `bin/README.md` |
-| `waybar/` | `style.css` = theme colors + `base.css` + theme overrides; `config-{desktop,laptop}.jsonc` |
+| `waybar/` | `style.css` = theme colors + `base.css` + theme overrides; `modules.jsonc` = shared bar settings and modules, `config-{desktop,laptop}.jsonc` only the right-hand modules |
 | `systemd/user/` | session services (`hypr-session.target`), backups, timers |
 | `uwsm/env` | session variables for Hyprland and all systemd services |
 | `nvim/` | Neovim config, see `nvim/README.md`; the theme comes from `themes/<name>/nvim.lua` |

@@ -26,14 +26,18 @@
     "hyprland/window": {
         "format": ""
     },
+    // Hidden in the taskbar; the long interval also stops their polling.
     "cpu": {
-        "format": ""
+        "format": "",
+        "interval": 3600
     },
     "memory": {
-        "format": ""
+        "format": "",
+        "interval": 3600
     },
     "temperature": {
-        "format": ""
+        "format": "",
+        "interval": 3600
     },
     "pulseaudio": {
         "format": "{icon}",
