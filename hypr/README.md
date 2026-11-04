@@ -1,6 +1,6 @@
 # Hyprland
 
-Lua-Konfiguration fuer Hyprland 0.56, gestartet ueber uwsm. Das Profil wird ueber
+Lua-Konfiguration fuer Hyprland 0.57, gestartet ueber uwsm. Das Profil wird ueber
 `HYPR_PROFILE` (`desktop` oder `laptop`) oder die Akku-Erkennung bestimmt: ein
 Systemakku ergibt `laptop`, alles andere `desktop` (`scripts/hypr-profile.sh`).
 
@@ -34,35 +34,54 @@ Auf der Neo65 sperrt auch `Super+code:49` als Fallback fuer QMK Grave-Escape.
 Ein neuer Laptop-Login startet mit dem erweiterten Profil. Die Auswahl wird in
 `~/.config/hypr/.monitor-profile` gespeichert und bleibt ueber Neustarts
 erhalten. Sie gilt auch fuer neu angeschlossene Displays.
-Das interne Display (`eDP-1`) bleibt in allen Profilen aktiv. Falls der Laptop
-einen anderen Anschlussnamen verwendet, diesen in `monitors.lua` anpassen.
+Das interne Display (`eDP-1`) bleibt in allen Profilen aktiv, ausser der Deckel
+ist im Dock zu (siehe Zuklappen). Falls der Laptop einen anderen Anschlussnamen
+verwendet, diesen in `monitors.lua` anpassen.
 Die Desktop-Belegung mit DP-2/DP-3 bleibt separat konfiguriert.
 
 ### Zuklappen
 
-`hypridle` kann das Lid-Ereignis nicht selbst auswerten; dafuer ist
-`systemd-logind` zustaendig. Die passende Drop-in-Datei liegt unter
-`hypr/logind/laptop.conf`. Auf dem Laptop einmal installieren:
+Ob der Laptop schlaeft oder nur sperrt, entscheidet `systemd-logind`. Die
+Drop-in-Datei liegt unter `hypr/logind/laptop.conf`. Auf dem Laptop einmal
+installieren, sie wirkt nach einem Neustart (`theme-setup --check` meldet, ob sie fehlt):
 
 ```sh
 sudo install -Dm644 ~/.config/hypr/logind/laptop.conf /etc/systemd/logind.conf.d/90-hypr-laptop.conf
-sudo systemctl restart systemd-logind
 ```
 
-Danach sperrt Zuklappen auf Akku und Netzteil. Im Dock bleibt der Rechner an
-und externe Monitore bleiben aktiv. Das gilt systemweit, ist auf einem Desktop
-ohne Lid aber wirkungslos.
+| Zustand | logind | Hyprland (`monitors.lua`) |
+| --- | --- | --- |
+| Akku | Suspend | - |
+| Netzteil | sperren | internes Panel aus |
+| Dock (externer Monitor) | nichts | `eDP-1` abgeschaltet, alles auf den externen Monitoren |
+
+Aufklappen schaltet `eDP-1` wieder an. Ist Hibernate eingerichtet, kann in der
+Datei statt `suspend` auch `suspend-then-hibernate` stehen.
 
 ### Inaktivitaet
 
-Der Laptop verwendet `hypridle-laptop.conf`: Nach 10 Minuten wird gesperrt,
-30 Sekunden spaeter werden die Displays abgeschaltet, nach 15 Minuten geht das
-System in Hibernate. Waerend Medienwiedergabe laeuft,
-werden diese Aktionen durch `playerctl` unterdrueckt.
+| Zeit | Desktop (`hypridle.conf`) | Laptop (`hypridle-laptop.conf`) |
+| --- | --- | --- |
+| 5 min | - | auf 10 % abdunkeln, Tastaturbeleuchtung aus |
+| 9 min | Bildschirmschoner des Themes | Bildschirmschoner des Themes |
+| 10 min | sperren | sperren |
+| 10,5 min | Monitore aus | Monitore aus |
+| 15 min | - | auf Akku: Ruhezustand |
+| 60 min | Suspend | Ruhezustand, auch am Netzteil |
 
-Der Desktop verwendet `hypridle.conf` mit 10 Minuten Sperre, 10,5 Minuten DPMS
-und 60 Minuten Suspend. Gesperrt wird vor dem Abschalten, damit hyprlock einen
-echten Screenshot als Hintergrund bekommt.
+Gesperrt wird vor dem Abschalten, damit hyprlock einen echten Screenshot als
+Hintergrund bekommt. Ruhezustand auf dem Laptop heisst `suspend-then-hibernate`,
+wenn Hibernate eingerichtet ist, sonst Suspend (`scripts/idle-sleep.sh`).
+
+Waehrend Audio/Video laeuft, haelt `media-watch.service` eine Idle-Sperre
+(`systemd-inhibit --what=idle`). Dann loest keine Stufe aus, und nach dem Ende der
+Wiedergabe beginnt die Kette von vorn. Eine Bedingung direkt im `on-timeout`
+reicht dafuer nicht: hypridle fuehrt jede Stufe nur einmal pro Leerlauf aus.
+
+Vor dem Suspend prueft hypridle mit `scripts/sleep-allowed.sh`, ob ein Programm den
+Ruhezustand blockiert (z. B. `backup-hetzner.service`), und versucht es dann alle
+5 Minuten erneut. Sperre und Monitor-Aus laufen trotzdem. `idle-test` spielt die
+Kette mit kurzen Zeiten durch.
 
 ### Automatische Monitore und Power-Profile
 
@@ -72,7 +91,8 @@ Profile ebenfalls automatisch um; die manuellen `Super+Ctrl+F1/F2/F3`-Shortcuts
 bleiben verfuegbar. `presentation` ist weiterhin ein manueller Override.
 
 `power-profile.service` laeuft nur im Laptop-Profil und waehlt bei Netzbetrieb
-`balanced` und auf Akku `power-saver`. Dafuer muss `power-profiles-daemon` installiert sein:
+`balanced` und auf Akku `power-saver`. Netzteil oder Akku erkennt
+`scripts/power-source.sh` (auch Laden ueber USB-C). Dafuer muss `power-profiles-daemon` installiert sein:
 
 ```sh
 sudo pacman -S power-profiles-daemon
@@ -83,13 +103,13 @@ Ohne das Paket bleibt der Dienst deaktiviert und veraendert nichts.
 
 ### Dienste
 
-Waybar, hypridle, hyprpaper, hyprsunset, dunst und beide Clipboard-Watcher
-laufen als User-Services unter `systemd --user`. Hyprland ruft beim Start nur
+Waybar, hypridle, hyprpaper, hyprsunset, dunst, beide Clipboard-Watcher und
+`media-watch` laufen als User-Services unter `systemd --user`. Hyprland ruft beim Start nur
 `uwsm finalize` auf; sobald uwsm die Session als bereit meldet, startet
 `graphical-session.target` das `hypr-session.target` und damit alle Dienste.
 Die Dienste haengen ausschliesslich ueber `Wants=` am Target.
 
-Auf jedem Rechner einmalig:
+Auf jedem Rechner einmalig (macht `bin/theme-setup` mit):
 
 ```sh
 systemctl --user enable hypr-session.target
@@ -109,8 +129,10 @@ Systemrechten. Die Paketeinheiten von Dunst und hyprpolkitagent erhalten diese
 Regeln ueber User-Drop-ins unter `systemd/user/*.service.d/`.
 
 Wegen `NoNewPrivileges` und der Limits erbt alles, was ein Dienst startet, diese
-Einschraenkungen (z.B. funktioniert dort kein `sudo`). Programme, die aus Waybar
-oder dunst gestartet werden, laufen deshalb ueber `uwsm app --` als eigene Unit.
+Einschraenkungen (z.B. funktioniert dort kein `sudo`). Programme, die aus Waybar,
+dunst, dem Launcher oder per Taste gestartet werden, laufen deshalb ueber
+`uwsm-app --` als eigene Unit. `uwsm-app` ist der schnelle Client von uwsm (~10 ms
+statt ~90 ms) und spricht mit `wayland-wm-app-daemon.service`, das mit der Session startet.
 `hypridle.service` hat bewusst gar keine Sandbox-Optionen: hyprlock braucht das
 setuid-Programm `unix_chkpwd` fuer die Passwortpruefung, und in User-Units
 blockieren sowohl `NoNewPrivileges` (auch implizit ueber `LockPersonality`,
@@ -119,9 +141,9 @@ blockieren sowohl `NoNewPrivileges` (auch implizit ueber `LockPersonality`,
 
 ### Waybar-Status
 
-Rechts zeigt Waybar zusaetzlich das Monitorprofil, das Power-Profil und den
-Status von `hypridle`. Ein Klick auf das Power-Profil wechselt zwischen
-`power-saver`, `balanced` und `performance`. Akku, Audio, Netzwerk und die
+Rechts zeigt Waybar zusaetzlich das Power-Profil (eingebautes Modul
+`power-profiles-daemon`, ohne Polling) und den Idle-Inhibitor. Klick auf das
+Power-Profil wechselt zum naechsten Profil, Rechtsklick zum vorherigen. Akku, Audio, Netzwerk und die
 bestehenden Systemanzeigen bleiben je nach Desktop- oder Laptop-Profil
 verfuegbar.
 
@@ -131,16 +153,14 @@ verfuegbar.
 Tagesfarben um. Helligkeit/Gamma bleiben bei 100 %.
 Autostart erfolgt ueber `hyprsunset.service` (`scripts/run-hyprsunset.sh`).
 
-Auf diesem Rechner liegt hyprsunset 0.4.0 unter `~/.local/bin/hyprsunset`,
-aus dem signaturgeprueften offiziellen Arch-Paket `hyprsunset-0.4.0-3`.
-Eine spaetere Systeminstallation mit `sudo pacman -S hyprsunset` wird bevorzugt;
-die lokale Kopie wird nicht automatisch durch pacman aktualisiert.
+`scripts/run-hyprsunset.sh` nimmt das Paket (`sudo pacman -S hyprsunset`) und nur
+ersatzweise eine Kopie unter `~/.local/bin/hyprsunset`, die keine Updates bekommt.
 
 - `hyprctl hyprsunset identity`: normale Farben bis zum naechsten Profilwechsel.
 - `hyprctl hyprsunset temperature 4500`: warme Farben sofort einschalten.
 
 ## Pruefung
 
-`Hyprland --verify-config -c ~/.config/hypr/hyprland.lua`
-
-`hyprctl reload` laedt die Konfiguration neu; `hyprctl configerrors` zeigt Fehler.
+`dotfiles-check` prueft das ganze Repo und laeuft auch vor jedem Commit. Fuer Hyprland allein:
+`hyprctl reload` laedt die Konfiguration neu, `hyprctl configerrors` zeigt Fehler.
+`Hyprland --verify-config` stuerzt mit der Lua-Config ab (0.57) und taugt dafuer nicht.

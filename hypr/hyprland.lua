@@ -26,21 +26,6 @@ end)
 -- systemd-Diensten gleichermassen mit. Dark Mode kommt aus gsettings (gtk-theme fuer
 -- GTK3, color-scheme fuer GTK4/libadwaita), nicht aus GTK_THEME.
 
-
------------------------
------ PERMISSIONS -----
------------------------
-
--- hl.config({
---     ecosystem = {
---         enforce_permissions = true,
---     },
--- })
-
--- hl.permission("/usr/(bin|local/bin)/grim", "screencopy", "allow")
--- hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencopy", "allow")
--- hl.permission("/usr/(bin|local/bin)/hyprpm", "plugin", "allow")
-
 -----------------------
 ---- LOOK AND FEEL ----
 -----------------------
@@ -49,17 +34,14 @@ hl.config({
 	general = {
 		gaps_in = 4,
 		gaps_out = 8,
-
-		-- border_size kommt aus dem Theme (hypr/theme.lua)
-
-		-- Farben kommen aus theme.lua
-
+		-- Rahmenbreite und Farben kommen aus dem Theme (hypr/theme.lua)
 		resize_on_border = true,
 		allow_tearing = false,
 		layout = "master",
 	},
 
-	-- Retro: eckig, keine Schatten, kein Blur (alles opak).
+	-- Grundlage: eckig, ohne Schatten und Blur. Themes duerfen das in palette.lua
+	-- ueberschreiben (z. B. tokyonight: Rundung, Blur, Schatten).
 	decoration = {
 		rounding = 0,
 
@@ -79,7 +61,6 @@ hl.config({
 
 -- Custom Bezier curves
 hl.curve("easeOutQuint", { type = "bezier", points = { { 0.23, 1 }, { 0.32, 1 } } })
-hl.curve("easeInOutCubic", { type = "bezier", points = { { 0.65, 0.05 }, { 0.36, 1 } } })
 hl.curve("linear", { type = "bezier", points = { { 0, 0 }, { 1, 1 } } })
 hl.curve("almostLinear", { type = "bezier", points = { { 0.5, 0.5 }, { 0.75, 1 } } })
 hl.curve("quick", { type = "bezier", points = { { 0.15, 0 }, { 0.1, 1 } } })
@@ -149,17 +130,10 @@ hl.config({
 hl.config({
 	input = {
 		kb_layout = "de",
-		kb_variant = "",
-		kb_model = "",
-		kb_options = "",
-		kb_rules = "",
 		-- Gehaltene Taste: nach 300 ms mit 40 Zeichen/s wiederholen (Standard 600/25).
 		repeat_delay = 300,
 		repeat_rate = 40,
-
 		follow_mouse = 1,
-		sensitivity = 0,
-
 	},
 })
 
