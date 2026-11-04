@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# CPU stability test for undervolting (Curve Optimizer): every core alone under a single-threaded
+# load with result verification (that is where a too low voltage shows), then all cores together.
+# Reports calculation errors and hardware errors (MCE) from the kernel log. A run that ended in a
+# freeze or reboot is reported at the next start, with the step it stopped at.
+#   cpu-stability             # 3 min per core, 10 min all cores, 1 round
+#   cpu-stability 5 20 2      # 5 min per core, 20 min all cores, 2 rounds
+#   cpu-stability 3 0         # single cores only
+# Needs stress-ng (sudo pacman -S stress-ng).
+set -u
+
+per_core=${1:-3}
+all_cores=${2:-10}
+rounds=${3:-1}
+state="${XDG_STATE_HOME:-$HOME/.local/state}/cpu-stability"
+mkdir -p "$state"
+
+command -v stress-ng >/dev/null || { echo "stress-ng is missing: sudo pacman -S stress-ng" >&2; exit 1; }
+
+if [[ -f $state/running ]]; then
+	echo "!! The previous run did not finish, it stopped at: $(cat "$state/running")"
+	echo "   A freeze or reboot there means unstable. Details: journalctl -k -b -1 | grep -i -E 'mce|hardware error'"
+	echo
+	rm -f "$state/running"
+fi
+
+# One logical CPU per physical core (the first SMT sibling).
+mapfile -t cores < <(cat /sys/devices/system/cpu/cpu[0-9]*/topology/thread_siblings_list |
+	sed -E 's/[,-].*//' | sort -nu)
+
+tctl=""
+for h in /sys/class/hwmon/hwmon*; do
+	[[ $(cat "$h/name" 2>/dev/null) == k10temp ]] && tctl=$h/temp1_input
+done
+
+start=$(date +%s)
+failed=()
+
+# run <label> <seconds> <stress-ng arguments...>
+run() {
+	local label=$1 secs=$2 max=0 t rc
+	shift 2
+	echo "$label" >"$state/running"
+	printf '%-28s ' "$label"
+	stress-ng "$@" --verify --timeout "${secs}s" --quiet &
+	local pid=$!
+	while kill -0 "$pid" 2>/dev/null; do
+		if [[ -n $tctl ]]; then
+			t=$(($(cat "$tctl") / 1000))
+			((t > max)) && max=$t
+		fi
+		sleep 2
+	done
+	wait "$pid"
+	rc=$?
+	if ((rc == 0)); then
+		printf 'ok      (max %s °C)\n' "$max"
+	else
+		printf 'FAILED  (stress-ng exit %s, max %s °C)\n' "$rc" "$max"
+		failed+=("$label")
+	fi
+}
+
+echo "${#cores[@]} cores, ${per_core} min each, all cores ${all_cores} min, ${rounds} round(s)"
+for ((r = 1; r <= rounds; r++)); do
+	for c in "${cores[@]}"; do
+		run "round $r: core $c (cpu $c)" $((per_core * 60)) --cpu 1 --cpu-method all --taskset "$c"
+	done
+	if ((all_cores > 0)); then
+		run "round $r: all cores" $((all_cores * 60)) --cpu 0 --cpu-method all
+	fi
+done
+rm -f "$state/running"
+
+echo
+hw=$(journalctl -k --since "@$start" --no-pager -o cat 2>/dev/null | grep -i -E 'mce|hardware error|machine check')
+if [[ -n $hw ]]; then
+	echo "!! Hardware errors in the kernel log during the test:"
+	echo "$hw"
+fi
+if ((${#failed[@]} == 0)) && [[ -z $hw ]]; then
+	echo "Stable: no calculation errors, no hardware errors."
+else
+	echo "UNSTABLE: ${failed[*]:-see the kernel log above}"
+	echo "Raise the voltage again (Curve Optimizer: 5 counts less negative) and test again."
+	exit 1
+fi
