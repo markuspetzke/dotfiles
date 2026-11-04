@@ -1,7 +1,9 @@
 -- Variablen definieren
 local mainMod = "SUPER"
-local terminal = "kitty"
-local fileManager = "thunar"
+-- uwsm-app: jedes Programm als eigene systemd-Unit (wie Launcher und Waybar), statt im Dienst
+-- von Hyprland mitzulaufen. Der schnelle Client von uwsm (~10 ms statt ~90 ms fuer "uwsm app").
+local terminal = "uwsm-app -- kitty"
+local fileManager = "uwsm-app -- thunar"
 -- Startmenue des Themes (bin/menu: z. B. XP-Startmenue), sonst hyprlauncher
 local menu = os.getenv("HOME") .. "/.config/bin/menu"
 local host = require("./host.lua")

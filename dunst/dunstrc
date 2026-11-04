@@ -44,7 +44,7 @@
 
     dmenu = hyprlauncher -m
     # Eigene systemd-Unit: sonst erbt der Browser die Limits von dunst.service.
-    browser = uwsm app -- xdg-open
+    browser = uwsm-app -- xdg-open
     always_run_script = true
 
     # Maus: links = Aktion/schliessen, Mitte = alle schliessen, rechts = schliessen
