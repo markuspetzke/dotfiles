@@ -7,7 +7,7 @@
             "2": "Michaels Büro",
             "3": "Konferenzraum",
             "4": "Lager",
-            "default": "Annex {name}"
+            "default": "Annex"
         }
     },
     "hyprland/window": {
