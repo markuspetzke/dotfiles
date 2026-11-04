@@ -9,5 +9,5 @@
 
     "modules-left": ["image#start", "custom/start", "hyprland/workspaces", "custom/playerctl"],
     "modules-center": ["hyprland/window"],
-    "modules-right": ["custom/power-profile", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network#wifi", "battery", "cpu", "memory", "custom/uptime", "clock", "tray"]
+    "modules-right": ["power-profiles-daemon", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network#wifi", "battery", "cpu", "memory", "custom/uptime", "clock", "tray"]
 }

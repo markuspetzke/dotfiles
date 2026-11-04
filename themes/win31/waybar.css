@@ -40,7 +40,7 @@ window#waybar {
 }
 
 /* Module durch eingelassene Trennkanten statt Linien. */
-#custom-power-profile, #idle_inhibitor, #custom-headset, #pulseaudio, #network,
+#power-profiles-daemon, #idle_inhibitor, #custom-headset, #pulseaudio, #network,
 #cpu, #memory, #temperature, #tray {
     border-left: 1px solid #808080;
     box-shadow: inset 1px 0 #ffffff;

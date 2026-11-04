@@ -6,7 +6,7 @@ window#waybar {
 }
 
 /* Trennlinien und Feld-Stil aus base.css zuruecksetzen */
-#custom-playerctl, #custom-power-profile, #custom-headset, #custom-uptime, #idle_inhibitor,
+#custom-playerctl, #power-profiles-daemon, #custom-headset, #custom-uptime, #idle_inhibitor,
 #pulseaudio, #network, #cpu, #memory, #temperature, #battery, #backlight, #bluetooth, #clock, #tray {
     border-left: none;
 }
@@ -70,7 +70,7 @@ window#waybar {
 
 /* Gemeinsame Modulform: kompakte farbige pills. */
 #custom-playerctl,
-#custom-power-profile,
+#power-profiles-daemon,
 #custom-headset,
 #idle_inhibitor,
 #pulseaudio,
@@ -97,10 +97,9 @@ window#waybar {
 #custom-playerctl.Playing { color: @cyan; }
 #custom-playerctl.Paused { color: @orange; }
 
-#custom-power-profile { color: @green; }
-#custom-power-profile.performance { color: @red; }
-#custom-power-profile.power-saver { color: @yellow; }
-#custom-power-profile.unavailable { color: @comment; }
+#power-profiles-daemon { color: @green; }
+#power-profiles-daemon.performance { color: @red; }
+#power-profiles-daemon.power-saver { color: @yellow; }
 #custom-headset { color: @blue; }
 #custom-headset.warning { color: @yellow; }
 #custom-headset.critical { color: @red; }

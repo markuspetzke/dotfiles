@@ -67,7 +67,7 @@ window#waybar > box {
 }
 
 /* Infobereich rechts (Tray): ein durchgehendes hellblaues Feld, nur Symbole + Uhr */
-#custom-power-profile, #idle_inhibitor, #custom-headset, #custom-uptime, #pulseaudio, #network,
+#power-profiles-daemon, #idle_inhibitor, #custom-headset, #custom-uptime, #pulseaudio, #network,
 #cpu, #memory, #temperature, #battery, #backlight, #bluetooth, #tray, #clock {
     background-image: linear-gradient(to bottom, #0c59b9 0%, #139ee9 6%, #18b9f0 20%, #12a5ec 60%, #0f8ee3 92%, #0b6fd0 100%);
     color: #ffffff;
@@ -78,7 +78,7 @@ window#waybar > box {
 }
 
 /* Kante links am Anfang des Infobereichs */
-#custom-power-profile {
+#power-profiles-daemon {
     border-left: 1px solid #0a3fa0;
     box-shadow: inset 1px 0 #3fc4ff;
     padding-left: 10px;

@@ -21,7 +21,7 @@
             "headset": "󰋎",
             "default": ["󰕿", "󰖀", "󰕾"]
         },
-        "on-click": "uwsm app -- pavucontrol",
+        "on-click": "uwsm-app -- pavucontrol",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +2%",
         "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -2%"
@@ -35,21 +35,21 @@
         "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}",
         "tooltip-format-linked": "{ifname}: verbunden, keine IP",
         "tooltip-format-disconnected": "Keine Verbindung",
-        "on-click": "uwsm app -- kitty -e nmtui"
+        "on-click": "uwsm-app -- kitty -e nmtui"
     },
 
     "cpu": {
         "format": "󰘚 {usage}%",
         "interval": 2,
         "tooltip-format": "Last: {load}",
-        "on-click": "uwsm app -- kitty -e htop"
+        "on-click": "uwsm-app -- kitty -e htop"
     },
 
     "memory": {
         "format": "󰍛 {percentage}%",
         "interval": 5,
         "tooltip-format": "RAM: {used:0.1f} / {total:0.1f} GiB\nSwap: {swapUsed:0.1f} / {swapTotal:0.1f} GiB",
-        "on-click": "uwsm app -- kitty -e htop"
+        "on-click": "uwsm-app -- kitty -e htop"
     },
 
     "temperature": {
@@ -57,7 +57,7 @@
         "critical-threshold": 80,
         "format": "{icon} {temperatureC}°C",
         "format-icons": ["󱃃", "󰔏", "󱃂"],
-        "on-click": "uwsm app -- kitty -e s-tui"
+        "on-click": "uwsm-app -- kitty -e s-tui"
     },
 
     "custom/playerctl": {
@@ -134,19 +134,24 @@
         "format-icons": { "activated": "󰅶", "deactivated": "󰾪" }
     },
 
-    "custom/power-profile": {
-        "exec": "bash ~/.config/hypr/scripts/waybar-power-profile.sh",
-        "return-type": "json",
-        "interval": 30,
-        "on-click": "bash ~/.config/hypr/scripts/waybar-power-profile.sh toggle",
-        "on-click-right": "uwsm app -- kitty -e powerprofilesctl"
+    // Eingebautes Modul (D-Bus, ohne Polling): zeigt Wechsel sofort, Klick naechstes Profil,
+    // Rechtsklick vorheriges. Ohne power-profiles-daemon blendet es sich aus.
+    "power-profiles-daemon": {
+        "format": "{icon}",
+        "tooltip-format": "Power-Profil: {profile}\nKlick: wechseln",
+        "format-icons": {
+            "default": "󰾆",
+            "performance": "󰓅",
+            "balanced": "󰾅",
+            "power-saver": "󰾆"
+        }
     },
 
     "custom/headset": {
         "exec": "bash ~/.config/hypr/scripts/waybar-headset.sh",
         "return-type": "json",
         "interval": 60,
-        "on-click": "uwsm app -- pavucontrol"
+        "on-click": "uwsm-app -- pavucontrol"
     },
 
     "battery": {
@@ -172,7 +177,7 @@
         "tooltip-format": "{controller_alias}\t{controller_address}",
         "tooltip-format-connected": "{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        "on-click": "uwsm app -- kitty -e bluetuith"
+        "on-click": "uwsm-app -- kitty -e bluetuith"
     },
 
     "network#wifi": {
@@ -182,7 +187,7 @@
         "format-disconnected": "󰤭",
         "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ifname}: {ipaddr}/{cidr}",
         "tooltip-format-disconnected": "Kein WLAN",
-        "on-click": "uwsm app -- kitty -e nmtui"
+        "on-click": "uwsm-app -- kitty -e nmtui"
     }
 
 }

@@ -59,7 +59,7 @@ window#waybar > box {
 
 /* Module: flach, nur durch senkrechte Trennlinien abgesetzt. */
 #custom-playerctl,
-#custom-power-profile,
+#power-profiles-daemon,
 #custom-headset,
 #custom-uptime,
 #idle_inhibitor,
@@ -84,9 +84,8 @@ window#waybar > box {
 #custom-playerctl.Playing { color: @foreground; }
 #custom-playerctl.Paused { color: @muted; }
 
-#custom-power-profile.performance { color: @orange; }
-#custom-power-profile.power-saver { color: @olive; }
-#custom-power-profile.unavailable { color: @muted; }
+#power-profiles-daemon.performance { color: @orange; }
+#power-profiles-daemon.power-saver { color: @olive; }
 #custom-headset.warning { color: @orange; }
 #custom-headset.critical { color: @red; }
 #custom-headset.charging { color: @olive; }
