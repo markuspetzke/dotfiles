@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+"""Erzeugt das Fastfetch-Logo des aktiven Themes als fertige ANSI-Datei:
+~/.local/state/theme/fastfetch-logo.ans (fastfetch: "type": "file-raw").
+
+- themes/<name>/private/logo.png vorhanden -> Pixelgrafik aus Halbbloecken (2 Pixel je Zeile,
+  echte Farben, Transparenz bleibt Terminal-Hintergrund). Breite: private/logo.width (Standard 26).
+- sonst themes/<name>/fastfetch-logo.txt mit $1..$9 -> Farben aus logo.color in fastfetch.jsonc.
+Wird von `theme` aufgerufen."""
+import json
+import os
+import re
+import sys
+
+cfg = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+theme = os.path.join(cfg, "theme-current")
+state = os.path.join(os.environ.get("XDG_STATE_HOME", os.path.expanduser("~/.local/state")), "theme")
+os.makedirs(state, exist_ok=True)
+out = os.path.join(state, "fastfetch-logo.ans")
+RESET = "\x1b[0m"
+
+
+def pixel_logo(png, width):
+    from PIL import Image
+    im = Image.open(png).convert("RGBA")
+    im = im.crop(im.getbbox() or (0, 0, *im.size))
+    h = max(2, round(im.height * width / im.width))
+    h += h % 2
+    im = im.resize((width, h), Image.LANCZOS)
+    px = im.load()
+    lines = []
+    for y in range(0, h, 2):
+        row = []
+        for x in range(width):
+            t, b = px[x, y], px[x, y + 1]
+            top, bot = t[3] > 100, b[3] > 100
+            if top and bot:
+                row.append(f"\x1b[38;2;{t[0]};{t[1]};{t[2]}m\x1b[48;2;{b[0]};{b[1]};{b[2]}m▀")
+            elif top:
+                row.append(f"\x1b[49m\x1b[38;2;{t[0]};{t[1]};{t[2]}m▀")
+            elif bot:
+                row.append(f"\x1b[49m\x1b[38;2;{b[0]};{b[1]};{b[2]}m▄")
+            else:
+                row.append("\x1b[49m ")
+        lines.append("".join(row) + RESET)
+    return "\n".join(lines) + "\n"
+
+
+def text_logo(txt, conf):
+    colors = {}
+    try:
+        raw = re.sub(r"^\s*//.*$", "", open(conf).read(), flags=re.M)
+        raw = re.sub(r"//[^\n\"]*$", "", raw, flags=re.M)
+        colors = json.loads(raw).get("logo", {}).get("color", {})
+    except Exception:
+        pass
+    s = open(txt).read()
+    s = re.sub(r"\$(\d)", lambda m: f"\x1b[{colors.get(m.group(1), '0')}m", s)
+    return "\n".join(line + RESET for line in s.rstrip("\n").split("\n")) + "\n"
+
+
+png = os.path.join(theme, "private", "logo.png")
+txt = os.path.join(theme, "fastfetch-logo.txt")
+if os.path.isfile(png):
+    w = 26
+    try:
+        w = int(open(os.path.join(theme, "private", "logo.width")).read().strip())
+    except (OSError, ValueError):
+        pass
+    data = pixel_logo(png, w)
+elif os.path.isfile(txt):
+    data = text_logo(txt, os.path.join(theme, "fastfetch.jsonc"))
+else:
+    sys.exit(0)
+open(out, "w").write(data)

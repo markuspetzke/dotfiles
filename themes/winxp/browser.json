@@ -1,0 +1,17 @@
+{
+  "_kommentar": "Helium/Chromium-Theme Windows XP: Luna-Blau, beige Werkzeugleiste",
+  "frame": "#0054e3",
+  "frame_inactive": "#7a96df",
+  "background_tab": "#0054e3",
+  "toolbar": "#ece9d8",
+  "tab_text": "#000000",
+  "tab_background_text": "#ffffff",
+  "toolbar_text": "#000000",
+  "toolbar_button_icon": "#0054e3",
+  "bookmark_text": "#000000",
+  "omnibox_background": "#ffffff",
+  "omnibox_text": "#000000",
+  "ntp_background": "#5a7edc",
+  "ntp_text": "#ffffff",
+  "ntp_link": "#ffffff"
+}

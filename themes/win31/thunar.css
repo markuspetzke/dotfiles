@@ -1,0 +1,102 @@
+/* Thunar -- win31 (eingebunden ueber ~/.config/gtk-3.0/gtk.css; gilt nur fuer Thunar-Fenster) */
+.thunar, .thunar * {
+    font-family: "DepartureMono Nerd Font";
+    font-size: 11px;
+}
+
+.thunar,
+.thunar paned,
+.thunar statusbar,
+.thunar toolbar,
+.thunar menubar,
+.thunar headerbar {
+    background-color: #c0c0c0;
+    background-image: none;
+    color: #000000;
+    border-color: #808080;
+}
+
+/* Dateiansicht */
+.thunar iconview,
+.thunar exoiconview,
+.thunar .view,
+.thunar treeview.view,
+.thunar scrolledwindow viewport {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Seitenleiste (Orte, Lesezeichen) */
+.thunar .shortcuts-pane,
+.thunar .shortcuts-pane treeview,
+.thunar treeview.view.shortcuts-pane,
+.thunar .shortcuts-pane treeview.view,
+.thunar .sidebar,
+.thunar placessidebar {
+    background-color: #dfdfdf;
+    color: #000000;
+}
+
+/* Auswahl */
+.thunar iconview:selected,
+.thunar exoiconview:selected,
+.thunar .view:selected,
+.thunar treeview.view:selected,
+.thunar *:selected {
+    background-color: #000080;
+    color: #ffffff;
+}
+
+/* Pfadleiste und Eingabefelder */
+.thunar entry {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #808080;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.thunar button {
+    background-image: none;
+    background-color: #dfdfdf;
+    color: #000000;
+    border: 1px solid #808080;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.thunar button:hover {
+    background-color: #808080;
+}
+
+.thunar button:checked {
+    background-color: #000080;
+    color: #ffffff;
+}
+
+.thunar statusbar,
+.thunar statusbar label {
+    color: #404040;
+}
+
+.thunar separator,
+.thunar paned > separator {
+    background-color: #808080;
+    min-width: 1px;
+    min-height: 1px;
+}
+
+.thunar menu,
+.thunar .context-menu,
+.thunar popover {
+    background-color: #c0c0c0;
+    color: #000000;
+    border: 1px solid #808080;
+}
+
+.thunar menu menuitem:hover,
+.thunar popover modelbutton:hover {
+    background-color: #000080;
+    color: #ffffff;
+}

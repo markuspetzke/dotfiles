@@ -1,0 +1,44 @@
+#!/bin/sh
+# Bildschirmschoner des aktiven Themes (themes/<name>/screensaver.py) auf allen Monitoren.
+#   screensaver start [sperren_nach] [aus_nach]   # hypridle; Standard 60 / 90 s nach dem Start
+#   screensaver stop                               # hypridle on-resume (Aktivitaet)
+#   screensaver stop --force                       # nach dem Entsperren (bin/theme-lock)
+# Hyprland wertet das Oeffnen/Schliessen eines Fensters als Aktivitaet: das setzt hypridles
+# Timer zurueck und loest sofort on-resume aus. Deshalb ignoriert "stop" die ersten 3 s, und der
+# Schoner sperrt bzw. schaltet die Monitore selbst ab (die Kette haengt nicht mehr an hypridle).
+# Themes ohne screensaver.py: nichts passiert, hypridle sperrt wie gewohnt.
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
+prog="$cfg/theme-current/screensaver.py"
+run="${XDG_RUNTIME_DIR:-/tmp}"
+
+running() { pgrep -f "kitty --class screensaver" >/dev/null; }
+
+case "${1:-start}" in
+start)
+	[ -f "$prog" ] || exit 0
+	running && exit 0
+	date +%s >"$run/screensaver.start"
+	for mon in $(hyprctl monitors -j | python3 -c 'import json,sys; print(" ".join(m["name"] for m in json.load(sys.stdin)))'); do
+		hyprctl dispatch "hl.dsp.exec_cmd(\"kitty --class screensaver -o window_padding_width=0 -o confirm_os_window_close=0 sh -c 'python3 -I $prog; $cfg/bin/screensaver stop --force'\", { monitor = \"$mon\", fullscreen = true })" >/dev/null
+	done
+	lock_after=${2:-60}
+	dpms_after=${3:-90}
+	(
+		sleep "$lock_after"
+		running || exit 0
+		loginctl lock-session
+		sleep $((dpms_after - lock_after))
+		running && pidof hyprlock >/dev/null && hyprctl dispatch 'hl.dsp.dpms({action = "off"})' >/dev/null
+	) >/dev/null 2>&1 &
+	echo $! >"$run/screensaver.timer"
+	;;
+stop)
+	if [ "${2:-}" != "--force" ] && [ -f "$run/screensaver.start" ]; then
+		# Aktivitaet, die das Oeffnen selbst ausgeloest hat, ignorieren
+		[ $(($(date +%s) - $(cat "$run/screensaver.start"))) -lt 3 ] && exit 0
+	fi
+	[ -f "$run/screensaver.timer" ] && kill "$(cat "$run/screensaver.timer")" 2>/dev/null
+	rm -f "$run/screensaver.timer" "$run/screensaver.start"
+	pkill -f "kitty --class screensaver" || true
+	;;
+esac

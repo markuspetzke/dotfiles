@@ -1,0 +1,16 @@
+# Anmeldebildschirm (sysc-greet) -- Windows XP. `theme` kopiert die Datei nach
+# /var/lib/sysc-greet/themes/ und waehlt sie aus (Einrichtung: bin/greeter-setup).
+name = "winxp"
+
+[colors]
+bg_base = "#5a7edc"
+bg_active = "#00309c"
+primary = "#ffffff"
+secondary = "#f0a050"
+accent = "#f0a050"
+warning = "#f9c74f"
+danger = "#e04343"
+fg_primary = "#ffffff"
+fg_secondary = "#dfe8ff"
+fg_muted = "#c3d3fd"
+border_focus = "#f0a050"

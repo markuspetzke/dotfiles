@@ -19,6 +19,7 @@ end
 function M.reload()
   M._cache = nil
   local t = M.get()
+  vim.o.background = t.background or "dark"
   if t.gruvbox and package.loaded["gruvbox"] then
     require("gruvbox").setup(t.gruvbox)
   end

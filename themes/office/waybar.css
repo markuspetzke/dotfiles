@@ -1,0 +1,46 @@
+/* Office: Abweichungen von waybar/base.css. Buero-Schrift statt Pixel, dunkle Leiste mit
+   blauer Kante, Workspaces als Raeume, Feierabend-Zaehler als Post-it. */
+* {
+    font-family: "Noto Sans", "Liberation Sans", sans-serif;
+    font-size: 12px;
+}
+
+window#waybar {
+    border-bottom: 2px solid @accent;
+}
+
+#workspaces button {
+    padding: 0 10px;
+}
+
+#workspaces button.active,
+#workspaces button.focused {
+    background: @accent;
+    color: #ffffff;
+    border-radius: 3px;
+}
+
+#window {
+    color: @muted;
+}
+
+/* Feierabend-Zaehler als Post-it */
+#custom-uptime {
+    background: @postit;
+    color: #2b2b2b;
+    border-left: none;
+    border-radius: 2px;
+    margin: 3px 4px;
+    font-weight: bold;
+}
+
+#clock {
+    border-radius: 3px;
+    color: #ffffff;
+}
+
+tooltip {
+    background: @surface;
+    border: 1px solid @surface2;
+    border-radius: 4px;
+}

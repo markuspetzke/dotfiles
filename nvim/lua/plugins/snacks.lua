@@ -16,7 +16,8 @@ return {
       enabled = true,
       width = 60,
       preset = {
-        header = table.concat({
+        -- Kopf vom Desktop-Theme (themes/<name>/nvim.lua: dashboard_header), sonst NEOVIM
+        header = require("config.theme").get().dashboard_header or table.concat({
           "███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
           "████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║",
           "██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║",

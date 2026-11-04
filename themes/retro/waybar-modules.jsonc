@@ -11,5 +11,84 @@
                 "today": "<span color='#e8a33d'><b><u>{}</u></b></span>"
             }
         }
+    },
+    "cpu": {
+        "format": "CPU {icon}",
+        "format-icons": [
+            "▯▯▯▯▯",
+            "▮▯▯▯▯",
+            "▮▮▯▯▯",
+            "▮▮▮▯▯",
+            "▮▮▮▮▯",
+            "▮▮▮▮▮"
+        ],
+        "tooltip-format": "CPU {usage}% · Last {load}"
+    },
+    "memory": {
+        "format": "MEM {icon}",
+        "format-icons": [
+            "▯▯▯▯▯",
+            "▮▯▯▯▯",
+            "▮▮▯▯▯",
+            "▮▮▮▯▯",
+            "▮▮▮▮▯",
+            "▮▮▮▮▮"
+        ]
+    },
+    "pulseaudio": {
+        "format": "VOL {icon}",
+        "format-muted": "VOL -----",
+        "format-icons": {
+            "headphone": [
+                "▯▯▯▯▯",
+                "▮▯▯▯▯",
+                "▮▮▯▯▯",
+                "▮▮▮▯▯",
+                "▮▮▮▮▯",
+                "▮▮▮▮▮"
+            ],
+            "headset": [
+                "▯▯▯▯▯",
+                "▮▯▯▯▯",
+                "▮▮▯▯▯",
+                "▮▮▮▯▯",
+                "▮▮▮▮▯",
+                "▮▮▮▮▮"
+            ],
+            "default": [
+                "▯▯▯▯▯",
+                "▮▯▯▯▯",
+                "▮▮▯▯▯",
+                "▮▮▮▯▯",
+                "▮▮▮▮▯",
+                "▮▮▮▮▮"
+            ]
+        },
+        "tooltip-format": "{desc}: {volume}%"
+    },
+    "battery": {
+        "format": "BAT {icon}",
+        "format-charging": "BAT+{icon}",
+        "format-plugged": "AC  {icon}",
+        "format-icons": [
+            "▯▯▯▯▯",
+            "▮▯▯▯▯",
+            "▮▮▯▯▯",
+            "▮▮▮▯▯",
+            "▮▮▮▮▯",
+            "▮▮▮▮▮"
+        ],
+        "tooltip-format": "{capacity}% · {timeTo}"
+    },
+    "backlight": {
+        "format": "LUM {icon}",
+        "format-icons": [
+            "▯▯▯▯▯",
+            "▮▯▯▯▯",
+            "▮▮▯▯▯",
+            "▮▮▮▯▯",
+            "▮▮▮▮▯",
+            "▮▮▮▮▮"
+        ]
     }
 }

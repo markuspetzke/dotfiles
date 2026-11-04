@@ -4,6 +4,7 @@ PartOf=hypr-session.target
 After=hypr-session.target
 
 [Service]
+ExecStartPre=-%h/.config/bin/theme-wallpaper --no-reload
 ExecStart=/usr/bin/hyprpaper
 Restart=on-failure
 RestartSec=2

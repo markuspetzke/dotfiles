@@ -17,5 +17,8 @@ return {
 		border_size = 1,
 		dim_inactive = true,
 		dim_strength = 0.25,
+		-- Verlauf Gruen -> Violett, laeuft langsam um das aktive Fenster
+		border_gradient = { "#7fd88f", "#9d84d8" },
+		border_loop = true,
 	},
 }

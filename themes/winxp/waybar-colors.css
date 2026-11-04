@@ -1,0 +1,12 @@
+/* Windows XP: Farben fuer waybar/base.css */
+@define-color background #245edb;
+@define-color background-dark #1941a5;
+@define-color surface #3c81f3;
+@define-color surface2 #1b4fc0;
+@define-color foreground #ffffff;
+@define-color muted #c3d3fd;
+@define-color accent #1e52b7;
+@define-color olive #3c9a3c;
+@define-color teal #0f8ef6;
+@define-color orange #f0a050;
+@define-color red #e04343;

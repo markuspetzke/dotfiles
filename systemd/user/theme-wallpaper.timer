@@ -1,0 +1,10 @@
+[Unit]
+Description=Theme-Wallpaper alle 10 Minuten an die Tageszeit anpassen
+PartOf=hypr-session.target
+
+[Timer]
+OnCalendar=*:0/10
+AccuracySec=30s
+
+[Install]
+WantedBy=hypr-session.target

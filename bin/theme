@@ -3,6 +3,7 @@
 #
 #   theme            # verfuegbare Themes, aktives markiert
 #   theme <name>     # aktivieren und alles neu laden
+#   theme --session  # nur Mauszeiger des aktiven Themes setzen (Hyprland-Start, hypr/theme.lua)
 #
 # Themes liegen in ~/.config/themes/<name>/. Aktiv ist, worauf der Symlink
 # ~/.config/theme-current zeigt (nicht im Git, also pro Rechner).
@@ -15,13 +16,103 @@ current=$(basename "$(readlink "$link" 2>/dev/null || true)")
 
 list() {
 	for d in "$themes"/*/; do
+		[[ -f $d/palette.lua ]] || continue
 		n=$(basename "$d")
 		[[ $n == "$current" ]] && echo "* $n" || echo "  $n"
 	done
 }
 
+# Mauszeiger: themes/<name>/cursor/<Name>/ nach ~/.local/share/icons verlinken und setzen,
+# sonst der Standard aus uwsm/env (XCURSOR_THEME).
+apply_cursor() {
+	local dir name size=${XCURSOR_SIZE:-24}
+	# "|| true": Themes ohne cursor/ duerfen das Skript nicht abbrechen (set -e)
+	dir=$(find -L "$link/cursor" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | head -1 || true)
+	if [[ -n $dir ]]; then
+		name=$(basename "$dir")
+		mkdir -p "$HOME/.local/share/icons"
+		ln -sfn "$(readlink -f "$dir")" "$HOME/.local/share/icons/$name"
+	else
+		name=${XCURSOR_THEME:-Wii-Pointer-P1}
+	fi
+	hyprctl setcursor "$name" "$size" >/dev/null 2>&1 || true
+	gsettings set org.gnome.desktop.interface cursor-theme "$name" 2>/dev/null || true
+}
+
+# Zusatz fuer hyprlock: Logo aus themes/<name>/private/logo.png, sonst leer. Die Datei existiert
+# immer, damit "source" in den Hyprlock-Themes nie ins Leere zeigt.
+write_lock_extra() {
+	local state="${XDG_STATE_HOME:-$HOME/.local/state}/theme" logo="$link/private/logo.png"
+	# Position/Groesse je Theme (themes/<name>/logo.conf: "position = x, y" / "size = n")
+	local pos="0, 300" size=260
+	if [[ -f $link/logo.conf ]]; then
+		pos=$(sed -n 's/^position *= *//p' "$link/logo.conf" | head -1)
+		size=$(sed -n 's/^size *= *//p' "$link/logo.conf" | head -1)
+		pos=${pos:-0, 300}
+		size=${size:-260}
+	fi
+	mkdir -p "$state"
+	if [[ -f $logo ]]; then
+		cat >"$state/hyprlock-extra.conf" <<-EOT
+			# Erzeugt von bin/theme: eigenes Logo des Themes (private/logo.png)
+			image {
+			    monitor =
+			    path = $(readlink -f "$logo")
+			    size = $size
+			    rounding = 0
+			    border_size = 0
+			    position = $pos
+			    halign = center
+			    valign = center
+			}
+		EOT
+	else
+		echo "# Erzeugt von bin/theme: kein eigenes Logo (themes/<name>/private/logo.png fehlt)" >"$state/hyprlock-extra.conf"
+	fi
+}
+
+# Symbol-Theme: themes/<name>/(private/)icon-theme/<Name>/ verlinken und setzen, sonst Adwaita
+apply_icons() {
+	local dir name
+	dir=$(find -L "$link/private/icon-theme" "$link/icon-theme" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | head -1 || true)
+	if [[ -n $dir ]]; then
+		name=$(basename "$dir")
+		mkdir -p "$HOME/.local/share/icons"
+		ln -sfn "$(readlink -f "$dir")" "$HOME/.local/share/icons/$name"
+	else
+		name=Adwaita
+	fi
+	gsettings set org.gnome.desktop.interface icon-theme "$name" 2>/dev/null || true
+	# Thunar: mit eigenem Symbol-Theme farbige Symbole in der Seitenleiste, sonst symbolische
+	if command -v xfconf-query >/dev/null; then
+		local sym=true
+		[[ -n $dir ]] && sym=false
+		xfconf-query -c thunar -p /misc-symbolic-icons-in-sidepane -n -t bool -s "$sym" 2>/dev/null || true
+		xfconf-query -c thunar -p /misc-symbolic-icons-in-toolbar -n -t bool -s "$sym" 2>/dev/null || true
+	fi
+}
+
+# Laufende GTK-Programme (Thunar) laden gtk.css nur bei einem Theme-Wechsel neu:
+# GTK-Theme kurz umschalten und zuruecksetzen
+reload_gtk() {
+	local cur
+	cur=$(gsettings get org.gnome.desktop.interface gtk-theme 2>/dev/null | tr -d "'")
+	[[ -n $cur ]] || return 0
+	gsettings set org.gnome.desktop.interface gtk-theme Adwaita
+	sleep 0.3
+	gsettings set org.gnome.desktop.interface gtk-theme "$cur"
+}
+
 if (($# == 0)); then
 	list
+	exit 0
+fi
+
+if [[ $1 == --session ]]; then
+	write_lock_extra
+	apply_cursor
+	"$cfg/bin/theme-sound" startup
+	"$cfg/bin/menu" --preload
 	exit 0
 fi
 
@@ -31,6 +122,8 @@ if [[ ! -f $themes/$name/palette.lua ]]; then
 	list >&2
 	exit 1
 fi
+
+"$cfg/bin/menu" --stop  # Startmenue des alten Themes beenden
 
 # Relativer Symlink: funktioniert unabhaengig vom Home-Pfad
 ln -sfn "themes/$name" "$link"
@@ -50,8 +143,40 @@ done
 # Nur in einer laufenden Hyprland-Sitzung neu laden
 if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
 	hyprctl reload >/dev/null
+	apply_cursor
+	"$cfg/bin/theme-wallpaper" --no-reload
+	write_lock_extra
+	"$cfg/bin/theme-browser" >/dev/null || true
+	"$cfg/bin/theme-fastfetch-logo" || true
+	"$cfg/bin/menu" --preload
+	apply_icons
+	reload_gtk
+	# Spotify (Spicetify): Farbschema = Theme-Name (themes/spicetify/color.ini), ohne Neustart
+	spotify_note=""
+	if command -v spicetify >/dev/null && grep -q "^\[$name\]" "$themes/spicetify/color.ini" 2>/dev/null; then
+		spicetify config current_theme DesktopTheme color_scheme "$name" >/dev/null 2>&1 &&
+			spicetify refresh -n >/dev/null 2>&1 || true
+		pgrep -x spotify >/dev/null && spotify_note=", Spotify: nach Neustart"
+	fi
+	thunar_note=""
+	if pgrep -x thunar >/dev/null; then
+		if hyprctl clients -j | grep -qi '"class": "thunar"'; then
+			thunar_note=", Thunar: nach Neustart"
+		else
+			thunar -q 2>/dev/null || true
+		fi
+	fi
+	"$cfg/bin/theme-greeter" || true
 	systemctl --user restart hyprpaper.service waybar.service dunst.service
+	# hyprlauncher liest sein Theme (hypr/hyprtoolkit.conf) nur beim Start: Daemon neu starten
+	if pkill -x hyprlauncher; then
+		sleep 0.3
+		hyprctl dispatch 'hl.dsp.exec_cmd("hyprlauncher -d")' >/dev/null
+	fi
 	pkill -USR1 -x kitty || true
-	notify-send -t 2000 "Theme" "$name ist aktiv"
+	msg="$name ist aktiv"
+	pgrep -x helium >/dev/null && msg="$msg (Helium: nach Neustart)"
+	msg="$msg$thunar_note$spotify_note"
+	notify-send -t 3000 "Theme" "$msg"
 fi
 echo "Theme: $name"

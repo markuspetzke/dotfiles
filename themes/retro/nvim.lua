@@ -1,6 +1,21 @@
 -- Theme "Bernstein-CRT" fuer Neovim: Colorscheme, gruvbox-Overrides, eigene Highlights.
 return {
   colorscheme = "gruvbox",
+  -- Kopf des Neovim-Startbildschirms (snacks dashboard): Sonne + READY. wie ein alter Heimcomputer
+  dashboard_header = table.concat({
+    "          ▄▄██████▄▄          ",
+    "       ▄██████████████▄       ",
+    "    ▄████████████████████▄    ",
+    "   ████████████████████████   ",
+    "  ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  ",
+    "  ██████████████████████████  ",
+    "  ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  ",
+    " ▁▂▃▅▆▅▃▂▁▂▄▆▇▇▆▄▂▁▂▃▅▆▅▃▂▁▂▃ ",
+    "",
+    "  BERNSTEIN-CRT  64K RAM SYSTEM",
+    "  READY.                       ",
+    "  █                            ",
+  }, "\n"),
   gruvbox = {
     contrast = "hard",
     palette_overrides = {

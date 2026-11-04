@@ -1,0 +1,134 @@
+/* Thunar -- Windows XP: wie der Explorer (beige Leisten, weisse Dateiansicht, blaue Aufgabenleiste
+   links, blaue Auswahl). Eingebunden ueber ~/.config/gtk-3.0/gtk.css, gilt nur fuer Thunar-Fenster. */
+.thunar, .thunar * {
+    font-family: "Tahoma", "Noto Sans", sans-serif;
+    font-size: 11px;
+}
+
+/* Menue-, Werkzeug- und Statusleiste: XP-Beige */
+.thunar,
+.thunar menubar,
+.thunar toolbar,
+.thunar statusbar,
+.thunar headerbar {
+    background-color: #ece9d8;
+    background-image: none;
+    color: #000000;
+    border-color: #aca899;
+}
+
+.thunar toolbar {
+    border-bottom: 1px solid #aca899;
+}
+
+/* Dateiansicht: weiss */
+.thunar iconview,
+.thunar exoiconview,
+.thunar .view,
+.thunar treeview.view,
+.thunar scrolledwindow viewport {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Linke Leiste: blauer Verlauf wie die XP-Aufgabenleiste, helle Schrift */
+/* Linke Leiste in XP-Blau (GTK zeichnet Listen-Hintergruende je Zeile, daher einfarbig statt Verlauf) */
+.thunar .shortcuts-pane,
+.thunar .shortcuts-pane treeview,
+.thunar treeview.view.shortcuts-pane,
+.thunar .shortcuts-pane treeview.view,
+.thunar .sidebar {
+    background-color: #6d8ae0;
+    background-image: none;
+    color: #ffffff;
+}
+
+.thunar .shortcuts-pane treeview:selected,
+.thunar treeview.view.shortcuts-pane:selected,
+.thunar .shortcuts-pane treeview.view:selected,
+.thunar .sidebar:selected {
+    background-color: #ffffff;
+    color: #215dc6;
+}
+
+/* Auswahl in der Dateiansicht */
+.thunar iconview:selected,
+.thunar exoiconview:selected,
+.thunar .view:selected,
+.thunar treeview.view:selected {
+    background-color: #316ac5;
+    color: #ffffff;
+}
+
+/* Adresszeile und Eingabefelder */
+.thunar entry {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #7f9db9;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* Knoepfe: flach auf Beige, beim Ueberfahren XP-artig hervorgehoben */
+.thunar button {
+    background-image: none;
+    background-color: transparent;
+    color: #000000;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.thunar button:hover {
+    background-image: linear-gradient(to bottom, #ffffff, #e3e3db);
+    border-color: #cecec3;
+}
+
+.thunar button:checked,
+.thunar button:active {
+    background-image: linear-gradient(to bottom, #e5e5de, #f8f8f6);
+    border-color: #a5a597;
+}
+
+.thunar statusbar,
+.thunar statusbar label {
+    color: #000000;
+}
+
+.thunar separator,
+.thunar paned > separator {
+    background-color: #aca899;
+    min-width: 1px;
+    min-height: 1px;
+}
+
+.thunar menu,
+.thunar .context-menu,
+.thunar popover {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #aca899;
+}
+
+.thunar menu menuitem:hover,
+.thunar popover modelbutton:hover {
+    background-color: #316ac5;
+    color: #ffffff;
+}
+
+/* Menueleiste mit XP-Flagge rechts (private/start-icon.png) */
+.thunar menubar {
+    background-image: url("private/start-icon.png");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 22px 19px;
+    border-bottom: 1px solid #aca899;
+}
+
+/* Adresszeile */
+.thunar toolbar entry {
+    min-height: 22px;
+    border: 1px solid #7f9db9;
+    background-color: #ffffff;
+}

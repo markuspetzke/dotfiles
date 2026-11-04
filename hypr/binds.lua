@@ -2,7 +2,8 @@
 local mainMod = "SUPER"
 local terminal = "kitty"
 local fileManager = "thunar"
-local menu = "hyprlauncher"
+-- Startmenue des Themes (bin/menu: z. B. XP-Startmenue), sonst hyprlauncher
+local menu = os.getenv("HOME") .. "/.config/bin/menu"
 local host = require("./host.lua")
 
 -- Applications & Windows
@@ -24,6 +25,10 @@ end)
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen_state({ internal = 2, client = 0, action = "toggle" }))
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen_state({ internal = 0, client = 2 }))
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.window.float({ action = "toggle" }))
+-- Bildschirm-Shader des Themes an/aus (themes/<name>/shader.frag)
+hl.bind(mainMod .. " + SHIFT + G", function()
+	require("./theme.lua").toggle_shader()
+end)
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("loginctl lock-session"))
 -- QMK Grave-Escape kann mit SUPER den Grave-Keycode statt Escape senden.

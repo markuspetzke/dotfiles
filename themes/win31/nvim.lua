@@ -1,6 +1,29 @@
 -- Theme "Windows-3.1" fuer Neovim: Colorscheme, gruvbox-Overrides, eigene Highlights.
+-- DOS-Menuekasten fuer den Startbildschirm; Breite 46, Inhalt wird aufgefuellt
+local function box(lines)
+  local w = 44
+  local out = { "╔" .. string.rep("═", w) .. "╗" }
+  for _, l in ipairs(lines) do
+    if l == "-" then
+      table.insert(out, "╠" .. string.rep("═", w) .. "╣")
+    else
+      table.insert(out, "║" .. l .. string.rep(" ", w - vim.fn.strdisplaywidth(l)) .. "║")
+    end
+  end
+  table.insert(out, "╚" .. string.rep("═", w) .. "╝")
+  return table.concat(out, "\n")
+end
+local v = vim.version()
+
 return {
   colorscheme = "gruvbox",
+  -- Kopf des Neovim-Startbildschirms (snacks dashboard)
+  dashboard_header = box({
+    string.format("  NEOVIM                    Version %d.%d.%d", v.major, v.minor, v.patch),
+    "  (C) Neovim-Mitwirkende, Apache-Lizenz 2.0",
+    "-",
+    "  Bitte waehlen Sie eine Option:",
+  }),
   gruvbox = {
     contrast = "hard",
     palette_overrides = {

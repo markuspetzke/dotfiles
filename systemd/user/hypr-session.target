@@ -1,7 +1,7 @@
 [Unit]
 Description=Hyprland user session services
 # Einzige Stelle, an der die Dienste haengen (sie selbst haben kein [Install]).
-Wants=hypridle.service hyprpaper.service hyprsunset.service dunst.service waybar.service cliphist-text.service cliphist-image.service power-profile.service headset.service hyprpolkitagent.service
+Wants=hypridle.service hyprpaper.service hyprsunset.service dunst.service waybar.service cliphist-text.service cliphist-image.service power-profile.service headset.service hyprpolkitagent.service theme-wallpaper.timer
 After=graphical-session-pre.target graphical-session.target
 # Mit der uwsm-Session stoppen, und zwar bevor Hyprland (wayland-wm@, Before=graphical-session.target)
 # beendet wird - sonst verlieren waybar/hyprpaper/hyprsunset beim Logout das Display und crashen.

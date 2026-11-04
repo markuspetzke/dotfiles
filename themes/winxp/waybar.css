@@ -1,0 +1,100 @@
+/* Windows XP: Taskleiste im Luna-Stil (Blau-Verlauf, gruener Startknopf, hellblauer
+   Infobereich rechts). Abweichungen von waybar/base.css. */
+* {
+    font-family: "Noto Sans", "Liberation Sans", sans-serif;
+    font-size: 12px;
+}
+
+window#waybar {
+    background-image: linear-gradient(to bottom, #3168d5 0%, #4993e6 10%, #2157d7 45%, #2663e0 88%, #1941a5 100%);
+    border-bottom: none;
+}
+
+window#waybar > box {
+    padding: 0 0 0 0;
+}
+
+/* Startknopf: Logo (image#start) + Text (custom/start) bilden zusammen einen Knopf */
+#image.start {
+    background-image: linear-gradient(to bottom, #388e38 0%, #57b857 15%, #3c9a3c 50%, #2f8a2f 85%, #246f24 100%);
+    padding: 0 3px 0 12px;
+    margin-right: -1px;   /* Waybar-Abstand zwischen Modulen schliessen: ein durchgehender Knopf */
+    border: none;
+}
+
+#custom-start {
+    background-image: linear-gradient(to bottom, #388e38 0%, #57b857 15%, #3c9a3c 50%, #2f8a2f 85%, #246f24 100%);
+    color: #ffffff;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 17px;
+    padding: 0 28px 0 4px;
+    margin: 0 10px 0 0;
+    border-radius: 0 14px 14px 0;
+    text-shadow: 1px 1px 1px #1b4e1b;
+    box-shadow: 2px 0 3px rgba(0, 0, 0, 0.45);
+}
+
+#custom-start:hover {
+    background-image: linear-gradient(to bottom, #44a044 0%, #68c868 15%, #4aac4a 50%, #3a9a3a 100%);
+}
+
+/* Taskleisten-Knoepfe */
+#workspaces button {
+    background-image: linear-gradient(to bottom, #4a8cf6, #3c81f3 50%, #3071e8);
+    color: #ffffff;
+    border: 1px solid #1b4fc0;
+    border-radius: 3px;
+    margin: 3px 2px;
+    padding: 0 12px;
+}
+
+#workspaces button:hover {
+    background-image: linear-gradient(to bottom, #5a9cff, #4a8ff8);
+    color: #ffffff;
+}
+
+#workspaces button.active,
+#workspaces button.focused {
+    background-image: none;
+    background: #1e52b7;
+    color: #ffffff;
+    box-shadow: inset 1px 1px 2px #0c2f7a;
+}
+
+#window {
+    color: #ffffff;
+}
+
+/* Infobereich rechts (Tray): ein durchgehendes hellblaues Feld, nur Symbole + Uhr */
+#custom-power-profile, #idle_inhibitor, #custom-headset, #custom-uptime, #pulseaudio, #network,
+#cpu, #memory, #temperature, #battery, #backlight, #bluetooth, #tray, #clock {
+    background-image: linear-gradient(to bottom, #0c59b9 0%, #139ee9 6%, #18b9f0 20%, #12a5ec 60%, #0f8ee3 92%, #0b6fd0 100%);
+    color: #ffffff;
+    border-left: none;
+    margin: 0;
+    padding: 0 5px;
+    text-shadow: 1px 1px #0a4fae;
+}
+
+/* Kante links am Anfang des Infobereichs */
+#custom-power-profile {
+    border-left: 1px solid #0a3fa0;
+    box-shadow: inset 1px 0 #3fc4ff;
+    padding-left: 10px;
+}
+
+#clock {
+    padding: 0 14px 0 8px;
+    font-size: 12px;
+}
+
+tooltip {
+    background: #ffffe1;
+    border: 1px solid #000000;
+    border-radius: 6px;
+}
+
+tooltip label {
+    color: #000000;
+}

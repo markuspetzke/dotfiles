@@ -1,0 +1,102 @@
+/* Thunar -- office (eingebunden ueber ~/.config/gtk-3.0/gtk.css; gilt nur fuer Thunar-Fenster) */
+.thunar, .thunar * {
+    font-family: "Noto Sans";
+    font-size: 12px;
+}
+
+.thunar,
+.thunar paned,
+.thunar statusbar,
+.thunar toolbar,
+.thunar menubar,
+.thunar headerbar {
+    background-color: #1f2329;
+    background-image: none;
+    color: #e6dfcf;
+    border-color: #3d4450;
+}
+
+/* Dateiansicht */
+.thunar iconview,
+.thunar exoiconview,
+.thunar .view,
+.thunar treeview.view,
+.thunar scrolledwindow viewport {
+    background-color: #181b20;
+    color: #e6dfcf;
+}
+
+/* Seitenleiste (Orte, Lesezeichen) */
+.thunar .shortcuts-pane,
+.thunar .shortcuts-pane treeview,
+.thunar treeview.view.shortcuts-pane,
+.thunar .shortcuts-pane treeview.view,
+.thunar .sidebar,
+.thunar placessidebar {
+    background-color: #2a2f37;
+    color: #e6dfcf;
+}
+
+/* Auswahl */
+.thunar iconview:selected,
+.thunar exoiconview:selected,
+.thunar .view:selected,
+.thunar treeview.view:selected,
+.thunar *:selected {
+    background-color: #5b8ad0;
+    color: #ffffff;
+}
+
+/* Pfadleiste und Eingabefelder */
+.thunar entry {
+    background-color: #181b20;
+    color: #e6dfcf;
+    border: 1px solid #3d4450;
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+.thunar button {
+    background-image: none;
+    background-color: #2a2f37;
+    color: #e6dfcf;
+    border: 1px solid #3d4450;
+    border-radius: 4px;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.thunar button:hover {
+    background-color: #3d4450;
+}
+
+.thunar button:checked {
+    background-color: #5b8ad0;
+    color: #ffffff;
+}
+
+.thunar statusbar,
+.thunar statusbar label {
+    color: #8d8778;
+}
+
+.thunar separator,
+.thunar paned > separator {
+    background-color: #3d4450;
+    min-width: 1px;
+    min-height: 1px;
+}
+
+.thunar menu,
+.thunar .context-menu,
+.thunar popover {
+    background-color: #1f2329;
+    color: #e6dfcf;
+    border: 1px solid #3d4450;
+}
+
+.thunar menu menuitem:hover,
+.thunar popover modelbutton:hover {
+    background-color: #5b8ad0;
+    color: #ffffff;
+}

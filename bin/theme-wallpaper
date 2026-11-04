@@ -1,0 +1,54 @@
+#!/bin/sh
+# Waehlt das Wallpaper des aktiven Themes nach Uhrzeit und verlinkt es nach
+# ~/.local/state/theme/wallpaper.png (hyprpaper.conf und die Hyprlock-Themes zeigen dorthin).
+#   theme-wallpaper            # setzen; hyprpaper nur neu starten, wenn sich etwas aendert
+#   theme-wallpaper --no-reload
+#   THEME_TIME=0700 theme-wallpaper   # Uhrzeit vorgeben (zum Testen der Phasen)
+# themes/<name>/wallpaper-phases: Zeilen "HH:MM phase" -> wallpapers/<phase>.png.
+# themes/<name>/wallpaper-rotate: Intervall in Sekunden -> wallpapers/*.png der Reihe nach.
+# Sonst gilt themes/<name>/wallpaper.png. Eigene Bilder: private/wallpapers/<phase>.png
+# (je Tageszeit) oder private/wallpaper.* (immer) haben Vorrang. Laeuft per theme-wallpaper.timer alle 10 min.
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
+theme="$cfg/theme-current"
+state="${XDG_STATE_HOME:-$HOME/.local/state}/theme"
+mkdir -p "$state"
+
+target="$theme/wallpaper.png"
+if [ -f "$theme/wallpaper-phases" ]; then
+	now=${THEME_TIME:-$(date +%H%M)}
+	# letzte Phase, deren Startzeit <= jetzt; vor der ersten Zeile gilt die letzte (Nacht)
+	phase=$(grep -v '^#' "$theme/wallpaper-phases" | awk -v now="$now" '
+		NF == 2 { t = $1; gsub(":", "", t); last = $2; if (t + 0 <= now + 0) cur = $2 }
+		END { print (cur != "" ? cur : last) }')
+	[ -f "$theme/wallpapers/$phase.png" ] && target="$theme/wallpapers/$phase.png"
+	# eigene Variante je Tageszeit (private/, nicht im Git) hat Vorrang
+	[ -f "$theme/private/wallpapers/$phase.png" ] && target="$theme/private/wallpapers/$phase.png"
+elif [ -f "$theme/wallpaper-rotate" ]; then
+	# Durchwechseln: Intervall in Sekunden, Reihenfolge alphabetisch
+	interval=$(grep -v '^#' "$theme/wallpaper-rotate" | head -1)
+	set -- "$theme"/wallpapers/*.png
+	# eigene Bilder (private/, nicht im Git) haben Vorrang
+	ls "$theme"/private/wallpapers/*.png >/dev/null 2>&1 && set -- "$theme"/private/wallpapers/*.png
+	if [ -f "$1" ] && [ "${interval:-0}" -gt 0 ]; then
+		i=$(( ($(date +%s) / interval) % $# + 1 ))
+		eval "target=\${$i}"
+	fi
+fi
+# Eigenes Wallpaper (private/, nicht im Git) hat Vorrang; als PNG, damit hyprpaper es sicher liest
+for f in "$theme"/private/wallpaper.png "$theme"/private/wallpaper.jpg "$theme"/private/wallpaper.jpeg "$theme"/private/wallpaper.webp; do
+	[ -f "$f" ] || continue
+	conv="$state/private-$(basename "$(readlink -f "$theme")").png"
+	if [ ! -f "$conv" ] || [ "$f" -nt "$conv" ]; then
+		python3 -I -c 'import sys; from PIL import Image; Image.open(sys.argv[1]).convert("RGB").save(sys.argv[2])' "$f" "$conv" || continue
+	fi
+	target=$conv
+	break
+done
+target=$(readlink -f "$target")
+
+link="$state/wallpaper.png"
+[ "$(readlink "$link" 2>/dev/null)" = "$target" ] && exit 0
+ln -sfn "$target" "$link"
+if [ "${1:-}" != "--no-reload" ] && systemctl --user is-active -q hyprpaper.service; then
+	systemctl --user restart hyprpaper.service
+fi

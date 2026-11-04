@@ -1,0 +1,43 @@
+// Windows XP: Taskleiste unten ohne Luecken, Startknopf, Infobereich nur mit Symbolen,
+// Uhr im englischen 12-Stunden-Format. Leeres "format" blendet ein Modul aus.
+{
+    "position": "bottom",
+    "custom/start": {
+        "exec": "echo start",
+        "interval": "once",
+        "tooltip": false,
+        "on-click": "~/.config/bin/menu"
+    },
+    "clock": {
+        "format": "{:%I:%M %p}",
+        "calendar": {
+            "format": {
+                "months": "<span color='#000000'><b>{}</b></span>",
+                "days": "<span color='#000000'>{}</span>",
+                "weeks": "<span color='#7a7a7a'><b>KW{}</b></span>",
+                "weekdays": "<span color='#0054e3'><b>{}</b></span>",
+                "today": "<span color='#e04343'><b><u>{}</u></b></span>"
+            }
+        },
+        "locale": "en_US.UTF-8",
+        "format-alt": "{:%A, %B %d, %Y}"
+    },
+    "spacing": 0,
+    "hyprland/window": {
+        "format": ""
+    },
+    "cpu": {
+        "format": ""
+    },
+    "memory": {
+        "format": ""
+    },
+    "temperature": {
+        "format": ""
+    },
+    "pulseaudio": {
+        "format": "{icon}",
+        "format-muted": "󰝟",
+        "tooltip-format": "{desc}: {volume}%"
+    }
+}

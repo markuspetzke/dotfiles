@@ -1,0 +1,43 @@
+#!/bin/sh
+# Einmalig mit sudo ausfuehren: Der Anmeldebildschirm (sysc-greet) folgt danach dem
+# Desktop-Theme. Danach braucht `theme` keine Root-Rechte mehr.
+#   sudo ~/.config/bin/greeter-setup
+# Macht:
+#  1. /var/lib/sysc-greet/{themes,shell-theme}/ anlegen, Besitzer = aufrufender Benutzer,
+#     lesbar fuer den Greeter-Benutzer
+#  2. /var/lib/greeter/.config/sysc-greet/themes -> /var/lib/sysc-greet/themes verlinken
+#     (dort sucht sysc-greet eigene Themes)
+#  3. das feste "--theme tokyo-night" aus /etc/greetd/hyprland-greeter-config.lua entfernen
+#     (Sicherung: .bak-theme), sonst gewinnt es immer
+#  4. aktuelles Desktop-Theme sofort uebernehmen
+set -eu
+user=${SUDO_USER:-}
+if [ "$(id -u)" -ne 0 ] || [ -z "$user" ]; then
+	echo "Bitte mit sudo ausfuehren: sudo $0" >&2
+	exit 1
+fi
+home=$(getent passwd "$user" | cut -d: -f6)
+base=/var/lib/sysc-greet
+
+install -d -m 755 "$base"
+install -d -o "$user" -m 755 "$base/themes" "$base/shell-theme"
+
+gdir=/var/lib/greeter/.config/sysc-greet
+install -d -o greeter -g greeter -m 755 "$gdir"
+if [ -L "$gdir/themes" ]; then
+	:
+elif [ -e "$gdir/themes" ]; then
+	mv "$gdir/themes" "$gdir/themes.bak-$(date +%Y%m%d)"
+	echo "Vorhandene Greeter-Themes gesichert: $gdir/themes.bak-$(date +%Y%m%d)"
+fi
+ln -sfn "$base/themes" "$gdir/themes"
+
+lua=/etc/greetd/hyprland-greeter-config.lua
+if grep -q -- " --theme tokyo-night" "$lua"; then
+	cp -a "$lua" "$lua.bak-theme"
+	sed -i 's/ --theme tokyo-night//' "$lua"
+	echo "Festes Greeter-Theme entfernt ($lua, Sicherung: $lua.bak-theme)"
+fi
+
+su -s /bin/sh "$user" -c "$home/.config/bin/theme-greeter"
+echo "Fertig. Der Anmeldebildschirm zeigt ab dem naechsten Start: $(cat "$base/shell-theme/theme" 2>/dev/null || echo '?')"

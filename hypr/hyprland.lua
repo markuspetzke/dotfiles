@@ -3,7 +3,6 @@
 -----------------
 
 local host = require("./host.lua")
-require("./theme.lua")
 require("./binds.lua")
 require("./monitors.lua")
 require("./windowrule.lua")
@@ -230,3 +229,11 @@ hl.window_rule({
 	move = "20 monitor_h-120",
 	float = true,
 })
+
+---------------
+---- THEME ----
+---------------
+
+-- Zuletzt laden: das aktive Theme (themes/<name>/palette.lua) setzt Farben und darf
+-- Aussehen, Animationen und Fensterregeln von oben ueberschreiben.
+require("./theme.lua")
