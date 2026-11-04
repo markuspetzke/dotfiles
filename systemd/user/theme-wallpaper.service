@@ -1,5 +1,5 @@
 [Unit]
-Description=Theme-Wallpaper nach Uhrzeit setzen (bin/theme-wallpaper)
+Description=Set the theme wallpaper by time of day (bin/theme-wallpaper)
 PartOf=hypr-session.target
 
 [Service]

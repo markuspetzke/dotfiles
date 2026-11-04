@@ -1,5 +1,5 @@
-"""Windows-3.1-Bildschirmschoner: Sternenfeld, das aus der Mitte heranfliegt
-(laeuft im Vollbild-Kitty, gestartet von bin/screensaver). Beendet sich bei jeder Taste."""
+"""Windows 3.1 screensaver: a starfield flying out of the center
+(runs in a fullscreen kitty, started by bin/screensaver). Quits on any key."""
 import os
 import random
 import select
@@ -15,7 +15,7 @@ _START = time.time()
 
 
 def key_pressed():
-    """Taste oder Mausbewegung (Terminal-Mausmeldungen) -> beenden; erste Sekunde ignorieren."""
+    """Key or mouse move (terminal mouse reports) -> quit; ignore the first second."""
     if not select.select([sys.stdin], [], [], 0)[0]:
         return False
     os.read(sys.stdin.fileno(), 4096)

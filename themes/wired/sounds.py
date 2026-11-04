@@ -1,6 +1,6 @@
-"""Wired: synthetisierte Sounds -> sounds/{notify,lock,unlock}.wav (python3 sounds.py).
-notify: kurzer Doppelpiep. lock: fallender Blip. unlock: Modem-Handshake (Waehlton,
-Pfeiftoene, Rauschen, Zirpen), ca. 1,5 s. Alles leise abgemischt."""
+"""Wired: synthesized sounds -> sounds/{notify,lock,unlock}.wav (python3 sounds.py).
+notify: a short double beep. lock: a falling blip. unlock: modem handshake (dial tone,
+whistles, noise, chirps), about 1.5 s. Everything mixed quietly."""
 import math
 import os
 import random
@@ -46,22 +46,22 @@ def mix(*parts):
 
 rng = random.Random(1)
 
-# notify: zwei kurze Rechteck-Pieps, leicht gefiltert durch geringe Lautstaerke
+# notify: two short square beeps, slightly filtered through a low volume
 save("notify", tone(1320, 0.045, square) + silence(0.035) + tone(1760, 0.06, square), gain=0.12)
 
-# lock: fallender Sinus-Blip
+# lock: falling sine blip
 save("lock", tone(lambda t: 880 - 2600 * t, 0.18), gain=0.3)
 
-# unlock: Modem-Handshake
+# unlock: modem handshake
 handshake = []
-handshake += mix(tone(350, 0.25), tone(440, 0.25))  # Waehlton
+handshake += mix(tone(350, 0.25), tone(440, 0.25))  # dial tone
 handshake += silence(0.05)
-handshake += tone(2100, 0.25, release=0.01)  # Antwortton
-handshake += [s * 0.7 for s in tone(lambda t: 1200 + 600 * math.sin(2 * math.pi * 9 * t), 0.2)]  # Wobbeln
+handshake += tone(2100, 0.25, release=0.01)  # answer tone
+handshake += [s * 0.7 for s in tone(lambda t: 1200 + 600 * math.sin(2 * math.pi * 9 * t), 0.2)]  # warble
 noise = [(rng.random() * 2 - 1) for _ in range(int(0.3 * RATE))]
-handshake += [n * min(1, i / 2000) * 0.6 for i, n in enumerate(noise)]  # Rauschen
-for f in (1650, 1850, 1650, 2400, 1200):  # Zirpen
+handshake += [n * min(1, i / 2000) * 0.6 for i, n in enumerate(noise)]  # noise
+for f in (1650, 1850, 1650, 2400, 1200):  # chirps
     handshake += tone(f, 0.05, square, release=0.005)
-handshake += tone(lambda t: 2200 - 900 * t, 0.12)  # verbunden
+handshake += tone(lambda t: 2200 - 900 * t, 0.12)  # connected
 save("unlock", handshake, gain=0.22)
 print("ok", OUT)

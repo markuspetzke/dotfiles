@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Laptop-Leerlauf (hypridle-laptop.conf): Bildschirm auf 10 % abdunkeln und Tastatur-
-# beleuchtung aus, bei Aktivitaet den vorherigen Wert wiederherstellen.
+# Laptop idle (hypridle-laptop.conf): dim the screen to 10 % and turn the keyboard
+# backlight off; restore the previous values on activity.
 #   backlight.sh dim | restore
-# brightnessctl merkt sich den Wert (-s) und stellt ihn her (-r). Die Merkdatei sorgt dafuer,
-# dass "restore" nur zuruecksetzt, was "dim" auch geaendert hat (sonst kaeme ein alter Wert zurueck).
+# brightnessctl saves the value (-s) and restores it (-r). The marker file makes sure
+# "restore" only resets what "dim" actually changed (otherwise an old value would come back).
 set -u
 command -v brightnessctl >/dev/null || exit 0
 mark=${XDG_RUNTIME_DIR:-/tmp}/hypr-backlight-dimmed
@@ -13,7 +13,7 @@ case ${1:-} in
 dim)
 	[[ -e $mark ]] && exit 0
 	: >"$mark"
-	# Nur abdunkeln, nie aufhellen: unter 10 % bleibt die Helligkeit, wie sie ist
+	# Only dim, never brighten: below 10 % the brightness stays as it is
 	cur=$(brightnessctl -m -c backlight 2>/dev/null | cut -d, -f4 | tr -d %)
 	if [[ $cur =~ ^[0-9]+$ ]] && ((cur > 10)); then
 		brightnessctl -q -s -c backlight set 10% && echo screen >>"$mark"
@@ -29,7 +29,7 @@ restore)
 	rm -f "$mark"
 	;;
 *)
-	echo "Aufruf: $0 dim|restore" >&2
+	echo "Usage: $0 dim|restore" >&2
 	exit 2
 	;;
 esac

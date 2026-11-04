@@ -5,12 +5,13 @@ hl.window_rule({
 	match = { title = "Picture-in-Picture" },
 
 	float = true,
-	pin = true, -- bleibt beim Workspace-Wechsel sichtbar
+	pin = true, -- stays visible when switching workspaces
 	size = "25% 25%",
-	move = "monitor_w-100%-20 monitor_h-100%-20", -- unten rechts
+	move = "monitor_w-100%-20 monitor_h-100%-20", -- bottom right
 })
 
--- Dialoge (Datei oeffnen/speichern, Polkit-Prompts) schweben zentriert.
+-- Dialogs (open/save file, polkit prompts) float centered. The German titles match
+-- dialogs of programs running with a German locale.
 hl.window_rule({
 	name = "dialogs-float",
 	match = {
@@ -40,22 +41,22 @@ hl.window_rule({
 	name = "tf2",
 	match = { class = "tf_linux64" },
 
-	-- Immer auf dem 165-Hz-Hauptmonitor (sonst landet TF2 auf dem Monitor mit der Maus,
-	-- z. B. links, wenn Steam dort offen ist). Nur Desktop, der Laptop hat kein DP-2.
+	-- Always on the 165 Hz main monitor (otherwise TF2 lands on the monitor with the mouse,
+	-- e.g. the left one when Steam is open there). Desktop only, the laptop has no DP-2.
 	monitor = host.is_desktop and "DP-2" or nil,
 	fullscreen = true,
-	-- Source engine crasht gerne, wenn der Compositor ihm einen Fullscreen-Wechsel meldet
-	-- (SDL macht dann einen Video-Mode-Reset). Fullscreen nur intern in Hyprland umschalten.
+	-- The Source engine likes to crash when the compositor reports a fullscreen change
+	-- (SDL then resets the video mode). Toggle fullscreen only inside Hyprland.
 	sync_fullscreen = false,
-	-- Ausserhalb von Fullscreen nicht kacheln: eine kleinere Fenstergroesse laesst die
-	-- Vulkan-Swapchain haengen (Spiel friert ein). Schwebend in Monitorgroesse bleibt alles gleich.
+	-- Do not tile outside fullscreen: a smaller window size makes the Vulkan
+	-- swapchain hang (game freezes). Floating at monitor size keeps everything the same.
 	float = true,
 	size = "monitor_w monitor_h",
 	move = "0 0",
 })
 
--- hyprlauncher: halbtransparenter Hintergrund (hyprtoolkit.conf) bekommt Blur,
--- der Rest des Bildschirms wird leicht abgedunkelt.
+-- hyprlauncher: the semi-transparent background (hyprtoolkit.conf) gets blur,
+-- the rest of the screen is dimmed slightly.
 hl.layer_rule({
 	name = "hyprlauncher",
 	match = { namespace = "^hyprlauncher$" },
@@ -65,7 +66,7 @@ hl.layer_rule({
 	dim_around = true,
 })
 
--- Bildschirmschoner (bin/screensaver): Vollbild, ohne Animation und Abdunkeln
+-- Screensaver (bin/screensaver): fullscreen, no animation, no dimming
 hl.window_rule({
 	name = "screensaver",
 	match = { class = "^screensaver$" },

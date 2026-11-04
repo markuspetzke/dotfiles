@@ -1,5 +1,5 @@
 {
-  "_kommentar": "Helium/Chromium-Theme (bin/theme-browser baut daraus eine Theme-Erweiterung)",
+  "_comment": "Helium/Chromium theme (bin/theme-browser builds a theme extension from it)",
   "frame": "#070807",
   "frame_inactive": "#0c0e0c",
   "background_tab": "#070807",

@@ -1,19 +1,19 @@
-# Git-Grundeinstellungen aus dem Dotfiles-Repo, gelten auf jedem Rechner.
-# Name, Mail und die SSH-Umleitung fuer GitHub stehen rechnerspezifisch in ~/.gitconfig
-# (wird nach dieser Datei gelesen, Werte dort haben Vorrang).
+# Git defaults from the dotfiles repo, valid on every machine.
+# Name, mail and the SSH rewrite for GitHub are machine specific in ~/.gitconfig
+# (read after this file, its values take precedence).
 
-# pull ohne Merge-Commits: eigene Commits auf den neuen Stand setzen, Aenderungen kurz wegstellen
+# pull without merge commits: rebase own commits onto the new state, stash changes briefly
 [pull]
 	rebase = true
 [rebase]
 	autoStash = true
-# Auf dem Server geloeschte Branches lokal mit aufraeumen
+# Also clean up branches deleted on the server
 [fetch]
 	prune = true
-# Erster Push eines neuen Branches legt ihn auf dem Server an
+# The first push of a new branch creates it on the server
 [push]
 	autoSetupRemote = true
-# Besser lesbare Diffs; Konflikte zeigen auch die gemeinsame Ursprungsversion
+# More readable diffs; conflicts also show the common base version
 [diff]
 	algorithm = histogram
 [merge]

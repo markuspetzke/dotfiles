@@ -11,7 +11,7 @@ clipboard | file) ;;
   ;;
 esac
 
-# Esc darf weder einen Screenshot ausloesen noch die Zwischenablage leeren.
+# Esc must neither take a screenshot nor clear the clipboard.
 geometry=$(slurp -d) || exit 0
 [[ -n "$geometry" ]] || exit 0
 
@@ -28,5 +28,5 @@ if [[ "$mode" == file ]]; then
   cp -- "$tmp" "$image"
 fi
 
-# Erst nach erfolgreicher Aufnahme kopieren, MIME-Typ explizit setzen.
+# Copy only after a successful capture, with an explicit MIME type.
 wl-copy --type image/png <"$image"

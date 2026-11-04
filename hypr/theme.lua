@@ -1,6 +1,6 @@
--- Laedt das aktive Theme (~/.config/theme-current -> themes/<name>, gesetzt mit `theme <name>`)
--- und setzt Rahmen-/Gruppenfarben sowie Theme-Eigenheiten (Rahmenbreite, Abdunkeln,
--- umlaufender Verlaufsrahmen, Bildschirm-Shader). Fehlt der Symlink, gilt themes/retro.
+-- Loads the active theme (~/.config/theme-current -> themes/<name>, set with `theme <name>`)
+-- and sets border/group colors plus theme specifics (border width, dimming,
+-- rotating gradient border, screen shader). Without the symlink, themes/retro applies.
 local home = os.getenv("HOME") or ""
 local current = home .. "/.config/theme-current"
 
@@ -25,7 +25,7 @@ local function exists(path)
 end
 
 local t = load_theme(current .. "/palette.lua") or load_theme(home .. "/.config/themes/retro/palette.lua")
--- Laptop: Effekte, die dauernd neu zeichnen (Shader, umlaufender Rahmen), standardmaessig aus (Akku)
+-- Laptop: effects that redraw constantly (shader, rotating border) are off by default (battery)
 local host = require("./host.lua")
 local c = t.colors
 local opt = t.hypr or {}
@@ -35,7 +35,7 @@ local function rgba(hex, alpha)
 	return string.format("rgba(%s%02x)", hex:sub(2), alpha or 0xff)
 end
 
--- Aktiver Rahmen: eine Akzentfarbe oder ein Verlauf (border_gradient), optional umlaufend.
+-- Active border: an accent color or a gradient (border_gradient), optionally rotating.
 local active_border = rgba(c.accent)
 if opt.border_gradient then
 	local cols = {}
@@ -73,12 +73,12 @@ hl.config({
 	},
 })
 
--- Beim Start den Mauszeiger des Themes setzen (bin/theme --session)
+-- Set the theme's cursor at startup (bin/theme --session)
 hl.on("hyprland.start", function()
 	hl.exec_cmd(home .. "/.config/bin/theme --session")
 end)
 
--- Freie Ueberschreibungen des Themes (z. B. Rundung, Blur, Abstaende, Animationen, Regeln)
+-- Free-form theme overrides (e.g. rounding, blur, gaps, animations, rules)
 if opt.config then
 	hl.config(opt.config)
 end
@@ -89,8 +89,8 @@ for _, r in ipairs(opt.window_rules or {}) do
 	hl.window_rule(r)
 end
 
--- smart_gaps = false: auch ein einzelnes Fenster behaelt Abstand, Rahmen und Rundung
--- (ueberschreibt die Smart-Gaps-Regeln aus hypr/hyprland.lua, gleiche Namen)
+-- smart_gaps = false: a single window also keeps gaps, border and rounding
+-- (overrides the smart gaps rules from hypr/hyprland.lua, same names)
 if opt.smart_gaps == false then
 	local cfg = opt.config or {}
 	local gi = (cfg.general or {}).gaps_in or 5
@@ -109,22 +109,22 @@ if opt.smart_gaps == false then
 	end
 end
 
--- Abdunkeln inaktiver Fenster (dim_inactive): Fenster mit laufendem Video bleiben hell.
--- Erkennung (bin/video-tags): laufendes Medium, dessen Titel im Fenstertitel steht (YouTube usw.),
--- oder Fenster unterdrueckt die Bildschirmsperre / ist ein Videoplayer -> Tag "video".
+-- Dimming of inactive windows (dim_inactive): windows with playing video stay bright.
+-- Detection (bin/video-tags): a playing medium whose title is in the window title (YouTube etc.),
+-- or the window inhibits the screen lock / is a video player -> tag "video".
 if opt.dim_inactive then
 	hl.window_rule({ name = "no-dim-video", match = { tag = "video" }, no_dim = true })
 
-	-- Erkennung im Hintergrund (bin/video-tags), damit der Compositor nie auf playerctl wartet.
-	-- Kein Polling: Player-Wechsel (Play/Pause/Titel) meldet media-watch.service, Fenster-
-	-- wechsel kommen von hier. Mehrere Ereignisse innerhalb von 300 ms loesen nur einen Lauf aus.
+	-- Detection runs in the background (bin/video-tags) so the compositor never waits for playerctl.
+	-- No polling: player changes (play/pause/title) come from media-watch.service, window
+	-- changes from here. Several events within 300 ms trigger only one run.
 	local script = home .. "/.config/bin/video-tags"
 	_G.theme_video_gen = (_G.theme_video_gen or 0) + 1
 	local vgen = _G.theme_video_gen
 	local pending = false
 	local function update_video_tags()
 		if vgen ~= _G.theme_video_gen or pending then
-			return -- Handler eines frueheren Config-Ladevorgangs bzw. Lauf schon geplant
+			return -- handler of an earlier config load, or a run is already scheduled
 		end
 		pending = true
 		hl.timer(function()
@@ -135,20 +135,20 @@ if opt.dim_inactive then
 	hl.on("window.open", update_video_tags)
 	hl.on("window.active", update_video_tags)
 	hl.on("window.title", update_video_tags)
-	update_video_tags() -- Stand nach Config-Reload bzw. Theme-Wechsel
+	update_video_tags() -- state after a config reload or theme switch
 end
 
 if opt.border_loop and not host.is_laptop then
-	-- Verlauf laeuft langsam um das aktive Fenster (wie ein Datenstrom)
+	-- The gradient slowly travels around the active window (like a data stream)
 	hl.animation({ leaf = "borderangle", enabled = true, speed = 60, bezier = "linear", style = "loop" })
 end
 
 ------------------------------------------------------------------------
--- Bildschirm-Shader (themes/<name>/shader.frag)
--- Super+Shift+G schaltet ihn um; in Vollbild-Spielen ist er automatisch aus.
+-- Screen shader (themes/<name>/shader.frag)
+-- Super+Shift+G toggles it; it is off automatically in fullscreen games.
 ------------------------------------------------------------------------
 local M = { colors = c }
--- Echter Pfad statt Symlink, damit Hyprland beim Theme-Wechsel neu kompiliert
+-- Real path instead of the symlink, so Hyprland recompiles on a theme switch
 local p = io.popen('readlink -f "' .. current .. '" 2>/dev/null')
 local real = p and (p:read("*l") or "") or ""
 if p then
@@ -157,8 +157,8 @@ end
 local shader = (real ~= "" and real or current) .. "/shader.frag"
 M.has_shader = exists(shader)
 
--- Zustand ueberlebt Config-Reloads (globale Variable im Lua-State). Auf dem Laptop
--- startet der Shader aus (Akku); Super+Shift+G schaltet ihn bei Bedarf ein.
+-- The state survives config reloads (global variable in the Lua state). On the laptop
+-- the shader starts off (battery); Super+Shift+G turns it on when needed.
 if _G.theme_shader_enabled == nil then
 	_G.theme_shader_enabled = not host.is_laptop
 end
@@ -196,20 +196,20 @@ end
 
 function M.toggle_shader()
 	if not M.has_shader then
-		hl.exec_cmd('notify-send -t 1500 "Shader" "Dieses Theme hat keinen Shader"')
+		hl.exec_cmd('notify-send -t 1500 "Shader" "This theme has no shader"')
 		return
 	end
 	_G.theme_shader_enabled = not _G.theme_shader_enabled
 	applied = nil
 	M.apply_shader()
 	hl.exec_cmd(
-		'notify-send -t 1500 "Shader" "' .. (_G.theme_shader_enabled and "an" or "aus") .. '"'
+		'notify-send -t 1500 "Shader" "' .. (_G.theme_shader_enabled and "on" or "off") .. '"'
 	)
 end
 
 M.apply_shader()
 if M.has_shader then
-	-- Handler frueherer Config-Ladevorgaenge werden wirkungslos (Generationszaehler)
+	-- Handlers of earlier config loads become no-ops (generation counter)
 	_G.theme_gen = (_G.theme_gen or 0) + 1
 	local gen = _G.theme_gen
 	local function on_change()

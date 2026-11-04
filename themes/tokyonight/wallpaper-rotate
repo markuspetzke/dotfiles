@@ -1,2 +1,2 @@
-# Wallpaper aus private/wallpapers/ (bzw. wallpapers/) im Stundentakt durchwechseln (wie frueher hyprpaper timeout = 3600).
+# Cycle through the wallpapers in private/wallpapers/ (or wallpapers/) every hour (like hyprpaper's old timeout = 3600).
 3600

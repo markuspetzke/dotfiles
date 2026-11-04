@@ -16,7 +16,7 @@ return {
       enabled = true,
       width = 60,
       preset = {
-        -- Kopf vom Desktop-Theme (themes/<name>/nvim.lua: dashboard_header), sonst NEOVIM
+        -- Header from the desktop theme (themes/<name>/nvim.lua: dashboard_header), otherwise NEOVIM
         header = require("config.theme").get().dashboard_header or table.concat({
           "███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
           "████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║",
@@ -84,14 +84,14 @@ return {
 
     input = { enabled = true },
 
-    -- Der Explorer laeuft auf dem Picker, deshalb bleibt der an; nur die
-    -- vim.ui.select-Uebernahme ist hier nicht erwuenscht.
+    -- The explorer runs on the picker, so the picker stays on; only its
+    -- takeover of vim.ui.select is not wanted here.
     picker = {
       enabled = true,
       ui_select = false,
       sources = {
-        -- Datei unter dem Cursor im Explorer gleich im Hauptfenster anzeigen (Vorschau,
-        -- kein echtes Oeffnen). Mit "P" im Explorer ein-/ausschalten.
+        -- Show the file under the cursor in the explorer right away in the main window (preview,
+        -- not really opening it). Toggle with "P" in the explorer.
         explorer = { layout = { preset = "sidebar", preview = "main" } },
       },
     },
@@ -112,7 +112,7 @@ return {
         debug = " ",
         trace = " ",
       },
-      style = "fancy", -- "compact" oder "fancy" oder "minimal"
+      style = "fancy", -- "compact" or "fancy" or "minimal"
     },
 
     quickfile = { enabled = true },
@@ -123,16 +123,16 @@ return {
 
     scroll = { enabled = true },
 
-    -- Statuscolumn: aus -- reserviert zusaetzliche Spalten links und macht
-    -- den Rand unnoetig breit. Signcolumn + Zeilennummern reichen.
+    -- Statuscolumn: off -- it reserves extra columns on the left and makes
+    -- the gutter needlessly wide. Signcolumn + line numbers are enough.
     statuscolumn = { enabled = false },
 
-    -- Zen Mode (optional, sehr nützlich!)
+    -- Zen mode (optional, very useful!)
     zen = {
-      enabled = true, -- Aktiviere wenn du willst
+      enabled = true, -- enable if you like
     },
 
-    -- Styles für verschiedene Windows
+    -- Styles for different windows
     styles = {
       notification = {
         wo = { wrap = true },
@@ -153,7 +153,7 @@ return {
     {
       "<leader>e",
       function()
-        -- Terminal-/Scratch-Buffer haben kein echtes Verzeichnis -> cwd nehmen.
+        -- Terminal/scratch buffers have no real directory -> use cwd.
         local dir = vim.fn.expand("%:p:h")
         if vim.bo.buftype ~= "" or vim.fn.isdirectory(dir) == 0 then
           dir = vim.fn.getcwd()
@@ -202,7 +202,7 @@ return {
       desc = "Notification History",
     },
 
-    -- Zen Mode (wenn aktiviert)
+    -- Zen mode (if enabled)
     {
       "<leader>z",
       function()
@@ -240,7 +240,7 @@ return {
         Snacks.toggle.indent():map("<leader>ug")
         Snacks.toggle.dim():map("<leader>uD")
 
-        -- Dim nur im aktiven Fenster; andere Splits bleiben voll sichtbar.
+        -- Dim only in the active window; other splits stay fully visible.
         local dim_on_win = Snacks.dim.on_win
         Snacks.dim.on_win = function(win, ...)
           if win == vim.api.nvim_get_current_win() then

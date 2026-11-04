@@ -1,5 +1,5 @@
-"""Pixel-Wallpaper "win31-desktop": Teal-Desktop mit eigenem, dezentem Rautenmuster.
-Rendert 480x270 (16px-Kachel), skaliert 4x (nearest) auf 1920x1080."""
+"""Pixel wallpaper "win31-desktop": teal desktop with an own, subtle diamond pattern.
+Renders 480x270 (16px tile), scaled 4x (nearest) to 1920x1080."""
 import sys
 
 from PIL import Image
@@ -9,7 +9,7 @@ TEAL = (0x00, 0x80, 0x80)
 DARK = (0x00, 0x6a, 0x6a)
 LIGHT = (0x1a, 0x94, 0x94)
 
-# 16x16-Kachel: Raute aus Punkten (dunkel) mit hellem Mittelpunkt, Rest Teal
+# 16x16 tile: a diamond of (dark) dots with a light center, teal otherwise
 TILE = 16
 img = Image.new("RGB", (W, H), TEAL)
 px = img.load()

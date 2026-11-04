@@ -1,11 +1,11 @@
 [Unit]
-Description=Wöchentliches Backup ~/Documents -> storageD -> NAS
+Description=Weekly backup ~/Documents -> storageD -> NAS
 
 [Timer]
-# Sonntag vor dem Hetzner-Lauf (13:00): so ist der aktuelle Stand schon auf der NAS, wenn
-# sie nach Hetzner gesichert wird. Wöchentlich statt monatlich: rsync überträgt nur Änderungen.
+# Sunday before the Hetzner run (13:00): the current state is already on the NAS when
+# it gets backed up to Hetzner. Weekly instead of monthly: rsync only transfers changes.
 OnCalendar=Sun 11:00
-# PC war aus -> beim nächsten Login nachholen
+# PC was off -> catch up at the next login
 Persistent=true
 
 [Install]

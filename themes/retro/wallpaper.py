@@ -1,7 +1,7 @@
-"""Pixel-Art-Wallpaper "retro-horizon" in der Bernstein-CRT-Palette, je Tageszeit.
+"""Pixel art wallpaper "retro-horizon" in the amber CRT palette, per time of day.
   python3 wallpaper.py              -> wallpapers/{morning,noon,evening,night}.png + wallpaper.png (= evening)
   python3 wallpaper.py <phase> <out>
-Rendert 480x270 und skaliert 4x (nearest) auf 1920x1080. Welche Phase wann gilt:
+Renders 480x270 and scales 4x (nearest) to 1920x1080. Which phase applies when:
 wallpaper-phases (bin/theme-wallpaper)."""
 import math
 import random
@@ -38,12 +38,12 @@ BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]]
 
 
 def dither(x, y, t, a, b):
-    """t in [0,1]: Anteil von b, per 4x4-Bayer-Matrix."""
+    """t in [0,1]: share of b, via a 4x4 Bayer matrix."""
     return b if t * 16 > BAYER[y % 4][x % 4] + 0.5 else a
 
 
 def ramp(x, y, t, stops):
-    """Mehrstufiger Verlauf ueber Farbliste, zwischen Nachbarn gedithert."""
+    """Multi-stop gradient over a color list, dithered between neighbors."""
     t = min(max(t, 0.0), 0.9999)
     seg = t * (len(stops) - 1)
     i = int(seg)
@@ -59,7 +59,7 @@ def ridge(x, seed, base, amp, freqs):
 
 
 PHASES = {
-    # Sonne (Mitte x, Mitte y, Radius) oder None; Himmel-Verschiebung; Sterne
+    # Sun (center x, center y, radius) or None; sky shift; stars
     "morning": dict(sun=(int(W * 0.28), HORIZON + 6, 46), sky_shift=0.10, stars=12, moon=None),
     "noon": dict(sun=(int(W * 0.62), HORIZON - 96, 30), sky_shift=0.22, stars=0, moon=None),
     "evening": dict(sun=(W // 2, HORIZON, 64), sky_shift=0.0, stars=70, moon=None),
@@ -76,7 +76,7 @@ def render(phase):
     glow_x, glow_y = (sun[0], sun[1]) if sun else (cfg["moon"][0], cfg["moon"][1])
     glow_amt = 0.35 if sun else 0.12
 
-    # Himmel
+    # Sky
     sky = [P["void"], P["bg_dark"], P["bg"], P["surface"], P["warm"], P["glow"]]
     for y in range(HORIZON):
         for x in range(W):
@@ -85,12 +85,12 @@ def render(phase):
             t += max(0.0, glow_amt - d / 520)
             px[x, y] = ramp(x, y, t, sky)
 
-    # Sterne
+    # Stars
     for _ in range(cfg["stars"]):
         x, y = rng.randrange(W), rng.randrange(int(HORIZON * (0.65 if phase == "night" else 0.45)))
         px[x, y] = P["cream"] if rng.random() < 0.25 else P["muted"]
 
-    # Sonne: Kreis bis zum Horizont, Streifen in der unteren Haelfte
+    # Sun: circle down to the horizon, stripes in the lower half
     if sun:
         cx, cy, r = sun
         for y in range(cy - r + 1, min(cy + r, HORIZON)):
@@ -102,7 +102,7 @@ def render(phase):
             for x in range(cx - half, cx + half + 1):
                 px[x, y] = ramp(x, y, rel, [P["amber_hi"], P["amber"], P["orange"], P["red"]])
 
-    # Mond (Sichel): Kreis minus versetzter Kreis
+    # Moon (crescent): circle minus an offset circle
     if cfg["moon"]:
         mx, my, mr = cfg["moon"]
         for y in range(my - mr, my + mr + 1):
@@ -110,7 +110,7 @@ def render(phase):
                 if (x - mx) ** 2 + (y - my) ** 2 <= mr * mr and (x - mx - 5) ** 2 + (y - my + 2) ** 2 > (mr - 1) ** 2:
                     px[x, y] = dither(x, y, 0.2, P["cream"], P["muted"])
 
-    # Berge: hintere Kette (Flaeche), vordere Kette (Oliv-dunkel)
+    # Mountains: back range (area), front range (dark olive)
     for x in range(W):
         far = int(ridge(x, 1.3, HORIZON - 22, 12, [0.013, 0.031, 0.077]))
         near = int(ridge(x, 4.1, HORIZON - 6, 9, [0.021, 0.05, 0.11]))
@@ -119,7 +119,7 @@ def render(phase):
         for y in range(max(0, near), HORIZON):
             px[x, y] = dither(x, y, 0.25, P["olive_dk"], P["olive"])
 
-    # Boden mit Spiegelung von Sonne bzw. Mond
+    # Ground with a reflection of the sun or moon
     refl_x = sun[0] if sun else cfg["moon"][0]
     refl_r = (sun[2] if sun else 18) * (1.0 if sun and sun[1] >= HORIZON - 20 else 0.6)
     refl_cols = (P["amber"], P["orange"]) if sun else (P["muted"], P["surface"])
@@ -134,12 +134,12 @@ def render(phase):
                 if fade * (1 - depth) * 16 > BAYER[y % 4][x % 4]:
                     px[x, y] = refl_cols[0] if depth < 0.25 else refl_cols[1]
 
-    # Horizontlinie
+    # Horizon line
     for x in range(W):
         near_sun = sun and sun[1] >= HORIZON - 20 and abs(x - sun[0]) < sun[2]
         px[x, HORIZON] = dither(x, HORIZON, 0.5, P["olive"], P["amber"]) if near_sun else P["olive_dk"]
 
-    # Scanlines: jede 4. Zeile minimal abdunkeln (nach dem Hochskalieren)
+    # Scanlines: darken every 4th line slightly (after upscaling)
     big = img.resize((W * SCALE, H * SCALE), Image.NEAREST)
     bp = big.load()
     for y in range(0, H * SCALE, SCALE):

@@ -1,9 +1,9 @@
-"""Windows 3.1: klassischer Pfeil, schwarz mit weissem Rand, eigene Pixelzeichnung
--> cursor/Theme-win31. python3 cursor.py (danach `theme win31`)."""
+"""Windows 3.1: classic arrow, black with a white outline, own pixel drawing
+-> cursor/Theme-win31. python3 cursor.py (then `theme win31`)."""
 import os
 import sys
 
-sys.dont_write_bytecode = True  # kein __pycache__ in themes/
+sys.dont_write_bytecode = True  # no __pycache__ in themes/
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from xcursor import build  # noqa: E402
 

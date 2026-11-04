@@ -1,5 +1,5 @@
-/* Wired: Abweichungen von waybar/base.css (wird zuletzt geladen). */
-/* Leiste: duenne dunkelgruene Phosphorlinie unten. */
+/* Wired: overrides of waybar/base.css (loaded last). */
+/* Bar: thin dark green phosphor line at the bottom. */
 window#waybar {
     border-bottom: 1px solid #2f5a37;
 }
@@ -8,7 +8,7 @@ window#waybar {
     color: @muted;
 }
 
-/* Aktiver Workspace: leuchtende Schrift mit Unterstrich statt gefuelltem Feld. */
+/* Active workspace: glowing text with an underline instead of a filled field. */
 #workspaces button.active,
 #workspaces button.focused {
     background: transparent;
@@ -17,7 +17,7 @@ window#waybar {
     text-shadow: 0 0 6px alpha(@accent, 0.7);
 }
 
-/* Uhr: leuchtende Phosphorschrift statt invertiertem Feld. */
+/* Clock: glowing phosphor text instead of an inverted field. */
 #clock {
     background: transparent;
     color: @accent;
@@ -26,7 +26,7 @@ window#waybar {
     text-shadow: 0 0 6px alpha(@accent, 0.7);
 }
 
-/* Leichter Phosphor-Schimmer auf allen Werten. */
+/* Slight phosphor shimmer on all values. */
 #cpu, #memory, #temperature, #pulseaudio, #network, #custom-playerctl.Playing {
     text-shadow: 0 0 4px alpha(@foreground, 0.35);
 }

@@ -3,7 +3,7 @@ return {
   version = "^9",
   ft = { "rust" },
   opts = {
-    -- Debugging ueber codelldb aus Mason (:MasonInstall codelldb).
+    -- Debugging through codelldb from Mason (:MasonInstall codelldb).
     dap = {
       adapter = function()
         local ext = vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/"
@@ -14,10 +14,10 @@ return {
       end,
     },
     server = {
-      -- rust-analyzer meldet Zusatztipps (z. B. "prefix it with an underscore") doppelt:
-      -- als relatedInformation der Warnung UND als eigene Hint-Diagnose, die mit
-      -- "original diagnostic" auf die Warnung zurueckverweist. Die Hint-Kopien verwerfen,
-      -- damit jeder Fehler nur einmal (mit ↳-Tipp) angezeigt wird.
+      -- rust-analyzer reports extra tips (e.g. "prefix it with an underscore") twice:
+      -- as relatedInformation of the warning AND as a separate hint diagnostic that points
+      -- back to the warning with "original diagnostic". Drop the hint copies
+      -- so every error shows up only once (with a ↳ tip).
       handlers = {
         ["textDocument/publishDiagnostics"] = function(err, result, ctx)
           if result and result.diagnostics then
@@ -35,8 +35,8 @@ return {
         end,
       },
       on_attach = function(_, bufnr)
-        -- Inlay Hints schaltet bereits das globale LspAttach ein. Hier nur die
-        -- Rust-spezifischen Varianten, die die LSP-Defaults ueberschreiben.
+        -- The global LspAttach already turns inlay hints on. Only the
+        -- Rust-specific variants that override the LSP defaults live here.
         local map = function(mode, lhs, rhs, desc)
           vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
         end
@@ -85,7 +85,7 @@ return {
               ["async-recursion"] = { "async_recursion" },
             },
           },
-          -- Inlay Hints Konfiguration
+          -- Inlay hints configuration
           inlayHints = {
             bindingModeHints = {
               enable = false,

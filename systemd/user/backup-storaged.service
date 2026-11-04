@@ -1,13 +1,13 @@
 [Unit]
 Description=Backup ~/Documents -> /mnt/storageD
-# Nur auf dem Desktop (GLaDOS). Auf dem Laptop sind die Timer ohnehin nicht aktiviert; das ist die Absicherung.
+# Desktop only (GLaDOS). The timers are not enabled on the laptop anyway; this is the safeguard.
 ConditionHost=GLaDOS
-# Danach direkt storageD -> NAS (statt eigenem Timer, der nur per Uhrzeit hinterherlief).
+# Then storageD -> NAS right away (instead of an own timer that only followed by clock time).
 OnSuccess=backup-nas.service
 
 [Service]
 Type=oneshot
-# Kein Ruhezustand mitten im Lauf (hypridle prüft vor dem Suspend auf solche Sperren)
-ExecStart=/usr/bin/systemd-inhibit --what=sleep --who=backup-storaged --why="Backup Dokumente -> storageD läuft" %h/.local/bin/backup-documents storaged
+# No sleep in the middle of a run (hypridle checks for such inhibitors before suspending)
+ExecStart=/usr/bin/systemd-inhibit --what=sleep --who=backup-storaged --why="Backup documents -> storageD running" %h/.local/bin/backup-documents storaged
 Nice=10
 IOSchedulingClass=idle

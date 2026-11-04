@@ -1,6 +1,6 @@
-"""Windows XP (Luna): synthetisierte, freundliche Systemklaenge -> sounds/{notify,lock,unlock}.wav.
-Eigene Klaenge, keine Microsoft-Samples: notify = weiches "Pling" (zwei Toene), lock = zwei
-fallende Toene, unlock = aufsteigender, flaechiger Akkord. python3 sounds.py"""
+"""Windows XP (Luna): synthesized, friendly system sounds -> sounds/{notify,lock,unlock}.wav.
+Own sounds, no Microsoft samples: notify = a soft "ding" (two tones), lock = two
+falling tones, unlock = a rising, pad-like chord. python3 sounds.py"""
 import math
 import os
 import struct
@@ -25,13 +25,13 @@ def n(d):
 
 
 def pling(freq, dur, decay=0.25):
-    """Weicher Glockenton: Grundton + leise Oktave, schneller Einsatz, langsames Abklingen."""
+    """Soft bell tone: fundamental + a quiet octave, fast attack, slow decay."""
     return [(math.sin(2 * math.pi * freq * i / RATE) + 0.25 * math.sin(4 * math.pi * freq * i / RATE))
             * math.exp(-i / (RATE * decay)) * min(1, i / 120) for i in range(n(dur))]
 
 
 def pad(freq, dur, attack=0.15, release=0.6):
-    """Flaechiger Ton: zwei leicht verstimmte Sinus, langsames Ein-/Ausblenden."""
+    """Pad tone: two slightly detuned sines, slow fade in/out."""
     out = []
     for i in range(n(dur)):
         t = i / RATE
@@ -53,5 +53,5 @@ def overlay(parts):
 save("notify", overlay([(0.0, pling(1318.5, 0.6)), (0.09, pling(1760.0, 0.7))]), gain=0.22)      # E6, A6
 save("lock", overlay([(0.0, pling(880.0, 0.4, 0.15)), (0.14, pling(659.3, 0.5, 0.2))]), gain=0.22)  # A5, E5
 save("unlock", overlay([(0.0, pad(349.2, 1.8)), (0.12, pad(440.0, 1.68)), (0.24, pad(523.3, 1.56)),
-                        (0.36, pad(698.5, 1.44)), (0.5, pling(1046.5, 1.0, 0.4))]), gain=0.25)   # F-Dur
+                        (0.36, pad(698.5, 1.44)), (0.5, pling(1046.5, 1.0, 0.4))]), gain=0.25)   # F major
 print("ok", OUT)

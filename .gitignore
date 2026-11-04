@@ -17,39 +17,39 @@ nvim/nvim.log
 !uwsm/**
 !fastfetch/
 !fastfetch/**
-# Desktop-Themes; das aktive (theme-current) ist ein lokaler Symlink und bleibt draussen
+# Desktop themes; the active one (theme-current) is a local symlink and stays out
 !themes/
 !themes/**
-# GTK 3: nur gtk.css (bindet das Thunar-Styling des Themes ein)
+# GTK 3: only gtk.css (includes the theme's Thunar styling)
 !gtk-3.0/
 !gtk-3.0/gtk.css
-# Eigene, evtl. urheberrechtlich geschuetzte Dateien je Theme (Logo, Bilder, Musik)
+# Own, possibly copyrighted files per theme (logo, images, music)
 themes/*/private/
-# Eigene Skripte; per Symlink nach ~/.local/bin (siehe bin/README.md)
+# Own scripts; symlinked into ~/.local/bin (see bin/README.md)
 !bin/
 !bin/**
-# User-Services der Hyprland-Session (Units + Drop-ins). *.wants/ sind lokale
-# Aktivierungs-Symlinks und bleiben draussen.
+# User services of the Hyprland session (units + drop-ins). *.wants/ are local
+# activation symlinks and stay out.
 !systemd/
 !systemd/user/
 !systemd/user/**
 systemd/user/*.wants/
-# Laufzeitzustand des Laptop-Monitorprofils
+# Runtime state of the laptop monitor profile
 hypr/.monitor-profile
-# makepkg: AUR-Builds mit allen Threads (nur diese Datei)
+# makepkg: AUR builds on all threads (this file only)
 !pacman/
 !pacman/makepkg.conf
-# Bash-Config (~/.bashrc laedt bash/bashrc)
+# Bash config (~/.bashrc loads bash/bashrc)
 !bash/
 !bash/**
-# Git: Grundeinstellungen und globale Ignore-Liste (Name/Mail bleiben lokal in ~/.gitconfig)
+# Git: defaults and global ignore list (name/mail stay local in ~/.gitconfig)
 !git/
 !git/config
 !git/ignore
-# Pruefung vor jedem Commit (bin/dotfiles-check)
+# Check before every commit (bin/dotfiles-check)
 !.githooks/
 !.githooks/**
-# Uebersicht und Screenshots fuer GitHub
+# Overview and screenshots for GitHub
 !README.md
 !docs/
 !docs/**

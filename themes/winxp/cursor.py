@@ -1,9 +1,9 @@
-"""Windows XP: weisser Pfeil mit schwarzem Rand und weichem grauem Schatten (eigene
-Pixelzeichnung) -> cursor/Theme-winxp. python3 cursor.py (danach `theme winxp`)."""
+"""Windows XP: white arrow with a black outline and a soft gray shadow (own
+pixel drawing) -> cursor/Theme-winxp. python3 cursor.py (then `theme winxp`)."""
 import os
 import sys
 
-sys.dont_write_bytecode = True  # kein __pycache__ in themes/
+sys.dont_write_bytecode = True  # no __pycache__ in themes/
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from xcursor import build  # noqa: E402
 

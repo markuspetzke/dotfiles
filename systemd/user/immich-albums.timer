@@ -1,5 +1,5 @@
 [Unit]
-Description=Immich-Ordner-Alben sonntags nach Backup und Scan
+Description=Immich folder albums on Sundays after backup and scan
 
 [Timer]
 OnCalendar=Sun 22:30

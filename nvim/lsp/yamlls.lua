@@ -4,7 +4,7 @@ return {
   end,
   settings = {
     yaml = {
-      -- schemastore uebernimmt; den eingebauten Store abschalten, sonst doppelt.
+      -- schemastore takes over; turn off the built-in store, otherwise everything shows up twice.
       schemaStore = { enable = false, url = "" },
       schemas = {},
       keyOrdering = false,

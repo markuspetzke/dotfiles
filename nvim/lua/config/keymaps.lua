@@ -8,29 +8,29 @@ map({ "i", "n", "v", "x" }, "<C-s>", function()
   vim.cmd("update")
 end, { desc = "Save file" })
 
--- Wrapped lines wie echte Zeilen bewegen, solange kein Count davor steht.
+-- Move through wrapped lines like real lines unless a count is given.
 map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true, desc = "Down" })
 map({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true, desc = "Down" })
 map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true, desc = "Up" })
 map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true, desc = "Up" })
 
--- Cursor mittig halten beim Suchen/Scrollen
+-- Keep the cursor centered while searching/scrolling
 map("n", "n", "nzzzv", { desc = "Next match" })
 map("n", "N", "Nzzzv", { desc = "Prev match" })
--- <C-d>/<C-u> bewusst ohne "zz": das Nachzentrieren kollidiert mit der Scroll-Animation
--- von snacks.scroll, dann "verschluckt" sich ab und zu ein Tastendruck.
+-- <C-d>/<C-u> deliberately without "zz": recentering clashes with the scroll animation
+-- of snacks.scroll, and then a keypress gets "swallowed" now and then.
 
--- Zeilen verschieben
+-- Move lines
 map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move line down" })
 map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move line up" })
 map("v", "<A-j>", ":m '>+1<cr>gv=gv", { silent = true, desc = "Move selection down" })
 map("v", "<A-k>", ":m '<-2<cr>gv=gv", { silent = true, desc = "Move selection up" })
 
--- Selektion nach Einruecken behalten
+-- Keep the selection after indenting
 map("v", "<", "<gv", { desc = "Indent left" })
 map("v", ">", ">gv", { desc = "Indent right" })
 
--- Beim Einfuegen ueber Selektion das Register nicht ueberschreiben
+-- Do not overwrite the register when pasting over a selection
 map("x", "<leader>P", [["_dP]], { desc = "Paste without yanking" })
 
 -- Windows

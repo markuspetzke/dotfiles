@@ -1,7 +1,7 @@
-/* Gemeinsames Leisten-Layout aller Themes. Farben (@background, @accent, ...) kommen aus
-   themes/<name>/waybar-colors.css, Abweichungen aus themes/<name>/waybar.css (style.css).
-   Regel: eine Akzentfarbe, Rahmen 1-2px, keine Rundungen, keine Schatten.
-   Departure Mono ist auf 11px gerastert -> font-size 11px bleibt pixelscharf. */
+/* Bar layout shared by all themes. Colors (@background, @accent, ...) come from
+   themes/<name>/waybar-colors.css, overrides from themes/<name>/waybar.css (style.css).
+   Rule: one accent color, 1-2px borders, no rounding, no shadows.
+   Departure Mono is rasterized at 11px -> font-size 11px stays pixel sharp. */
 * {
     border: none;
     border-radius: 0;
@@ -11,15 +11,15 @@
     min-height: 0;
 }
 
-/* Hintergrund und Kante direkt am Fenster: "#waybar > .box" greift in aktuellen
-   Waybar-Versionen nicht, die Leiste waere sonst durchsichtig. */
+/* Background and edge directly on the window: "#waybar > .box" does not apply in current
+   Waybar versions, the bar would be transparent otherwise. */
 window#waybar {
     background: @background;
     border-bottom: 2px solid @surface2;
     color: @foreground;
 }
 
-/* Innenabstand der Leiste. */
+/* Inner padding of the bar. */
 window#waybar > box {
     padding: 0 6px;
 }
@@ -57,7 +57,7 @@ window#waybar > box {
     padding: 0 12px;
 }
 
-/* Module: flach, nur durch senkrechte Trennlinien abgesetzt. */
+/* Modules: flat, separated only by vertical lines. */
 #custom-playerctl,
 #power-profiles-daemon,
 #custom-headset,
@@ -102,7 +102,7 @@ window#waybar > box {
     animation: blink 1s steps(2) infinite;
 }
 
-/* Uhr als Akzent: invertiert wie ein Statusfeld. */
+/* Clock as the accent: inverted like a status field. */
 #clock {
     background: @accent;
     color: @background-dark;
@@ -137,7 +137,7 @@ tooltip label {
     color: @foreground;
 }
 
-/* Hartes Blinken wie ein Terminal-Cursor statt weichem Fade. */
+/* Hard blinking like a terminal cursor instead of a soft fade. */
 @keyframes blink {
     to { color: @background; }
 }

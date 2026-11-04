@@ -1,5 +1,5 @@
--- Theme "Office": Grossraumbuero nach Feierabend. Anthrazit, Papierbeige, Firmenblau,
--- Post-it-Gelb. Dunkel, leicht abgerundet, sanfte Schatten, kein Blur.
+-- Theme "Office": open-plan office after hours. Charcoal, paper beige, company blue,
+-- post-it yellow. Dark, slightly rounded, soft shadows, no blur.
 return {
 	colors = {
 		bg = "#1f2329",

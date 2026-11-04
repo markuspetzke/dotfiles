@@ -1,6 +1,6 @@
-"""Office: synthetisierte Buero-Klaenge -> sounds/{notify,lock,unlock}.wav (python3 sounds.py).
-Eigene Klaenge, keine Samples: notify = kurzes Telefon-Trillern, lock = Stempel ("Thunk"),
-unlock = Tastaturklappern + "Ding"."""
+"""Office: synthesized office sounds -> sounds/{notify,lock,unlock}.wav (python3 sounds.py).
+Own sounds, no samples: notify = a short phone trill, lock = a stamp ("thunk"),
+unlock = keyboard clatter + "ding"."""
 import math
 import os
 import random
@@ -35,7 +35,7 @@ def add(a, b, offset=0.0):
 
 
 def trill(dur):
-    """Telefon: zwei Toene im 20-Hz-Wechsel, weich ein-/ausgeblendet."""
+    """Phone: two tones alternating at 20 Hz, soft fade in/out."""
     out = []
     for i in range(n(dur)):
         t = i / RATE
@@ -46,7 +46,7 @@ def trill(dur):
 
 
 def thunk():
-    """Stempel: tiefer Schlag + kurzes Rauschen."""
+    """Stamp: a low thud + a short burst of noise."""
     out, prev = [], 0.0
     for i in range(n(0.18)):
         t = i / RATE

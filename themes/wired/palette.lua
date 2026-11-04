@@ -1,4 +1,4 @@
--- Theme "Wired": Farben fuer Hyprland (hypr/theme.lua) und Hyprland-Eigenheiten.
+-- Theme "Wired": colors for Hyprland (hypr/theme.lua) and Hyprland specifics.
 return {
 	colors = {
 		bg = "#0c0e0c",
@@ -17,7 +17,7 @@ return {
 		border_size = 1,
 		dim_inactive = true,
 		dim_strength = 0.25,
-		-- Verlauf Gruen -> Violett, laeuft langsam um das aktive Fenster
+		-- Gradient green -> violet, slowly travels around the active window
 		border_gradient = { "#7fd88f", "#9d84d8" },
 		border_loop = true,
 	},

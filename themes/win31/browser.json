@@ -1,5 +1,5 @@
 {
-  "_kommentar": "Helium/Chromium-Theme wie ein Win-3.1-Programmfenster: Navy-Titelleiste, graue Leiste, weisse Adresszeile",
+  "_comment": "Helium/Chromium theme like a Win 3.1 program window: navy title bar, gray bar, white address bar",
   "frame": "#000080",
   "frame_inactive": "#808080",
   "background_tab": "#000080",

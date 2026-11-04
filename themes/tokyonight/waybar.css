@@ -1,11 +1,11 @@
-/* Tokyo Night: der alte Leistenstil (schwebende Pills ueber dem Wallpaper), ueberschreibt
-   waybar/base.css. Hintergrund durchsichtig wie damals. */
+/* Tokyo Night: the old bar style (floating pills above the wallpaper), overrides
+      waybar/base.css. Transparent background like back then. */
 window#waybar {
     background: transparent;
     border-bottom: none;
 }
 
-/* Trennlinien und Feld-Stil aus base.css zuruecksetzen */
+/* Reset separators and field style from base.css */
 #custom-playerctl, #power-profiles-daemon, #custom-headset, #custom-uptime, #idle_inhibitor,
 #pulseaudio, #network, #cpu, #memory, #temperature, #battery, #backlight, #bluetooth, #clock, #tray {
     border-left: none;
@@ -20,7 +20,7 @@ window#waybar {
     min-height: 0;
 }
 
-/* Eine ruhige, abgesetzte Leiste statt einzelner harter Rahmen. */
+/* A calm, separated bar instead of single hard borders. */
 #waybar > .box {
     background: @background;
     border: 1px solid alpha(@foreground, 0.08);
@@ -68,7 +68,7 @@ window#waybar {
     padding: 0 12px;
 }
 
-/* Gemeinsame Modulform: kompakte farbige pills. */
+/* Shared module shape: compact colored pills. */
 #custom-playerctl,
 #power-profiles-daemon,
 #custom-headset,

@@ -1,12 +1,12 @@
-// Bernstein-CRT: nur Abweichungen von waybar/modules.jsonc. Wird zuerst eingebunden,
-// Waybar fuehrt die Objekte zusammen (erste Datei gewinnt).
+// Amber CRT: only overrides of waybar/modules.jsonc. Included first,
+// Waybar merges the objects (the first file wins).
 {
     "clock": {
         "calendar": {
             "format": {
                 "months": "<span color='#e6dcc3'><b>{}</b></span>",
                 "days": "<span color='#e6dcc3'>{}</span>",
-                "weeks": "<span color='#8a8370'><b>KW{}</b></span>",
+                "weeks": "<span color='#8a8370'><b>W{}</b></span>",
                 "weekdays": "<span color='#8f9a5b'><b>{}</b></span>",
                 "today": "<span color='#e8a33d'><b><u>{}</u></b></span>"
             }

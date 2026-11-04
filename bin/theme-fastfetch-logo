@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Erzeugt das Fastfetch-Logo des aktiven Themes als fertige ANSI-Datei:
+"""Generates the active theme's fastfetch logo as a ready ANSI file:
 ~/.local/state/theme/fastfetch-logo.ans (fastfetch: "type": "file-raw").
 
-- themes/<name>/private/logo.png vorhanden -> Pixelgrafik aus Halbbloecken (2 Pixel je Zeile,
-  echte Farben, Transparenz bleibt Terminal-Hintergrund). Breite: private/logo.width (Standard 26).
-- sonst themes/<name>/fastfetch-logo.txt mit $1..$9 -> Farben aus logo.color in fastfetch.jsonc.
-Wird von `theme` aufgerufen."""
+- themes/<name>/private/logo.png present -> pixel art from half blocks (2 pixels per line,
+    true colors, transparency stays terminal background). Width: private/logo.width (default 26).
+- otherwise themes/<name>/fastfetch-logo.txt with $1..$9 -> colors from logo.color in fastfetch.jsonc.
+Called by `theme`."""
 import json
 import os
 import re

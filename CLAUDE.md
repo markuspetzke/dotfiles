@@ -1,57 +1,59 @@
 # Dotfiles (~/.config)
 
-Arch Linux, Hyprland 0.57 (Lua-Config) ueber uwsm, Waybar, Kitty, Dunst, Neovim (lazy.nvim).
-Repo `markuspetzke/dotfiles` ist **oeffentlich**. Ein Branch (`master`) fuer Desktop und Laptop;
-die Unterschiede erkennt `hypr/scripts/hypr-profile.sh` zur Laufzeit.
-Doku, Kommentare und Commits auf Deutsch, ohne Umlaute (ae/oe/ue/ss).
+Arch Linux, Hyprland 0.57 (Lua config) through uwsm, Waybar, Kitty, Dunst, Neovim (lazy.nvim).
+The repo `markuspetzke/dotfiles` is **public**. One branch (`master`) for desktop and laptop;
+`hypr/scripts/hypr-profile.sh` detects the differences at runtime.
+Everything in the repo is in English: docs, comments, script output, theme texts, commit messages.
+Exception: strings that must match German program output (e.g. dialog titles in
+`hypr/windowrule.lua`). The user talks to Claude in German.
 
-## Was versioniert ist
+## What is versioned
 
-`.gitignore` ist eine Whitelist (`*`, dann `!ordner/`). Neue Ordner/Dateien muessen dort
-freigegeben werden, sonst landen sie nicht im Repo. Nie versioniert:
-- `theme-current` (lokaler Symlink aufs aktive Theme, je Rechner)
-- `themes/*/private/` (urheberrechtlich geschuetztes Material: Logos, Bilder, Sounds)
+`.gitignore` is a whitelist (`*`, then `!folder/`). New folders/files must be allowed there,
+otherwise they do not end up in the repo. Never versioned:
+- `theme-current` (local symlink to the active theme, per machine)
+- `themes/*/private/` (copyrighted material: logos, images, sounds)
 - `systemd/user/*.wants/`, `hypr/.monitor-profile`
 
-## Aufbau
+## Layout
 
-| Pfad | Inhalt |
+| Path | Contents |
 | --- | --- |
-| `hypr/` | `hyprland.lua` laedt `host.lua`, `binds.lua`, `monitors.lua`, `windowrule.lua`, zuletzt `theme.lua`. Siehe `hypr/README.md` |
-| `hypr/scripts/` | Hilfsskripte, u. a. `hypr-profile.sh` (Profil `desktop`/`laptop`: `HYPR_PROFILE` oder Akku-Erkennung) |
-| `themes/<name>/` | Desktop-Themes (retro, wired, win31, winxp, office, tokyonight). Dateien und Extras: `themes/README.md` |
-| `bin/` | Eigene Skripte, nach `~/.local/bin` verlinkt. Uebersicht: `bin/README.md` |
-| `waybar/` | `style.css` = Theme-Farben + `base.css` + Theme-Abweichungen; `config-{desktop,laptop}.jsonc` |
-| `systemd/user/` | Session-Dienste (`hypr-session.target`), Backups, Timer |
-| `uwsm/env` | Session-Variablen fuer Hyprland und alle systemd-Dienste |
-| `nvim/` | Neovim-Config, siehe `nvim/README.md`; Theme kommt aus `themes/<name>/nvim.lua` |
-| `bash/`, `git/` | `~/.bashrc` laedt nur `bash/bashrc`; `git/config` hat die Grundeinstellungen, Name/Mail und die GitHub-SSH-Umleitung bleiben lokal in `~/.gitconfig` |
-| `.githooks/` | `pre-commit` ruft `bin/dotfiles-check --staged` (aktiv ueber `core.hooksPath`, setzt `theme-setup`) |
-| `README.md`, `docs/` | Uebersicht fuer GitHub mit Screenshots je Theme |
+| `hypr/` | `hyprland.lua` loads `host.lua`, `binds.lua`, `monitors.lua`, `windowrule.lua`, `theme.lua` last. See `hypr/README.md` |
+| `hypr/scripts/` | helper scripts, e.g. `hypr-profile.sh` (profile `desktop`/`laptop`: `HYPR_PROFILE` or battery detection) |
+| `themes/<name>/` | desktop themes (retro, wired, win31, winxp, office, tokyonight). Files and extras: `themes/README.md` |
+| `bin/` | own scripts, linked into `~/.local/bin`. Overview: `bin/README.md` |
+| `waybar/` | `style.css` = theme colors + `base.css` + theme overrides; `config-{desktop,laptop}.jsonc` |
+| `systemd/user/` | session services (`hypr-session.target`), backups, timers |
+| `uwsm/env` | session variables for Hyprland and all systemd services |
+| `nvim/` | Neovim config, see `nvim/README.md`; the theme comes from `themes/<name>/nvim.lua` |
+| `bash/`, `git/` | `~/.bashrc` only loads `bash/bashrc`; `git/config` holds the defaults, name/mail and the GitHub SSH rewrite stay local in `~/.gitconfig` |
+| `.githooks/` | `pre-commit` runs `bin/dotfiles-check --staged` (enabled through `core.hooksPath`, set by `theme-setup`) |
+| `README.md`, `docs/` | overview for GitHub with a screenshot per theme |
 
 ## Themes
 
-- Configs binden nur `~/.config/theme-current/...` ein. Umschalten: `theme <name>` (laedt alles neu).
-- Neues Theme: Ordner kopieren, `palette.lua` muss existieren (daran erkennt `theme` ein Theme).
-- Generierte Dateien (`wallpaper.png`, `sounds/`, `cursor/`) kommen aus `wallpaper.py`,
-  `sounds.py`, `cursor.py` im Theme-Ordner: nach Farbaenderungen neu erzeugen, nicht von Hand bearbeiten.
-- Bei neuen Theme-Dateien/Extras die Tabellen in `themes/README.md` mitpflegen, neue Skripte in `bin/README.md`.
+- Configs only include `~/.config/theme-current/...`. Switch with `theme <name>` (reloads everything).
+- New theme: copy a folder; `palette.lua` must exist (that is how `theme` recognizes a theme).
+- Generated files (`wallpaper.png`, `sounds/`, `cursor/`) come from `wallpaper.py`,
+  `sounds.py`, `cursor.py` in the theme folder: regenerate them after color changes, do not edit by hand.
+- When adding theme files/extras, update the tables in `themes/README.md`; new scripts go into `bin/README.md`.
 
-## Arbeitsweise
+## Working on it
 
-- Aenderungen live pruefen (`hyprctl reload`, `theme <name>`, `hyprctl` / `journalctl --user`).
-- Keinen Branch wechseln, waehrend Hyprland laeuft: fehlende Config -> Notfallmodus.
-- Hyprland-Config nicht mit blockierenden Aufrufen bremsen; Langsames in Skripte auslagern
-  (Beispiel `bin/video-tags`).
-- Laptop-Profil beachten: dauernd neu zeichnende Effekte (Shader, umlaufender Rahmen) dort aus.
-- hypridle fuehrt jede Stufe nur einmal pro Leerlauf aus. "Nicht waehrend X" daher nie als
-  Bedingung im `on-timeout`, sondern als Idle-Sperre (`systemd-inhibit`, siehe `media-watch`)
-  oder `condition_cmd` + `condition_retry`.
-- Programme aus Binds/Waybar/dunst ueber `uwsm-app --` starten.
-- Vor dem Commit `dotfiles-check` (laeuft auch als Hook). `Hyprland --verify-config` stuerzt mit
-  der Lua-Config ab; fuer Hyprland `hyprctl configerrors` nutzen.
-- Screenshots fuer `docs/`: mit `private/`-Inhalten (so nutzt der User die Themes), aber ohne
-  Medientitel in der Leiste. Die `private/`-Dateien selbst kommen nie ins Repo.
-- Commits nur unter dem Namen des Users, ohne Co-Authored-By-Zeile und ohne Hinweis auf Claude.
-  Nicht pushen, das macht der User selbst.
-- Schritte mit sudo (z. B. `bin/greeter-setup`) nicht selbst ausfuehren, sondern dem User nennen.
+- Check changes live (`hyprctl reload`, `theme <name>`, `hyprctl` / `journalctl --user`).
+- Do not switch branches while Hyprland runs: a missing config -> emergency mode.
+- Do not slow down the Hyprland config with blocking calls; move slow work into scripts
+  (example: `bin/video-tags`).
+- Mind the laptop profile: effects that redraw constantly (shader, rotating border) are off there.
+- hypridle runs each stage only once per idle period. So "not while X" never goes into
+  `on-timeout` as a condition, but becomes an idle inhibitor (`systemd-inhibit`, see `media-watch`)
+  or `condition_cmd` + `condition_retry`.
+- Start programs from binds/Waybar/dunst through `uwsm-app --`.
+- Run `dotfiles-check` before committing (it also runs as a hook). `Hyprland --verify-config`
+  crashes with the Lua config; use `hyprctl configerrors` for Hyprland.
+- Screenshots for `docs/`: with the `private/` content (that is how the user uses the themes), but
+  without media titles in the bar. The `private/` files themselves never go into the repo.
+- Commits only under the user's name, no Co-Authored-By line and no mention of Claude.
+  Do not push, the user does that.
+- Do not run sudo steps (e.g. `bin/greeter-setup`) yourself; tell the user.

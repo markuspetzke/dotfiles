@@ -1,10 +1,10 @@
 #!/bin/sh
-# Startmenue: das aktive Theme kann ein eigenes mitbringen (themes/<name>/startmenu.py,
-# z. B. winxp), sonst hyprlauncher. Das Startmenue laeuft als Hintergrundprozess (schnell);
-# jeder Aufruf blendet es ein bzw. aus. Aufruf: Super-Taste, Startknopf der Leiste.
-#   menu            # ein-/ausblenden
-#   menu --preload  # nur im Hintergrund starten (beim Login, theme --session)
-#   menu --stop     # Hintergrundprozess beenden (bei Theme-Wechsel)
+# Start menu: the active theme can bring its own (themes/<name>/startmenu.py,
+# e.g. winxp), hyprlauncher otherwise. The start menu runs as a background process (fast);
+# every call shows or hides it. Called by: Super key, start button in the bar.
+#   menu            # show/hide
+#   menu --preload  # only start in the background (at login, theme --session)
+#   menu --stop     # stop the background process (on a theme switch)
 menu="${XDG_CONFIG_HOME:-$HOME/.config}/theme-current/startmenu.py"
 pidfile="${XDG_RUNTIME_DIR:-/tmp}/theme-startmenu.pid"
 
@@ -19,7 +19,7 @@ case "${1:-}" in
 --preload)
 	[ -f "$menu" ] || exit 0
 	running && exit 0
-	setsid python3 -I "$menu" --daemon >/dev/null 2>&1 &  # schreibt seine PID selbst
+	setsid python3 -I "$menu" --daemon >/dev/null 2>&1 &  # writes its own PID
 	exit 0
 	;;
 esac
@@ -28,7 +28,7 @@ if [ -f "$menu" ]; then
 	if running; then
 		kill -USR1 "$(cat "$pidfile")"
 	else
-		setsid python3 -I "$menu" --daemon --show >/dev/null 2>&1 &  # schreibt seine PID selbst
+		setsid python3 -I "$menu" --daemon --show >/dev/null 2>&1 &  # writes its own PID
 	fi
 	exit 0
 fi

@@ -1,10 +1,10 @@
 #!/bin/sh
-# Sperren: Medien pausieren, Theme-Sound beim Sperren, hyprlock, Sound nach dem Entsperren.
-# hypridle ruft das als lock_cmd auf (hypr/hypridle.conf).
+# Lock: pause media, theme sound when locking, hyprlock, sound after unlocking.
+# hypridle calls this as lock_cmd (hypr/hypridle.conf).
 d="${XDG_CONFIG_HOME:-$HOME/.config}/bin"
-# Alle Medien anhalten (YouTube im Browser, Spotify, ...), bevor gesperrt wird
+# Pause all media (YouTube in the browser, Spotify, ...) before locking
 command -v playerctl >/dev/null && playerctl -a pause 2>/dev/null
 "$d/theme-sound" lock
 hyprlock
-"$d/screensaver" stop --force  # Schoner hinter der Sperre schliessen
+"$d/screensaver" stop --force  # close the screensaver behind the lock
 "$d/theme-sound" unlock

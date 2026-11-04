@@ -1,6 +1,6 @@
-"""Bernstein-CRT-Bildschirmschoner: grosse Uhr in Blockziffern, die langsam ueber den
-Bildschirm wandert und an den Raendern abprallt (laeuft im Vollbild-Kitty, gestartet von
-bin/screensaver). Beendet sich bei jeder Taste."""
+"""Amber CRT screensaver: a big clock in block digits slowly wandering across the
+screen and bouncing off the edges (runs in a fullscreen kitty, started by
+bin/screensaver). Quits on any key."""
 import os
 import select
 import sys
@@ -10,7 +10,7 @@ import tty
 
 AMBER, DIM, BG = (232, 163, 61), (110, 78, 32), (20, 19, 16)
 
-# 5x5-Ziffern, '#' = Block
+# 5x5 digits, '#' = block
 FONT = {
     "0": ["###", "# #", "# #", "# #", "###"],
     "1": [" # ", "## ", " # ", " # ", "###"],
@@ -25,7 +25,7 @@ FONT = {
     ":": ["   ", " # ", "   ", " # ", "   "],
     " ": ["   ", "   ", "   ", "   ", "   "],
 }
-SCALE_X = 3  # ein Font-Pixel = 3 Zeichen breit, 1 Zeile hoch (Zellen sind ca. 1:2)
+SCALE_X = 3  # one font pixel = 3 chars wide, 1 line high (cells are about 1:2)
 
 
 def render(text):
@@ -42,7 +42,7 @@ _START = time.time()
 
 
 def key_pressed():
-    """Taste oder Mausbewegung (Terminal-Mausmeldungen) -> beenden; erste Sekunde ignorieren."""
+    """Key or mouse move (terminal mouse reports) -> quit; ignore the first second."""
     if not select.select([sys.stdin], [], [], 0)[0]:
         return False
     os.read(sys.stdin.fileno(), 4096)
@@ -54,7 +54,7 @@ def main():
     cols, rows = os.get_terminal_size()
     out.write("\x1b[?1049h\x1b[?25l\x1b[?1003h" + f"\x1b[48;2;{BG[0]};{BG[1]};{BG[2]}m\x1b[2J")
     w = len(render("00:00")[0])
-    h = 7  # 5 Zeilen Uhr + Leerzeile + Datum
+    h = 7  # 5 clock lines + blank line + date
     x, y, dx, dy = 2.0, 2.0, 0.6, 0.25
     prev = None
     while True:
@@ -66,7 +66,7 @@ def main():
         date = time.strftime("%a %d.%m.%Y", now).upper()
 
         buf = []
-        if prev:  # alte Position loeschen
+        if prev:  # clear the old position
             px, py = prev
             for i in range(h):
                 buf.append(f"\x1b[{py + i + 1};{px + 1}H" + " " * (w + 1))

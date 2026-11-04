@@ -1,5 +1,5 @@
-# Anmeldebildschirm (sysc-greet) -- Bernstein-CRT. `theme` kopiert die Datei nach
-# /var/lib/sysc-greet/themes/ und waehlt sie aus (Einrichtung: bin/greeter-setup).
+# Login screen (sysc-greet) -- Amber CRT. `theme` copies the file to
+# /var/lib/sysc-greet/themes/ and selects it (setup: bin/greeter-setup).
 name = "retro"
 
 [colors]

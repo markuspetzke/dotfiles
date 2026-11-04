@@ -1,5 +1,5 @@
 return {
-  -- Schemas lazy holen, damit lsp/jsonls.lua nicht beim Start schemastore laedt.
+  -- Fetch schemas lazily so lsp/jsonls.lua does not load schemastore at startup.
   before_init = function(_, config)
     config.settings.json.schemas = require("schemastore").json.schemas()
   end,

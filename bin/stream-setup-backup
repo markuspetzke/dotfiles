@@ -1,0 +1,49 @@
+#!/bin/sh
+# Copies the stream setup to ~/Documents/Twitch/setup/ so it is included in the
+# weekly backup (backup-storaged, ~/Documents).
+# Runs as ExecStartPre of backup-storaged.service, but can also be run by hand at any time.
+# Deliberately NOT backed up: the stream key (service.json) and the websocket password, since the backup goes to Hetzner.
+set -eu
+DST="$HOME/Documents/Twitch/setup"
+mkdir -p "$DST/bin" "$DST/etc"
+
+# OBS: profiles, scenes, scripts, plugin settings (no logs, browser cache, secrets, .bak)
+rsync -a --delete \
+	--exclude=logs/ --exclude=profiler_data/ --exclude=crashes/ \
+	--exclude=plugin_config/obs-browser/ --exclude=plugin_config/obs-websocket/ \
+	--exclude='basic/profiles/*/service.json' --exclude='*.bak*' \
+	"$HOME/.config/obs-studio/" "$DST/obs-studio/"
+
+# Own scripts (sonycam, obs-spiel, clip, death counter, websocket client, this script)
+for f in sonycam obs-spiel obs-spiel-audio obs-ws stream-deaths stream-clip stream-setup-backup; do
+	[ -f "$HOME/.local/bin/$f" ] && cp -p "$HOME/.local/bin/$f" "$DST/bin/"
+done
+
+# Audio: virtual outputs desktop/game/Spotify, Spotify rules, headset mic off
+rsync -a --delete "$HOME/.config/pipewire/" "$DST/pipewire/"
+[ -d "$HOME/.config/wireplumber" ] && rsync -a --delete "$HOME/.config/wireplumber/" "$DST/wireplumber/"
+
+# Camera: v4l2loopback (/dev/video10 "SonyCam")
+cp -p /etc/modprobe.d/*v4l2* /etc/modules-load.d/*v4l2* "$DST/etc/" 2>/dev/null || true
+
+# Death counter value
+cp -p "$HOME/.local/share/stream/tode.count" "$DST/" 2>/dev/null || true
+
+rm -f "$DST/WIEDERHERSTELLEN.txt" # German version from before
+cat > "$DST/RESTORE.txt" <<'EOF'
+Restoring the stream setup (GLaDOS, Arch + Hyprland)
+
+1. Packages: obs-studio-browser (AUR, brings ffmpeg-obs), obs-vkcapture + lib32-obs-vkcapture,
+   v4l2loopback-dkms, gphoto2, python-pillow
+2. obs-studio/  -> ~/.config/obs-studio/
+      Then enter the stream key in OBS again (Settings -> Stream), it is deliberately not backed up.
+      Enable the websocket in OBS (Tools -> WebSocket Server Settings), the password does not matter (obs-ws reads it from the config).
+3. bin/*        -> ~/.local/bin/ (keep them executable)
+4. pipewire/    -> ~/.config/pipewire/      wireplumber/ -> ~/.config/wireplumber/
+      then: systemctl --user restart pipewire pipewire-pulse wireplumber
+                  wpctl set-default <ID of obs_desktop>
+5. etc/*v4l2*   -> /etc/modprobe.d/ or /etc/modules-load.d/ (sudo), reboot
+6. tode.count   -> ~/.local/share/stream/
+Hyprland keys (SUPER+X/C, SUPER+W guard) and the TF2 window rule live in the git repo ~/.config (hypr/).
+EOF
+echo "Stream setup backed up to $DST"

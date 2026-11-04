@@ -1,5 +1,5 @@
-# Anmeldebildschirm (sysc-greet) -- Tokyo Night. `theme` kopiert die Datei nach
-# /var/lib/sysc-greet/themes/ und waehlt sie aus (Einrichtung: bin/greeter-setup).
+# Login screen (sysc-greet) -- Tokyo Night. `theme` copies the file to
+# /var/lib/sysc-greet/themes/ and selects it (setup: bin/greeter-setup).
 name = "tokyonight"
 
 [colors]

@@ -10,7 +10,7 @@ return {
 
     dapui.setup()
 
-    -- UI automatisch öffnen/schließen
+    -- Open/close the UI automatically
     dap.listeners.after.event_initialized["dapui_config"] = function()
       dapui.open()
     end

@@ -40,8 +40,8 @@ return {
     config = function(_, opts)
       require("hardtime").setup(opts)
 
-      -- Als Snacks-Toggle, damit which-key den Zustand anzeigt wie bei den anderen <leader>u-Schaltern.
-      -- vim.g.learning_mode liest lualine fuer die Anzeige in der Statusleiste.
+      -- As a snacks toggle so which-key shows the state like for the other <leader>u switches.
+      -- lualine reads vim.g.learning_mode for the indicator in the statusline.
       Snacks.toggle
         .new({
           id = "learning_mode",
@@ -53,9 +53,9 @@ return {
             local hardtime = require("hardtime")
             local precognition = require("precognition")
             vim.g.learning_mode = state
-            -- snacks.scroll animiert <C-d>/<C-u> in vielen Einzelschritten; precognition
-            -- rechnet bei jedem CursorMoved neu -> Scrollen wird zaeh. Daher im
-            -- Learning Mode die Scroll-Animation aus.
+            -- snacks.scroll animates <C-d>/<C-u> in many small steps; precognition
+            -- recomputes on every CursorMoved -> scrolling gets sluggish. So in
+            -- learning mode the scroll animation is off.
             if state then
               hardtime.enable()
               precognition.show()

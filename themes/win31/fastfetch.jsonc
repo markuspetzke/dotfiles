@@ -1,17 +1,17 @@
-// fastfetch -- Windows-3.1, gleiche Palette wie hypr/theme.lua.
-// Logo: Roehrenmonitor mit DOS-Prompt (logo.txt, $1-$4 = Farben unten).
-// Nur Module mit Inhalt; was auf einem Rechner nichts findet (z. B. Akku am Desktop),
-// wird ausgeblendet (showErrors = false). Keine lokale IP, damit Screenshots harmlos sind.
+// fastfetch -- Windows 3.1, same palette as hypr/theme.lua.
+// Logo: CRT monitor with a DOS prompt (logo.txt, $1-$4 = colors below).
+// Only modules with content; whatever finds nothing on a machine (e.g. battery on the desktop)
+// is hidden (showErrors = false). No local IP, so screenshots are harmless.
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
     "type": "file",
     "source": "~/.config/theme-current/fastfetch-logo.txt",
     "color": {
-      "1": "38;2;170;170;170", // Gehaeuse: Grau
-      "2": "38;2;255;255;85", // Prompt: Gelb
-      "3": "38;2;85;255;255", // Verzeichnisse: Cyan
-      "4": "38;2;255;255;255" // Text: Weiss
+      "1": "38;2;170;170;170", // case: gray
+      "2": "38;2;255;255;85", // prompt: yellow
+      "3": "38;2;85;255;255", // directories: cyan
+      "4": "38;2;255;255;255" // text: white
     },
     "padding": { "top": 1, "left": 1, "right": 3 }
   },
@@ -44,7 +44,7 @@
     { "type": "os", "key": "OS", "format": "{pretty-name} {arch}" },
     { "type": "kernel", "key": "KERNEL", "format": "{release}" },
     { "type": "uptime", "key": "UPTIME" },
-    { "type": "packages", "key": "PAKETE" },
+    { "type": "packages", "key": "PACKAGES" },
     "break",
     { "type": "wm", "key": "WM", "format": "{pretty-name} {version}" },
     { "type": "terminal", "key": "TERMINAL", "format": "{pretty-name}" },
@@ -55,7 +55,7 @@
     { "type": "gpu", "key": "GPU", "format": "{name}", "hideType": "integrated", "driverSpecific": false },
     { "type": "memory", "key": "RAM", "format": "{percentage-bar}  {used} / {total}" },
     { "type": "disk", "key": "DISK", "folders": "/", "format": "{size-percentage-bar}  {size-used} / {size-total}" },
-    { "type": "battery", "key": "AKKU" },
+    { "type": "battery", "key": "BATTERY" },
     "break",
     {
       "type": "colors",

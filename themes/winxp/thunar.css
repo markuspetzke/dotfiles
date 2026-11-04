@@ -1,11 +1,11 @@
-/* Thunar -- Windows XP: wie der Explorer (beige Leisten, weisse Dateiansicht, blaue Aufgabenleiste
-   links, blaue Auswahl). Eingebunden ueber ~/.config/gtk-3.0/gtk.css, gilt nur fuer Thunar-Fenster. */
+/* Thunar -- Windows XP: like Explorer (beige bars, white file view, blue task pane
+   on the left, blue selection). Included through ~/.config/gtk-3.0/gtk.css, applies to Thunar windows only. */
 .thunar, .thunar * {
     font-family: "Tahoma", "Noto Sans", sans-serif;
     font-size: 11px;
 }
 
-/* Menue-, Werkzeug- und Statusleiste: XP-Beige */
+/* Menu, tool and status bar: XP beige */
 .thunar,
 .thunar menubar,
 .thunar toolbar,
@@ -21,7 +21,7 @@
     border-bottom: 1px solid #aca899;
 }
 
-/* Dateiansicht: weiss */
+/* File view: white */
 .thunar iconview,
 .thunar exoiconview,
 .thunar .view,
@@ -31,8 +31,8 @@
     color: #000000;
 }
 
-/* Linke Leiste: blauer Verlauf wie die XP-Aufgabenleiste, helle Schrift */
-/* Linke Leiste in XP-Blau (GTK zeichnet Listen-Hintergruende je Zeile, daher einfarbig statt Verlauf) */
+/* Left pane: blue gradient like the XP task pane, light text */
+/* Left pane in XP blue (GTK draws list backgrounds per row, so a solid color instead of a gradient) */
 .thunar .shortcuts-pane,
 .thunar .shortcuts-pane treeview,
 .thunar treeview.view.shortcuts-pane,
@@ -51,7 +51,7 @@
     color: #215dc6;
 }
 
-/* Auswahl in der Dateiansicht */
+/* Selection in the file view */
 .thunar iconview:selected,
 .thunar exoiconview:selected,
 .thunar .view:selected,
@@ -60,7 +60,7 @@
     color: #ffffff;
 }
 
-/* Adresszeile und Eingabefelder */
+/* Address bar and entry fields */
 .thunar entry {
     background-color: #ffffff;
     color: #000000;
@@ -69,7 +69,7 @@
     box-shadow: none;
 }
 
-/* Knoepfe: flach auf Beige, beim Ueberfahren XP-artig hervorgehoben */
+/* Buttons: flat on beige, highlighted XP style on hover */
 .thunar button {
     background-image: none;
     background-color: transparent;
@@ -117,7 +117,7 @@
     color: #ffffff;
 }
 
-/* Menueleiste mit XP-Flagge rechts (private/start-icon.png) */
+/* Menu bar with the XP flag on the right (private/start-icon.png) */
 .thunar menubar {
     background-image: url("private/start-icon.png");
     background-repeat: no-repeat;
@@ -126,7 +126,7 @@
     border-bottom: 1px solid #aca899;
 }
 
-/* Adresszeile */
+/* Address bar */
 .thunar toolbar entry {
     min-height: 22px;
     border: 1px solid #7f9db9;

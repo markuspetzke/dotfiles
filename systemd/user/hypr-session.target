@@ -1,16 +1,16 @@
 [Unit]
 Description=Hyprland user session services
-# Einzige Stelle, an der die Dienste haengen (sie selbst haben kein [Install]).
+# The only place the services hang off (they have no [Install] themselves).
 Wants=hypridle.service hyprpaper.service hyprsunset.service dunst.service waybar.service cliphist-text.service cliphist-image.service power-profile.service headset.service hyprpolkitagent.service theme-wallpaper.timer media-watch.service
-# uwsm-app (Binds, Launcher, Waybar) startet Programme ueber diesen Daemon; vorab gestartet
-# entfaellt die Sekunde Wartezeit beim ersten Aufruf nach dem Login.
+# uwsm-app (binds, launcher, Waybar) starts programs through this daemon; started in advance
+# there is no one-second wait on the first call after login.
 Wants=wayland-wm-app-daemon.service
 After=graphical-session-pre.target graphical-session.target
-# Mit der uwsm-Session stoppen, und zwar bevor Hyprland (wayland-wm@, Before=graphical-session.target)
-# beendet wird - sonst verlieren waybar/hyprpaper/hyprsunset beim Logout das Display und crashen.
+# Stop with the uwsm session, before Hyprland (wayland-wm@, Before=graphical-session.target)
+# exits - otherwise waybar/hyprpaper/hyprsunset lose the display at logout and crash.
 PartOf=graphical-session.target
 
 [Install]
-# Startet, sobald uwsm die Session als bereit meldet (uwsm finalize in hyprland.lua).
-# Pro Rechner einmalig: systemctl --user enable hypr-session.target
+# Starts as soon as uwsm reports the session as ready (uwsm finalize in hyprland.lua).
+# Once per machine: systemctl --user enable hypr-session.target
 WantedBy=graphical-session.target

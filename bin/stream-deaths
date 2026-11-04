@@ -1,0 +1,18 @@
+#!/bin/sh
+# Death counter for the stream: stream-deaths + | - | 0
+# The OBS text source "Todeszähler" reads ~/.local/share/stream/tode.txt (refreshes about once a second).
+# File names and the shown text stay as they are, OBS and the stream overlay depend on them.
+# Hyprland: SUPER+X (+1), SUPER+SHIFT+X (-1), SUPER+CTRL+X (0)
+dir="$HOME/.local/share/stream"
+mkdir -p "$dir"
+n=$(cat "$dir/tode.count" 2>/dev/null)
+case "$n" in '' | *[!0-9]*) n=0 ;; esac
+case "${1:-+}" in
+    +) n=$((n + 1)) ;;
+    -) [ "$n" -gt 0 ] && n=$((n - 1)) ;;
+    0) n=0; notify-send -t 2000 "Death counter" "Reset to 0" ;;
+    *) echo "Usage: stream-deaths + | - | 0" >&2; exit 1 ;;
+esac
+echo "$n" > "$dir/tode.count"
+# Write to a temporary file first, then rename: OBS never reads half a file
+printf 'Tode: %s' "$n" > "$dir/tode.txt.tmp" && mv "$dir/tode.txt.tmp" "$dir/tode.txt"

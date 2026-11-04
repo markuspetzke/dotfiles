@@ -1,10 +1,10 @@
 {
     "layer": "top",
-    // "position" steht in modules.jsonc (Standard oben), Themes koennen es ueberschreiben
+    // "position" lives in modules.jsonc (default top), themes may override it
     "height": 30,
-    // "spacing" steht in modules.jsonc (Standard 1), Themes koennen es ueberschreiben
+    // "spacing" lives in modules.jsonc (default 1), themes may override it
     "margin": 0,
-    // Theme-Module zuerst: bei gleichen Schluesseln gewinnt die zuerst eingebundene Datei.
+    // Theme modules first: for identical keys the file included first wins.
     "include": ["~/.config/theme-current/waybar-modules.jsonc", "~/.config/waybar/modules.jsonc"],
 
     "modules-left": ["image#start", "custom/start", "hyprland/workspaces", "custom/playerctl"],

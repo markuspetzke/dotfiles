@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Gibt das Hardwareprofil aus: desktop oder laptop.
-# HYPR_PROFILE gewinnt, sonst entscheidet ein Systemakku. Ohne Akku immer desktop --
-# ein unbekannter Rechner bekommt so nie die Laptop-Logik (Hibernate nach 15 min).
-# Einzige Quelle fuer host.lua, run-hypridle.sh, run-waybar.sh und die User-Units.
+# Prints the hardware profile: desktop or laptop.
+# HYPR_PROFILE wins, otherwise a system battery decides. Without a battery always desktop --
+# so an unknown machine never gets the laptop logic (hibernate after 15 min).
+# Single source for host.lua, run-hypridle.sh, run-waybar.sh and the user units.
 set -euo pipefail
 
 profile=${HYPR_PROFILE:-}
@@ -10,7 +10,7 @@ if [[ "$profile" != desktop && "$profile" != laptop ]]; then
   profile=desktop
   for supply in /sys/class/power_supply/*; do
     [[ -r "$supply/type" && "$(<"$supply/type")" == Battery ]] || continue
-    # Maus-/Headset-Akkus melden scope=Device; Systemakkus haben kein scope oder System.
+    # Mouse/headset batteries report scope=Device; system batteries have no scope or System.
     [[ -r "$supply/scope" && "$(<"$supply/scope")" == Device ]] && continue
     profile=laptop
     break

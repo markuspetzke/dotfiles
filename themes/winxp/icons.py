@@ -1,11 +1,11 @@
-"""XP-Stil-Symbole fuer das Startmenue (eigene Zeichnungen) -> icons/<name>.png in 64 px.
-Gezeichnet in 4x Groesse und herunterskaliert (weiche Kanten). python3 icons.py"""
+"""XP style icons for the start menu (own drawings) -> icons/<name>.png at 64 px.
+Drawn at 4x size and scaled down (smooth edges). python3 icons.py"""
 import math
 import os
 
 from PIL import Image, ImageDraw
 
-S = 256  # Zeichengroesse, Ausgabe 64 px
+S = 256  # drawing size, output 64 px
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "icons")
 
 
@@ -34,13 +34,13 @@ def save(im, name):
 
 def folder(extra=None):
     im, d = new()
-    d.rounded_rectangle((28, 56, 120, 96), 14, fill=(214, 160, 40, 255))           # Lasche
-    grad(d, (24, 76, 232, 216), (250, 214, 110), (222, 162, 40), 18)                  # Rueckwand
+    d.rounded_rectangle((28, 56, 120, 96), 14, fill=(214, 160, 40, 255))           # tab
+    grad(d, (24, 76, 232, 216), (250, 214, 110), (222, 162, 40), 18)                  # back
     if extra:
         extra(im, d)
-    grad(d, (24, 112, 232, 222), (255, 230, 140), (236, 180, 56), 18)                  # Vorderseite
+    grad(d, (24, 112, 232, 222), (255, 230, 140), (236, 180, 56), 18)                  # front
     d.rounded_rectangle((24, 112, 232, 222), 18, outline=(170, 118, 20, 255), width=6)
-    d.line([(40, 122), (216, 122)], fill=(255, 246, 200, 255), width=6)               # Glanz
+    d.line([(40, 122), (216, 122)], fill=(255, 246, 200, 255), width=6)               # shine
     return im
 
 
@@ -66,11 +66,11 @@ def music_sheet(im, d):
 
 def computer():
     im, d = new()
-    grad(d, (30, 30, 226, 176), (235, 235, 230), (190, 190, 182), 14)                 # Gehaeuse
+    grad(d, (30, 30, 226, 176), (235, 235, 230), (190, 190, 182), 14)                 # case
     d.rounded_rectangle((30, 30, 226, 176), 14, outline=(120, 120, 112, 255), width=6)
-    grad(d, (50, 48, 206, 156), (60, 130, 240), (20, 70, 190), 6)                      # Bildschirm
+    grad(d, (50, 48, 206, 156), (60, 130, 240), (20, 70, 190), 6)                      # screen
     d.polygon([(50, 130), (110, 96), (160, 120), (206, 104), (206, 156), (50, 156)], fill=(80, 170, 70, 255))
-    grad(d, (96, 178, 160, 206), (200, 200, 192), (160, 160, 152))                     # Fuss
+    grad(d, (96, 178, 160, 206), (200, 200, 192), (160, 160, 152))                     # stand
     grad(d, (60, 204, 196, 224), (220, 220, 212), (170, 170, 162), 8)
     return im
 
@@ -114,7 +114,7 @@ def square_button(top, bottom, symbol):
     im, d = new()
     grad(d, (20, 20, 236, 236), top, bottom, 40)
     d.rounded_rectangle((20, 20, 236, 236), 40, outline=(255, 255, 255, 255), width=10)
-    d.ellipse((50, 30, 206, 110), fill=(255, 255, 255, 60))  # Glanz
+    d.ellipse((50, 30, 206, 110), fill=(255, 255, 255, 60))  # shine
     symbol(d)
     return im
 

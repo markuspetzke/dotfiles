@@ -4,12 +4,12 @@ PartOf=hypr-session.target
 After=hypr-session.target
 
 [Service]
-# Keine Sandbox-Optionen: hypridle startet hyprlock, und hyprlock prueft das
-# Passwort ueber das setuid-Programm unix_chkpwd. In einer User-Unit
-# implizieren LockPersonality/RestrictSUIDSGID/RestrictRealtime NoNewPrivileges,
-# und PrivateTmp/ProtectSystem/ProtectKernel*/ProtectControlGroups laufen in
-# einem User-Namespace -- beides verhindert, dass unix_chkpwd /etc/shadow liest.
-# Die Limits gelten auch fuer hyprlock.
+# No sandbox options: hypridle starts hyprlock, and hyprlock checks the password
+# through the setuid program unix_chkpwd. In a user unit
+# LockPersonality/RestrictSUIDSGID/RestrictRealtime imply NoNewPrivileges,
+# and PrivateTmp/ProtectSystem/ProtectKernel*/ProtectControlGroups run in
+# a user namespace -- both keep unix_chkpwd from reading /etc/shadow.
+# The limits also apply to hyprlock.
 ExecStart=%h/.config/hypr/scripts/run-hypridle.sh
 Restart=on-failure
 RestartSec=2

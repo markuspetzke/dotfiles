@@ -14,7 +14,7 @@ return {
     },
     winopts = { preview = { layout = "vertical", vertical = "up:55%" } },
     lsp = { code_actions = { previewer = "codeaction_native" } },
-    -- Nur die installierten dunklen Themes anzeigen: Builtins und Light-Varianten raus.
+    -- Show only the installed dark themes: builtins and light variants are left out.
     colorschemes = {
       ignore_patterns = {
         "^default$",
@@ -56,7 +56,7 @@ return {
   config = function(_, opts)
     local fzf_lua = require("fzf-lua")
     fzf_lua.setup(opts)
-    -- vim.ui.select (z.B. Code Actions) ueber fzf statt der nackten Prompt.
+    -- vim.ui.select (e.g. code actions) through fzf instead of the bare prompt.
     fzf_lua.register_ui_select()
   end,
   keys = {
@@ -79,7 +79,7 @@ return {
     {
       "<leader>uC",
       function()
-        -- Colorschemes sind lazy; ohne Laden fehlen sie in der Auswahl.
+        -- Colorschemes are lazy; without loading them they are missing from the list.
         require("lazy").load({
           plugins = { "tokyonight.nvim", "catppuccin", "rose-pine", "kanagawa.nvim", "kanso", "gruvbox.nvim" },
         })

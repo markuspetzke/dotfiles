@@ -1,5 +1,5 @@
-// Wired: nur Abweichungen von waybar/modules.jsonc. Wird zuerst eingebunden,
-// Waybar fuehrt die Objekte zusammen (erste Datei gewinnt).
+// Wired: only overrides of waybar/modules.jsonc. Included first,
+// Waybar merges the objects (the first file wins).
 {
     "hyprland/window": {
         "format": "> {title}"
@@ -33,7 +33,7 @@
             "format": {
                 "months": "<span color='#c9d6c3'><b>{}</b></span>",
                 "days": "<span color='#c9d6c3'>{}</span>",
-                "weeks": "<span color='#6f7d6b'><b>KW{}</b></span>",
+                "weeks": "<span color='#6f7d6b'><b>W{}</b></span>",
                 "weekdays": "<span color='#9d84d8'><b>{}</b></span>",
                 "today": "<span color='#7fd88f'><b><u>{}</u></b></span>"
             }

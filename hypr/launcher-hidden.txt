@@ -1,5 +1,5 @@
-# Programme, die im Launcher (hyprlauncher) nicht erscheinen sollen. Sie bleiben installiert,
-# Dateien oeffnen sich weiter damit. Anwenden: bin/launcher-hide (eine Desktop-ID pro Zeile).
+# Programs that should not show up in the launcher (hyprlauncher). They stay installed,
+# files still open with them. Apply: bin/launcher-hide (one desktop ID per line).
 cmake-gui.desktop
 xdvi.desktop
 jupyterlab.desktop

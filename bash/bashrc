@@ -1,11 +1,11 @@
 # shellcheck shell=bash
-# Bash-Config aus dem Dotfiles-Repo. ~/.bashrc laedt nur diese Datei (theme-setup traegt das ein).
-# Rechnerspezifisches wird nur gesetzt, wenn es auf dem Rechner existiert, damit dieselbe Datei
-# auf Desktop und Laptop passt.
+# Bash config from the dotfiles repo. ~/.bashrc only loads this file (theme-setup adds that).
+# Machine-specific parts are only set if they exist on the machine, so the same file
+# works on desktop and laptop.
 
 [[ $- != *i* ]] && return
 
-# Verzeichnis vorne in PATH, falls es existiert und noch nicht drin ist (keine Duplikate)
+# Prepend a directory to PATH if it exists and is not in it yet (no duplicates)
 path_prepend() { [[ -d $1 && ":$PATH:" != *":$1:"* ]] && PATH="$1:$PATH"; }
 
 alias ls='ls --color=auto'
@@ -16,18 +16,18 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 PS1='[\u@\h \W]\$ '
 
-# Strg+S/Strg+Q nicht als Terminal-Flusssteuerung (Strg+S friert sonst die Ausgabe ein)
+# Ctrl+S/Ctrl+Q not as terminal flow control (Ctrl+S would freeze the output)
 stty -ixon 2>/dev/null
 
-# ssh-agent als systemd-User-Dienst (ssh-agent.socket)
+# ssh-agent as a systemd user service (ssh-agent.socket)
 [[ -S $XDG_RUNTIME_DIR/ssh-agent.socket ]] && export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
-# Eigene Skripte (bin/ ist dorthin verlinkt), Rust, Bun
+# Own scripts (bin/ is linked there), Rust, Bun
 path_prepend "$HOME/.local/bin"
 path_prepend "$HOME/.cargo/bin"
 path_prepend "$HOME/.bun/bin"
 
-# Java und Android-SDK (Android Studio)
+# Java and Android SDK (Android Studio)
 [[ -d /usr/lib/jvm/java-21-openjdk ]] && export JAVA_HOME=/usr/lib/jvm/java-21-openjdk/
 if [[ -d $HOME/Android/Sdk ]]; then
 	export ANDROID_HOME=$HOME/Android/Sdk
@@ -39,19 +39,19 @@ if [[ -d $HOME/Android/Sdk ]]; then
 fi
 export PATH
 
-# Verlauf: 100.000 statt 500 Befehle, ohne Duplikate (Leerzeichen am Anfang = nicht speichern).
-# Jeder Befehl wird sofort angehaengt und neue Zeilen anderer Terminals eingelesen,
-# so teilen sich alle offenen Terminals einen Verlauf.
+# History: 100,000 instead of 500 commands, no duplicates (leading space = do not save).
+# Every command is appended right away and new lines from other terminals are read,
+# so all open terminals share one history.
 HISTSIZE=100000
 HISTFILESIZE=100000
 HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
 PROMPT_COMMAND="history -a; history -n${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 
-# fzf: Strg+R Verlauf unscharf durchsuchen, Strg+T Datei einfuegen, Alt+C in Ordner wechseln
+# fzf: Ctrl+R fuzzy history search, Ctrl+T insert a file, Alt+C change into a directory
 command -v fzf >/dev/null && eval "$(fzf --bash)"
 
-# theme <Tab>: vorhandene Themes (Ordner mit palette.lua)
+# theme <Tab>: available themes (folders with palette.lua)
 _theme_complete() {
 	local d themes=()
 	for d in "${XDG_CONFIG_HOME:-$HOME/.config}"/themes/*/palette.lua; do

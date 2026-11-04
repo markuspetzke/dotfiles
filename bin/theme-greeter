@@ -1,8 +1,8 @@
 #!/bin/sh
-# Anmeldebildschirm (sysc-greet) an das Desktop-Theme anpassen:
-# themes/*/greeter.toml -> /var/lib/sysc-greet/themes/<name>.toml, aktives Theme ->
-# /var/lib/sysc-greet/shell-theme/theme (liest der Greeter beim naechsten Start).
-# Wird von `theme` aufgerufen. Einmalige Einrichtung (Root): sudo ~/.config/bin/greeter-setup
+# Adapt the login screen (sysc-greet) to the desktop theme:
+# themes/*/greeter.toml -> /var/lib/sysc-greet/themes/<name>.toml, active theme ->
+# /var/lib/sysc-greet/shell-theme/theme (the greeter reads it at its next start).
+# Called by `theme`. One-time setup (root): sudo ~/.config/bin/greeter-setup
 cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
 base=/var/lib/sysc-greet
 [ -w "$base/themes" ] && [ -w "$base/shell-theme" ] || exit 0

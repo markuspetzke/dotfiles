@@ -1,6 +1,6 @@
 [Unit]
-Description=Backups pruefen, ueberfaellige nachholen
-# Nur auf dem Desktop (GLaDOS), wie die Backups selbst
+Description=Check backups, restart overdue ones
+# Desktop only (GLaDOS), like the backups themselves
 ConditionHost=GLaDOS
 
 [Service]

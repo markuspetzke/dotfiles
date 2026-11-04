@@ -13,7 +13,7 @@ return {
       border = "rounded",
       padding = { 1, 2 },
     },
-    -- Nur Gruppen; die einzelnen Keys beschreiben sich ueber ihre `desc` selbst.
+    -- Groups only; the single keys describe themselves through their `desc`.
     spec = {
       { "<leader>f", group = "Find" },
       { "<leader>c", group = "Code" },

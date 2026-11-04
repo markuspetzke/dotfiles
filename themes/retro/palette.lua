@@ -1,4 +1,4 @@
--- Theme "Bernstein-CRT": Farben fuer Hyprland (hypr/theme.lua) und Hyprland-Eigenheiten.
+-- Theme "Amber CRT": colors for Hyprland (hypr/theme.lua) and Hyprland specifics.
 return {
 	colors = {
 		bg = "#1b1a16",

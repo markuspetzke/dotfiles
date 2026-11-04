@@ -1,4 +1,4 @@
-/* Thunar -- retro (eingebunden ueber ~/.config/gtk-3.0/gtk.css; gilt nur fuer Thunar-Fenster) */
+/* Thunar -- retro (included through ~/.config/gtk-3.0/gtk.css; applies to Thunar windows only) */
 .thunar, .thunar * {
     font-family: "DepartureMono Nerd Font";
     font-size: 11px;
@@ -16,7 +16,7 @@
     border-color: #36332b;
 }
 
-/* Dateiansicht */
+/* File view */
 .thunar iconview,
 .thunar exoiconview,
 .thunar .view,
@@ -26,7 +26,7 @@
     color: #e6dcc3;
 }
 
-/* Seitenleiste (Orte, Lesezeichen) */
+/* Sidebar (places, bookmarks) */
 .thunar .shortcuts-pane,
 .thunar .shortcuts-pane treeview,
 .thunar treeview.view.shortcuts-pane,
@@ -37,7 +37,7 @@
     color: #e6dcc3;
 }
 
-/* Auswahl */
+/* Selection */
 .thunar iconview:selected,
 .thunar exoiconview:selected,
 .thunar .view:selected,
@@ -47,7 +47,7 @@
     color: #141310;
 }
 
-/* Pfadleiste und Eingabefelder */
+/* Path bar and entry fields */
 .thunar entry {
     background-color: #141310;
     color: #e6dcc3;

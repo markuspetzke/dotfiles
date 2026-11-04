@@ -1,5 +1,5 @@
-/* Windows XP: Taskleiste im Luna-Stil (Blau-Verlauf, gruener Startknopf, hellblauer
-   Infobereich rechts). Abweichungen von waybar/base.css. */
+/* Windows XP: taskbar in Luna style (blue gradient, green start button, light blue
+   notification area on the right). Overrides of waybar/base.css. */
 * {
     font-family: "Noto Sans", "Liberation Sans", sans-serif;
     font-size: 12px;
@@ -14,11 +14,11 @@ window#waybar > box {
     padding: 0 0 0 0;
 }
 
-/* Startknopf: Logo (image#start) + Text (custom/start) bilden zusammen einen Knopf */
+/* Start button: logo (image#start) + text (custom/start) form one button */
 #image.start {
     background-image: linear-gradient(to bottom, #388e38 0%, #57b857 15%, #3c9a3c 50%, #2f8a2f 85%, #246f24 100%);
     padding: 0 3px 0 12px;
-    margin-right: -1px;   /* Waybar-Abstand zwischen Modulen schliessen: ein durchgehender Knopf */
+    margin-right: -1px;   /* close Waybar's gap between modules: one continuous button */
     border: none;
 }
 
@@ -39,7 +39,7 @@ window#waybar > box {
     background-image: linear-gradient(to bottom, #44a044 0%, #68c868 15%, #4aac4a 50%, #3a9a3a 100%);
 }
 
-/* Taskleisten-Knoepfe */
+/* Taskbar buttons */
 #workspaces button {
     background-image: linear-gradient(to bottom, #4a8cf6, #3c81f3 50%, #3071e8);
     color: #ffffff;
@@ -66,7 +66,7 @@ window#waybar > box {
     color: #ffffff;
 }
 
-/* Infobereich rechts (Tray): ein durchgehendes hellblaues Feld, nur Symbole + Uhr */
+/* Notification area on the right (tray): one continuous light blue field, icons + clock only */
 #power-profiles-daemon, #idle_inhibitor, #custom-headset, #custom-uptime, #pulseaudio, #network,
 #cpu, #memory, #temperature, #battery, #backlight, #bluetooth, #tray, #clock {
     background-image: linear-gradient(to bottom, #0c59b9 0%, #139ee9 6%, #18b9f0 20%, #12a5ec 60%, #0f8ee3 92%, #0b6fd0 100%);
@@ -77,7 +77,7 @@ window#waybar > box {
     text-shadow: 1px 1px #0a4fae;
 }
 
-/* Kante links am Anfang des Infobereichs */
+/* Left edge at the start of the notification area */
 #power-profiles-daemon {
     border-left: 1px solid #0a3fa0;
     box-shadow: inset 1px 0 #3fc4ff;

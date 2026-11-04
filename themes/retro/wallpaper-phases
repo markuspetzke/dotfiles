@@ -1,4 +1,4 @@
-# Uhrzeit (HH:MM) und Wallpaper aus wallpapers/ -- bin/theme-wallpaper nimmt die letzte vergangene Zeile.
+# Time (HH:MM) and wallpaper from wallpapers/ -- bin/theme-wallpaper takes the last line that has passed.
 06:00 morning
 11:00 noon
 17:00 evening

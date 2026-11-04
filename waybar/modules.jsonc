@@ -1,4 +1,4 @@
-// Gemeinsame Modul-Definitionen fuer Desktop und Laptop.
+// Module definitions shared by desktop and laptop.
 {
     "hyprland/window": {
         "separate-outputs": true,
@@ -8,7 +8,7 @@
         "disable-scroll": true,
         "all-outputs": true,
         "format": "{name}",
-        // Nur Workspaces mit Fenstern (plus der aktive) -- keine persistenten Platzhalter.
+        // Only workspaces with windows (plus the active one) -- no persistent placeholders.
         "show-special": false
     },
 
@@ -33,15 +33,15 @@
         "format-linked": "󰈀",
         "format-disconnected": "󰖪",
         "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}",
-        "tooltip-format-linked": "{ifname}: verbunden, keine IP",
-        "tooltip-format-disconnected": "Keine Verbindung",
+        "tooltip-format-linked": "{ifname}: connected, no IP",
+        "tooltip-format-disconnected": "No connection",
         "on-click": "uwsm-app -- kitty -e nmtui"
     },
 
     "cpu": {
         "format": "󰘚 {usage}%",
         "interval": 2,
-        "tooltip-format": "Last: {load}",
+        "tooltip-format": "Load: {load}",
         "on-click": "uwsm-app -- kitty -e htop"
     },
 
@@ -70,11 +70,11 @@
         "on-click-right": "playerctl next"
     },
 
-    // Leistenposition und Modulabstand (Themes koennen sie ueberschreiben, z. B. winxp)
+    // Bar position and module spacing (themes may override them, e.g. winxp)
     "position": "top",
     "spacing": 1,
 
-    // Startknopf-Bild: nur sichtbar, wenn das Theme private/start-icon.png hat (winxp)
+    // Start button image: only visible if the theme has private/start-icon.png (winxp)
     "image#start": {
         "exec": "f=\"$HOME/.config/theme-current/private/start-icon.png\"; [ -f \"$f\" ] && echo \"$f\"",
         "size": 20,
@@ -83,13 +83,13 @@
         "tooltip": false
     },
 
-    // Startknopf: nur sichtbar, wenn das Theme "exec" setzt (winxp).
+    // Start button: only visible if the theme sets "exec" (winxp).
     "custom/start": {
         "exec": "true",
         "interval": "once"
     },
 
-    // Nur sichtbar, wenn das Theme "exec" setzt (z. B. wired: CONNECTED hh:mm).
+    // Only visible if the theme sets "exec" (e.g. wired: CONNECTED hh:mm).
     "custom/uptime": {
         "exec": "true",
         "interval": "once"
@@ -98,18 +98,20 @@
     "clock": {
         "format": "󰥔 {:%H:%M}",
         "format-alt": "󰃮 {:%a, %d.%m.%Y}",
-        "locale": "de_AT.UTF-8",
+        "locale": "en_US.UTF-8",
         "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
         "calendar": {
             "mode": "month",
             "mode-mon-col": 3,
             "weeks-pos": "right",
             "on-scroll": 1,
-            // Standardfarben; die Themes ueberschreiben sie (themes/<name>/waybar-modules.jsonc)
+            // iso8601: weeks start on Monday regardless of the locale
+            "iso8601": true,
+            // Default colors; the themes override them (themes/<name>/waybar-modules.jsonc)
             "format": {
                 "months":   "<span color='#e6dcc3'><b>{}</b></span>",
                 "days":     "<span color='#e6dcc3'>{}</span>",
-                "weeks":    "<span color='#8a8370'><b>KW{}</b></span>",
+                "weeks":    "<span color='#8a8370'><b>W{}</b></span>",
                 "weekdays": "<span color='#8f9a5b'><b>{}</b></span>",
                 "today":    "<span color='#e8a33d'><b><u>{}</u></b></span>"
             }
@@ -129,16 +131,16 @@
     },
 
     "idle_inhibitor": {
-        // Kein tooltip-format-*: crasht in waybar 0.15 beim Klick ("argument not found").
+        // No tooltip-format-*: crashes in waybar 0.15 on click ("argument not found").
         "format": "{icon}",
         "format-icons": { "activated": "󰅶", "deactivated": "󰾪" }
     },
 
-    // Eingebautes Modul (D-Bus, ohne Polling): zeigt Wechsel sofort, Klick naechstes Profil,
-    // Rechtsklick vorheriges. Ohne power-profiles-daemon blendet es sich aus.
+    // Built-in module (D-Bus, no polling): shows changes right away, click = next profile,
+    // right click = previous one. Hides itself without power-profiles-daemon.
     "power-profiles-daemon": {
         "format": "{icon}",
-        "tooltip-format": "Power-Profil: {profile}\nKlick: wechseln",
+        "tooltip-format": "Power profile: {profile}\nClick: switch",
         "format-icons": {
             "default": "󰾆",
             "performance": "󰓅",
@@ -186,7 +188,7 @@
         "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
         "format-disconnected": "󰤭",
         "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ifname}: {ipaddr}/{cidr}",
-        "tooltip-format-disconnected": "Kein WLAN",
+        "tooltip-format-disconnected": "No Wi-Fi",
         "on-click": "uwsm-app -- kitty -e nmtui"
     }
 

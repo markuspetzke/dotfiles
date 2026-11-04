@@ -1,19 +1,19 @@
 #!/bin/sh
-# Einmalig mit sudo ausfuehren: Der Anmeldebildschirm (sysc-greet) folgt danach dem
-# Desktop-Theme. Danach braucht `theme` keine Root-Rechte mehr.
+# Run once with sudo: afterwards the login screen (sysc-greet) follows the
+# desktop theme, and `theme` no longer needs root.
 #   sudo ~/.config/bin/greeter-setup
-# Macht:
-#  1. /var/lib/sysc-greet/{themes,shell-theme}/ anlegen, Besitzer = aufrufender Benutzer,
-#     lesbar fuer den Greeter-Benutzer
-#  2. /var/lib/greeter/.config/sysc-greet/themes -> /var/lib/sysc-greet/themes verlinken
-#     (dort sucht sysc-greet eigene Themes)
-#  3. das feste "--theme tokyo-night" aus /etc/greetd/hyprland-greeter-config.lua entfernen
-#     (Sicherung: .bak-theme), sonst gewinnt es immer
-#  4. aktuelles Desktop-Theme sofort uebernehmen
+# Does:
+#  1. create /var/lib/sysc-greet/{themes,shell-theme}/, owner = calling user,
+#     readable for the greeter user
+#  2. link /var/lib/greeter/.config/sysc-greet/themes -> /var/lib/sysc-greet/themes
+#     (where sysc-greet looks for its own themes)
+#  3. remove the fixed "--theme tokyo-night" from /etc/greetd/hyprland-greeter-config.lua
+#     (backup: .bak-theme), otherwise it always wins
+#  4. apply the current desktop theme right away
 set -eu
 user=${SUDO_USER:-}
 if [ "$(id -u)" -ne 0 ] || [ -z "$user" ]; then
-	echo "Bitte mit sudo ausfuehren: sudo $0" >&2
+	echo "Please run with sudo: sudo $0" >&2
 	exit 1
 fi
 home=$(getent passwd "$user" | cut -d: -f6)
@@ -28,7 +28,7 @@ if [ -L "$gdir/themes" ]; then
 	:
 elif [ -e "$gdir/themes" ]; then
 	mv "$gdir/themes" "$gdir/themes.bak-$(date +%Y%m%d)"
-	echo "Vorhandene Greeter-Themes gesichert: $gdir/themes.bak-$(date +%Y%m%d)"
+	echo "Existing greeter themes backed up: $gdir/themes.bak-$(date +%Y%m%d)"
 fi
 ln -sfn "$base/themes" "$gdir/themes"
 
@@ -36,8 +36,8 @@ lua=/etc/greetd/hyprland-greeter-config.lua
 if grep -q -- " --theme tokyo-night" "$lua"; then
 	cp -a "$lua" "$lua.bak-theme"
 	sed -i 's/ --theme tokyo-night//' "$lua"
-	echo "Festes Greeter-Theme entfernt ($lua, Sicherung: $lua.bak-theme)"
+	echo "Fixed greeter theme removed ($lua, backup: $lua.bak-theme)"
 fi
 
 su -s /bin/sh "$user" -c "$home/.config/bin/theme-greeter"
-echo "Fertig. Der Anmeldebildschirm zeigt ab dem naechsten Start: $(cat "$base/shell-theme/theme" 2>/dev/null || echo '?')"
+echo "Done. From the next start the login screen shows: $(cat "$base/shell-theme/theme" 2>/dev/null || echo '?')"

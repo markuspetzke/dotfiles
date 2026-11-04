@@ -1,4 +1,4 @@
-# dunst -- gemeinsamer Teil; Farben, Rahmen, Schrift und Format kommen vom aktiven Theme
+# dunst -- shared part; colors, border, font and format come from the active theme
 # (dunstrc.d/50-theme.conf -> themes/<name>/dunst.conf).
 
 [global]
@@ -31,7 +31,7 @@
     icon_position = left
     min_icon_size = 32
     max_icon_size = 48
-    # Papirus ist auf diesem System nicht installiert; Adwaita ist vorhanden.
+    # Papirus is not installed on this system; Adwaita is.
     icon_theme = Adwaita
     enable_recursive_icon_lookup = true
 
@@ -43,11 +43,11 @@
     history_length = 40
 
     dmenu = hyprlauncher -m
-    # Eigene systemd-Unit: sonst erbt der Browser die Limits von dunst.service.
+    # Own systemd unit: otherwise the browser inherits the limits of dunst.service.
     browser = uwsm-app -- xdg-open
     always_run_script = true
 
-    # Maus: links = Aktion/schliessen, Mitte = alle schliessen, rechts = schliessen
+    # Mouse: left = action/close, middle = close all, right = close
     mouse_left_click = do_action, close_current
     mouse_middle_click = close_all
     mouse_right_click = close_current

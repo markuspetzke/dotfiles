@@ -1,9 +1,9 @@
-"""Wired: kleines Fadenkreuz in Phosphorgruen mit dunklem Rand -> cursor/Theme-wired.
-python3 cursor.py (danach `theme wired`)."""
+"""Wired: small crosshair in phosphor green with a dark outline -> cursor/Theme-wired.
+python3 cursor.py (then `theme wired`)."""
 import os
 import sys
 
-sys.dont_write_bytecode = True  # kein __pycache__ in themes/
+sys.dont_write_bytecode = True  # no __pycache__ in themes/
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from xcursor import build  # noqa: E402
 

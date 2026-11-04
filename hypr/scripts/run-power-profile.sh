@@ -2,16 +2,15 @@
 set -euo pipefail
 
 if ! command -v powerprofilesctl >/dev/null; then
-  echo 'powerprofilesctl fehlt; installiere power-profiles-daemon' >&2
+  echo 'powerprofilesctl missing; install power-profiles-daemon' >&2
   exit 0
 fi
 
-# Netzteil/Akku (auch USB-C-Laden) erkennt power-source.sh; ohne Systemakku gilt immer "ac".
+# AC/battery (including USB-C charging) comes from power-source.sh; without a system battery it is always "ac".
 power_source="$HOME/.config/hypr/scripts/power-source.sh"
 
-# Profil nur beim Start und beim Wechsel Netzteil <-> Akku setzen. Dazwischen
-# bleibt eine manuelle Wahl (Waybar-Klick) erhalten, statt alle 30 s ueberschrieben
-# zu werden.
+# Set the profile only at startup and when switching between AC and battery. In between
+# a manual choice (Waybar click) is kept instead of being overwritten every 30 s.
 last=""
 while :; do
   desired=balanced

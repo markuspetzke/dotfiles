@@ -1,16 +1,16 @@
-"""Minimaler Xcursor-Schreiber fuer Pixel-Art-Zeiger der Themes (ohne xcursorgen).
+"""Minimal Xcursor writer for the themes' pixel art pointers (without xcursorgen).
 
 build(name, art, palette, hotspot, out_dir, inherits)
-  art:     Liste gleich langer Strings, ein Zeichen = ein Pixel ('.' = transparent)
-  palette: Zeichen -> (r, g, b)
-  hotspot: (x, y) in Pixeln der 1x-Grafik
-Erzeugt <out_dir>/<name>/index.theme und cursors/left_ptr (+ Aliase) in 24/48 px.
-Alle anderen Zeiger erbt das Theme von `inherits`."""
+    art:     list of equally long strings, one char = one pixel ('.' = transparent)
+    palette: char -> (r, g, b)
+    hotspot: (x, y) in pixels of the 1x image
+Creates <out_dir>/<name>/index.theme and cursors/left_ptr (+ aliases) at 24/48 px.
+The theme inherits all other pointers from `inherits`."""
 import os
 import struct
 
 ALIASES = ["default", "arrow", "top_left_arrow"]
-SIZES = [(24, 1), (48, 2)]  # Nenngroesse, Skalierung der 1x-Grafik
+SIZES = [(24, 1), (48, 2)]  # nominal size, scaling of the 1x image
 
 
 def _image(art, palette, scale, nominal):
@@ -61,5 +61,5 @@ def build(name, art, palette, hotspot, out_dir, inherits):
             os.remove(link)
         os.symlink("left_ptr", link)
     with open(os.path.join(root, "index.theme"), "w") as f:
-        f.write(f"[Icon Theme]\nName={name}\nComment=Pixel-Zeiger aus ~/.config/themes\nInherits={inherits}\n")
+        f.write(f"[Icon Theme]\nName={name}\nComment=Pixel pointer from ~/.config/themes\nInherits={inherits}\n")
     return root

@@ -5,7 +5,7 @@ umask 077
 selection=$(cliphist list | hyprlauncher -m) || exit 0
 [[ -n "$selection" ]] || exit 0
 
-# Datei statt Shell-Variable: auch Bilder und abschliessende Newlines erhalten.
+# A file instead of a shell variable: keeps images and trailing newlines intact.
 tmp=$(mktemp "${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/hypr-clipboard.XXXXXX")
 trap 'rm -f -- "$tmp"' EXIT
 printf '%s\n' "$selection" | cliphist decode >"$tmp"

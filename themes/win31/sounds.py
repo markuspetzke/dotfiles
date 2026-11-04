@@ -1,6 +1,6 @@
-"""Windows 3.1: synthetisierte Systemklaenge -> sounds/{notify,lock,unlock}.wav (python3 sounds.py).
-Eigene Klaenge, keine Samples: notify = glockenartiges "Ding" (Sinus mit Obertoenen,
-abklingend), unlock = aufsteigender Dur-Akkord, lock = zwei tiefe Toene."""
+"""Windows 3.1: synthesized system sounds -> sounds/{notify,lock,unlock}.wav (python3 sounds.py).
+Own sounds, no samples: notify = a bell-like "ding" (sine with overtones,
+decaying), unlock = a rising major chord, lock = two low tones."""
 import math
 import os
 import struct
@@ -21,7 +21,7 @@ def save(name, samples, gain=0.3):
 
 
 def bell(freq, dur, decay=4.0):
-    """Glocke: Grundton + unharmonische Obertoene, exponentiell abklingend."""
+    """Bell: fundamental + inharmonic overtones, decaying exponentially."""
     partials = [(1.0, 1.0), (2.76, 0.4), (5.4, 0.2), (8.9, 0.08)]
     out = []
     for i in range(int(dur * RATE)):
@@ -32,7 +32,7 @@ def bell(freq, dur, decay=4.0):
 
 
 def soft(freq, dur):
-    """Weicher Orgelton (Grundton + Oktave), kurzes Ein-/Ausblenden."""
+    """Soft organ tone (fundamental + octave), short fade in/out."""
     out = []
     for i in range(int(dur * RATE)):
         t = i / RATE
@@ -42,7 +42,7 @@ def soft(freq, dur):
 
 
 def overlay(parts):
-    """parts: [(startzeit, samples)]"""
+    """parts: [(start_time, samples)]"""
     n = max(int(s * RATE) + len(p) for s, p in parts)
     out = [0.0] * n
     for start, p in parts:
@@ -53,7 +53,7 @@ def overlay(parts):
 
 
 save("notify", bell(1046.5, 0.9), gain=0.25)  # C6
-# Aufsteigender C-Dur-Akkord, Toene klingen nach
+# Rising C major chord, the tones ring on
 save("unlock", overlay([(0.0, soft(523.3, 1.0)), (0.12, soft(659.3, 0.88)), (0.24, soft(784.0, 0.76)), (0.36, soft(1046.5, 0.64))]), gain=0.25)
 save("lock", soft(392.0, 0.18) + soft(261.6, 0.3), gain=0.25)
 print("ok", OUT)

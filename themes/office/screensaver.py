@@ -1,6 +1,6 @@
-"""Office-Bildschirmschoner: Notiz "Konferenzraum. Fuenf Minuten." (Michael Scott), das langsam ueber
-den Bildschirm wandert (gegen Einbrennen). Laeuft im Vollbild-Kitty (bin/screensaver),
-beendet sich bei jeder Taste."""
+"""Office screensaver: the note "Conference room. Five minutes." (Michael Scott), slowly wandering
+across the screen (against burn-in). Runs in a fullscreen kitty (bin/screensaver),
+quits on any key."""
 import os
 import select
 import sys
@@ -15,7 +15,7 @@ _START = time.time()
 
 
 def key_pressed():
-    """Taste oder Mausbewegung (Terminal-Mausmeldungen) -> beenden; erste Sekunde ignorieren."""
+    """Key or mouse move (terminal mouse reports) -> quit; ignore the first second."""
     if not select.select([sys.stdin], [], [], 0)[0]:
         return False
     os.read(sys.stdin.fileno(), 4096)
@@ -34,10 +34,10 @@ def sign_lines(since):
     inner = 34
     rows = [
         ("", MUTED),
-        ("KONFERENZRAUM.", INK),
-        ("FÜNF MINUTEN.", INK),
+        ("CONFERENCE ROOM.", INK),
+        ("FIVE MINUTES.", INK),
         ("", MUTED),
-        (f"– M. Scott, seit {since}", MUTED),
+        (f"– M. Scott, since {since}", MUTED),
         ("", MUTED),
     ]
     return inner, rows
@@ -49,7 +49,7 @@ def main():
     since = time.strftime("%H:%M")
     out.write("\x1b[?1049h\x1b[?25l\x1b[?1003h" + bg(WALL) + "\x1b[2J")
     inner, lines = sign_lines(since)
-    w, h = inner + 2, len(lines) + 3  # + Rand + blaue Kopfzeile
+    w, h = inner + 2, len(lines) + 3  # + border + blue header
     x, y, dx, dy = 4.0, 3.0, 0.35, 0.15
     prev = None
     while True:
@@ -61,15 +61,15 @@ def main():
             for i in range(h + 1):
                 buf.append(f"\x1b[{py + i + 1};{px + 1}H" + bg(WALL) + " " * (w + 2))
         ix, iy = int(x), int(y)
-        # Schatten
+        # Shadow
         for i in range(1, h + 1):
             buf.append(f"\x1b[{iy + i + 1};{ix + 3}H" + bg((14, 16, 19)) + " " * w)
-        # Kopfzeile
-        buf.append(f"\x1b[{iy + 1};{ix + 1}H" + bg(BLUE) + fg((255, 255, 255)) + " DUNDER MIFFLIN · NOTIZ".ljust(w))
-        # Papier
+        # Header
+        buf.append(f"\x1b[{iy + 1};{ix + 1}H" + bg(BLUE) + fg((255, 255, 255)) + " DUNDER MIFFLIN · MEMO".ljust(w))
+        # Paper
         for i, (text, color) in enumerate(lines):
             buf.append(f"\x1b[{iy + i + 2};{ix + 1}H" + bg(PAPER) + fg(color) + " " + text.center(inner) + " ")
-        clock = time.strftime("jetzt %H:%M")
+        clock = time.strftime("now %H:%M")
         buf.append(f"\x1b[{iy + len(lines) + 2};{ix + 1}H" + bg(PAPER) + fg(MUTED) + " " + clock.rjust(inner) + " ")
         buf.append(f"\x1b[{iy + len(lines) + 3};{ix + 1}H" + bg(PAPER) + " " * w)
         out.write("".join(buf))

@@ -1,4 +1,4 @@
--- Theme "Windows-3.1": Farben fuer Hyprland (hypr/theme.lua) und Hyprland-Eigenheiten.
+-- Theme "Windows 3.1": colors for Hyprland (hypr/theme.lua) and Hyprland specifics.
 return {
 	colors = {
 		bg = "#c0c0c0",

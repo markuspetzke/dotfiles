@@ -1,11 +1,11 @@
-// Tokyo Night: nur Abweichungen von waybar/modules.jsonc (Kalenderfarben).
+// Tokyo Night: only overrides of waybar/modules.jsonc (calendar colors).
 {
     "clock": {
         "calendar": {
             "format": {
                 "months": "<span color='#c8d3f5'><b>{}</b></span>",
                 "days": "<span color='#c8d3f5'>{}</span>",
-                "weeks": "<span color='#636da6'><b>KW{}</b></span>",
+                "weeks": "<span color='#636da6'><b>W{}</b></span>",
                 "weekdays": "<span color='#82aaff'><b>{}</b></span>",
                 "today": "<span color='#ffc777'><b><u>{}</u></b></span>"
             }

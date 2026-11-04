@@ -1,16 +1,16 @@
 [Unit]
 Description=Backup /mnt/storageD -> NAS
-# Nur auf dem Desktop (GLaDOS). Auf dem Laptop sind die Timer ohnehin nicht aktiviert; das ist die Absicherung.
+# Desktop only (GLaDOS). The timers are not enabled on the laptop anyway; this is the safeguard.
 ConditionHost=GLaDOS
-# Tagsüber weckt das Skript die NAS per WoL. Scheitert es trotzdem (nachts, NAS weg):
-# alle 2 h neu versuchen, höchstens 6x am Tag; danach holt backup-check den Lauf nach.
+# During the day the script wakes the NAS via WoL. If it still fails (night, NAS gone):
+# retry every 2 h, at most 6x a day; after that backup-check catches up.
 StartLimitIntervalSec=1d
 StartLimitBurst=6
 
 [Service]
 Type=oneshot
-# Kein Ruhezustand mitten im Lauf (hypridle prüft vor dem Suspend auf solche Sperren)
-ExecStart=/usr/bin/systemd-inhibit --what=sleep --who=backup-nas --why="Backup storageD -> NAS läuft" %h/.local/bin/backup-documents nas
+# No sleep in the middle of a run (hypridle checks for such inhibitors before suspending)
+ExecStart=/usr/bin/systemd-inhibit --what=sleep --who=backup-nas --why="Backup storageD -> NAS running" %h/.local/bin/backup-documents nas
 Restart=on-failure
 RestartSec=2h
 Nice=10

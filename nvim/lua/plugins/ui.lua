@@ -1,14 +1,14 @@
 return {
 
-  -- Colorschemes: lazy. Das aktive laedt lazy.nvim automatisch bei :colorscheme
-  -- (config/options.lua); <leader>uC laedt vorher alle fuer die Live-Preview.
+  -- Colorschemes: lazy. lazy.nvim loads the active one automatically on :colorscheme
+  -- (config/options.lua); <leader>uC loads all of them first for the live preview.
   { "folke/tokyonight.nvim", lazy = true, opts = { style = "moon" } },
   { "catppuccin/nvim", name = "catppuccin", lazy = true, opts = { flavour = "mocha" } },
   { "rose-pine/neovim", name = "rose-pine", lazy = true, opts = { variant = "moon" } },
   { "rebelot/kanagawa.nvim", lazy = true, opts = {} },
   { "webhooked/kanso.nvim", name = "kanso", lazy = true },
   {
-    -- gruvbox mit der Palette des Desktop-Themes (themes/<name>/nvim.lua).
+    -- gruvbox with the desktop theme's palette (themes/<name>/nvim.lua).
     "ellisonleao/gruvbox.nvim",
     lazy = true,
     opts = function()
@@ -17,16 +17,16 @@ return {
   },
 
   {
-    -- Blockman-Port: verschachtelte Bloecke als abgestufte Hintergrundflaechen.
+    -- Blockman port: nested blocks as graded background areas.
     "HampusHauffman/block.nvim",
     cmd = { "Block", "BlockOn", "BlockOff" },
     keys = {
       {
         "<leader>uB",
         function()
-          -- block.nvim polstert ab einer festen Bildschirmspalte und kennt keine Inlay
-          -- Hints -> die verschieben den Text, das Polster ueberdeckt das Zeilenende.
-          -- Deshalb Hints im Buffer aus, solange Block an ist.
+          -- block.nvim pads from a fixed screen column and knows nothing about inlay
+          -- hints -> they shift the text, and the padding covers the end of the line.
+          -- So hints are off in the buffer while block is on.
           local buf = vim.api.nvim_get_current_buf()
           local on = not vim.b[buf].block_on
           vim.b[buf].block_on = on
@@ -37,9 +37,9 @@ return {
       },
     },
     opts = {
-      percent = 0.85, -- Aufhellung/Abdunklung pro Ebene (naeher an 1 = subtiler)
-      depth = 4, -- Anzahl der Farbstufen
-      automatic = false, -- nur per Toggle, nicht in jedem Buffer
+      percent = 0.85, -- lightening/darkening per level (closer to 1 = subtler)
+      depth = 4, -- number of color levels
+      automatic = false, -- only via toggle, not in every buffer
     },
   },
   {
@@ -128,7 +128,7 @@ return {
     end,
   },
   {
-    -- Breadcrumbs in der Winbar: datei > struct > fn, klickbar.
+    -- Breadcrumbs in the winbar: file > struct > fn, clickable.
     "Bekaboo/dropbar.nvim",
     event = { "BufReadPost", "BufNewFile" },
     keys = {
@@ -143,7 +143,7 @@ return {
     opts = {},
   },
   {
-    -- Cmdline/Suche als Popup, Messages als Notifications, LSP-Progress.
+    -- Cmdline/search as a popup, messages as notifications, LSP progress.
     "folke/noice.nvim",
     event = "VeryLazy",
     dependencies = { "MunifTanjim/nui.nvim" },
@@ -153,11 +153,11 @@ return {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
           ["vim.lsp.util.stylize_markdown"] = true,
         },
-        -- Signature Help kommt von blink.cmp, sonst erscheint das Popup doppelt.
+        -- Signature help comes from blink.cmp, otherwise the popup shows up twice.
         signature = { enabled = false },
       },
       routes = {
-        -- "written"-Meldungen und Suchtreffer-Zaehler nicht als Notification.
+        -- No notifications for "written" messages and search match counters.
         {
           filter = {
             event = "msg_show",
@@ -235,20 +235,20 @@ return {
     keys = { { "<leader>um", "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle Render Markdown" } },
   },
   {
-    -- Aktuelle Funktion/Klasse bleibt beim Scrollen oben stehen.
+    -- The current function/class stays at the top while scrolling.
     "nvim-treesitter/nvim-treesitter-context",
     event = { "BufReadPost", "BufNewFile" },
     opts = { max_lines = 3, multiline_threshold = 1, trim_scope = "outer", mode = "cursor" },
     keys = { { "<leader>ut", "<cmd>TSContext toggle<cr>", desc = "Toggle Treesitter Context" } },
   },
   {
-    -- Aktiver Split bekommt einen farbigen Rahmen.
+    -- The active split gets a colored border.
     "nvim-zh/colorful-winsep.nvim",
     event = "WinNew",
     opts = {},
   },
   {
-    -- Farbige Klammern nach Verschachtelungstiefe.
+    -- Colored brackets by nesting depth.
     "HiPhish/rainbow-delimiters.nvim",
     event = { "BufReadPost", "BufNewFile" },
     main = "rainbow-delimiters.setup",

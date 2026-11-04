@@ -14,7 +14,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   end,
 })
 
--- Datei von aussen geaendert? Neu laden statt still veralten.
+-- File changed outside? Reload instead of silently going stale.
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
   group = augroup("checktime"),
   callback = function()
@@ -24,7 +24,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
   end,
 })
 
--- Splits beim Resize des Terminals neu verteilen
+-- Rebalance splits when the terminal is resized
 vim.api.nvim_create_autocmd("VimResized", {
   group = augroup("resize_splits"),
   callback = function()
@@ -34,7 +34,7 @@ vim.api.nvim_create_autocmd("VimResized", {
   end,
 })
 
--- Hilfs-/Listen-Buffer mit q schliessen
+-- Close help/list buffers with q
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("close_with_q"),
   pattern = { "help", "qf", "man", "checkhealth", "lspinfo", "notify", "startuptime", "dap-float" },
@@ -44,7 +44,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Wrap + Spell in Prosa-Dateien
+-- Wrap + spell in prose files
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("wrap_spell"),
   pattern = { "gitcommit", "markdown", "text" },
@@ -88,7 +88,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
--- Terminal: Esc verlaesst den Terminal-Modus, in lazygit schliesst es das Fenster.
+-- Terminal: Esc leaves terminal mode; in lazygit it closes the window.
 vim.api.nvim_create_autocmd("TermOpen", {
   group = augroup("term_esc"),
   callback = function(event)
@@ -100,9 +100,9 @@ vim.api.nvim_create_autocmd("TermOpen", {
   end,
 })
 
--- LSP keymaps. Neovim 0.11+ liefert grr/gra/grn/gri/grt und K bereits als
--- Defaults; hier nur, was darueber hinausgeht. Kein blankes `gr` mappen -- das
--- ist buffer-lokal und wuerde die globalen gr*-Defaults unerreichbar machen.
+-- LSP keymaps. Neovim 0.11+ already ships grr/gra/grn/gri/grt and K as
+-- defaults; only what goes beyond that lives here. Do not map a bare `gr` -- that
+-- is buffer-local and would make the global gr* defaults unreachable.
 vim.api.nvim_create_autocmd("LspAttach", {
   group = augroup("lsp_attach"),
   callback = function(args)
@@ -120,11 +120,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "<leader>cl", "<cmd>checkhealth vim.lsp<cr>", "LSP info")
 
     local client = vim.lsp.get_client_by_id(args.data.client_id)
-    -- ESLint-Fixes nicht zusaetzlich synchron bei jedem Speichern ausfuehren:
-    -- Conform uebernimmt das Formatieren; ESLint-Fixes bleiben manuell ueber
-    -- Code Actions verfuegbar und blockieren dadurch kein `:wq`.
-    -- Inlay Hints (Typen/Parameternamen im Code) standardmaessig an; <leader>uh toggelt.
-    -- Ausnahme: Buffer mit Blockman an (vertraegt sich nicht mit Inlay Hints, siehe ui.lua).
+    -- Do not also run ESLint fixes synchronously on every save:
+    -- conform does the formatting; ESLint fixes stay available manually through
+    -- code actions and so never block a `:wq`.
+    -- Inlay hints (types/parameter names in the code) on by default; <leader>uh toggles.
+    -- Exception: buffers with Blockman on (it does not get along with inlay hints, see ui.lua).
     if client and client:supports_method("textDocument/inlayHint") and not vim.b[args.buf].block_on then
       vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
     end

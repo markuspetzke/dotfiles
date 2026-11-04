@@ -1,0 +1,8 @@
+[Unit]
+Description=Immich: add albums from folders (after the Sunday scan)
+# Desktop only (GLaDOS). The timers are not enabled on the laptop anyway; this is the safeguard.
+ConditionHost=GLaDOS
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/immich-ordner-alben

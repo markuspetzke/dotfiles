@@ -1,4 +1,4 @@
--- Theme "Office" fuer Neovim: dunkles gruvbox, Startbildschirm als Memo von Michael Scott.
+-- Theme "Office" for Neovim: dark gruvbox, start screen as a memo from Michael Scott.
 return {
   colorscheme = "gruvbox",
   background = "dark",
@@ -6,9 +6,9 @@ return {
     "┌──────────────────────────────────────────────┐",
     "│ DUNDER MIFFLIN · SCRANTON              MEMO  │",
     "├──────────────────────────────────────────────┤",
-    "│ An:       Alle Mitarbeiter                   │",
-    "│ Von:      Michael Scott, Regionalleiter      │",
-    "│ Betreff:  Konferenzraum. Fünf Minuten.       │",
+    "│ To:       All staff                          │",
+    "│ From:     Michael Scott, Regional Manager    │",
+    "│ Subject:  Conference room. Five minutes.     │",
     "└──────────────────────────────────────────────┘",
     "",
     "      Limitless paper in a paperless world.     ",

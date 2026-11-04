@@ -1,16 +1,16 @@
 #!/bin/sh
-# Bildschirmschoner des aktiven Themes (themes/<name>/screensaver.py) auf allen Monitoren.
-#   screensaver start [sperren_nach] [aus_nach]   # hypridle; Standard 60 / 90 s nach dem Start
-#   screensaver stop                               # hypridle on-resume (Aktivitaet)
-#   screensaver stop --force                       # nach dem Entsperren (bin/theme-lock)
-# Hyprland wertet das Oeffnen/Schliessen eines Fensters als Aktivitaet: das setzt hypridles
-# Timer zurueck und loest sofort on-resume aus. Deshalb ignoriert "stop" die ersten 3 s, und der
-# Schoner sperrt bzw. schaltet die Monitore selbst ab (die Kette haengt nicht mehr an hypridle).
-# Themes ohne screensaver.py: nichts passiert, hypridle sperrt wie gewohnt.
+# Screensaver of the active theme (themes/<name>/screensaver.py) on all monitors.
+#   screensaver start [lock_after] [off_after]   # hypridle; default 60 / 90 s after the start
+#   screensaver stop                              # hypridle on-resume (activity)
+#   screensaver stop --force                      # after unlocking (bin/theme-lock)
+# Hyprland counts opening/closing a window as activity: that resets hypridle's timers and
+# fires on-resume right away. So "stop" ignores the first 3 s, and the screensaver locks
+# and turns the monitors off by itself (the chain no longer depends on hypridle).
+# Themes without screensaver.py: nothing happens, hypridle locks as usual.
 cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
 prog="$cfg/theme-current/screensaver.py"
 run="${XDG_RUNTIME_DIR:-/tmp}"
-# Nur der Python-Prozess der Animation (nicht kitty oder die Shell, die ihn startet)
+# Only the Python process of the animation (not kitty or the shell that starts it)
 anim="^python3 -I $prog\$"
 
 running() { pgrep -f "kitty --class screensaver" >/dev/null; }
@@ -32,21 +32,21 @@ start)
 		sleep $((dpms_after - lock_after))
 		running && pidof hyprlock >/dev/null || exit 0
 		hyprctl dispatch 'hl.dsp.dpms({action = "off"})' >/dev/null
-		# Monitore aus: Animation anhalten, sonst laeuft sie ungesehen weiter, bis jemand
-		# zurueckkommt. Beenden ginge nicht, das Schliessen zaehlt als Aktivitaet und schaltet
-		# die Monitore wieder an. "stop" setzt sie fort und beendet sie.
+		# Monitors off: pause the animation, otherwise it keeps running unseen until someone
+		# comes back. Quitting would not work: closing counts as activity and turns the
+		# monitors back on. "stop" resumes it and quits it.
 		pkill -STOP -f "$anim"
 	) >/dev/null 2>&1 &
 	echo $! >"$run/screensaver.timer"
 	;;
 stop)
 	if [ "${2:-}" != "--force" ] && [ -f "$run/screensaver.start" ]; then
-		# Aktivitaet, die das Oeffnen selbst ausgeloest hat, ignorieren
+		# Ignore activity caused by opening the screensaver itself
 		[ $(($(date +%s) - $(cat "$run/screensaver.start"))) -lt 3 ] && exit 0
 	fi
 	[ -f "$run/screensaver.timer" ] && kill "$(cat "$run/screensaver.timer")" 2>/dev/null
 	rm -f "$run/screensaver.timer" "$run/screensaver.start"
-	pkill -CONT -f "$anim" # angehaltene Animation (Monitore aus) fortsetzen, damit sie sauber endet
+	pkill -CONT -f "$anim" # resume a paused animation (monitors off) so it ends cleanly
 	pkill -f "kitty --class screensaver" || true
 	;;
 esac

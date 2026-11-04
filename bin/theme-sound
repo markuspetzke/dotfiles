@@ -1,11 +1,11 @@
 #!/bin/sh
-# Spielt einen Sound des aktiven Themes, falls vorhanden:
+# Plays a sound of the active theme, if there is one:
 #   theme-sound [--wait] notify|critical|lock|unlock|startup|shutdown
-# --wait: blockiert bis der Sound fertig ist (z. B. vor dem Ausschalten).
-# Suchreihenfolge: themes/<name>/private/sounds/<ereignis>.{wav,ogg,flac,mp3} (eigene Dateien,
-# nicht im Git), dann themes/<name>/sounds/<ereignis>.wav (erzeugte Klaenge).
-# Von dunst als "script" aufgerufen (5 Argumente: app, summary, body, icon, urgency):
-# LOW -> still, CRITICAL -> "critical" (falls vorhanden, sonst notify), sonst "notify".
+# --wait: blocks until the sound has finished (e.g. before powering off).
+# Search order: themes/<name>/private/sounds/<event>.{wav,ogg,flac,mp3} (own files,
+# not in git), then themes/<name>/sounds/<event>.wav (generated sounds).
+# Called by dunst as "script" (5 arguments: app, summary, body, icon, urgency):
+# LOW -> silent, CRITICAL -> "critical" (if present, notify otherwise), otherwise "notify".
 wait=""
 [ "${1:-}" = "--wait" ] && { wait=1; shift; }
 if [ $# -ge 5 ]; then

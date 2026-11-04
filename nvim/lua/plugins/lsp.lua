@@ -13,7 +13,7 @@ return {
         },
       },
     },
-    -- mason.nvim selbst kennt kein ensure_installed; Formatter/Debugger hier nachinstallieren.
+    -- mason.nvim itself has no ensure_installed; install formatters/debuggers here.
     config = function(_, opts)
       require("mason").setup(opts)
       local registry = require("mason-registry")
@@ -35,13 +35,13 @@ return {
       local ok, blink = pcall(require, "blink.cmp")
       local capabilities = ok and blink.get_lsp_capabilities() or vim.lsp.protocol.make_client_capabilities()
 
-      -- Per-Server-Settings liegen in lsp/<name>.lua und werden hierauf gemerged.
+      -- Per-server settings live in lsp/<name>.lua and get merged onto this.
       vim.lsp.config("*", { capabilities = capabilities })
 
       require("mason-lspconfig").setup({
         ensure_installed = { "lua_ls", "ts_ls", "astro", "eslint", "tailwindcss", "jsonls", "yamlls" },
-        -- stylua/stylua3p_ls haben zwar lspconfig-Eintraege, sind aber reine
-        -- Formatter -- die laufen ueber conform, nicht als zweiter LSP-Client.
+        -- stylua/stylua3p_ls do have lspconfig entries, but they are pure
+        -- formatters -- those run through conform, not as a second LSP client.
         automatic_enable = { exclude = { "stylua", "stylua3p_ls" } },
       })
     end,

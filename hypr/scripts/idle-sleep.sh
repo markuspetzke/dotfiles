@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Ruhezustand nach Leerlauf auf dem Laptop (hypridle-laptop.conf): suspend-then-hibernate,
-# wenn Hibernate eingerichtet ist (logind meldet "yes": Swap gross genug, resume konfiguriert),
-# sonst normaler Suspend. Wann aus dem Suspend in Hibernate gewechselt wird, regelt
-# HibernateDelaySec in /etc/systemd/sleep.conf (ohne Angabe: wenn der Akku etwa 5 % erreicht).
+# Sleep after idle on the laptop (hypridle-laptop.conf): suspend-then-hibernate
+# if hibernation is set up (logind reports "yes": enough swap, resume configured),
+# otherwise plain suspend. When to switch from suspend to hibernate is set by
+# HibernateDelaySec in /etc/systemd/sleep.conf (unset: when the battery reaches about 5 %).
 set -u
 can=$(busctl call org.freedesktop.login1 /org/freedesktop/login1 \
 	org.freedesktop.login1.Manager CanSuspendThenHibernate 2>/dev/null)

@@ -1,4 +1,4 @@
--- Theme "Windows XP" fuer Neovim: dunkles gruvbox mit Luna-Blau, Startbildschirm als Fenster.
+-- Theme "Windows XP" for Neovim: dark gruvbox with Luna blue, start screen as a window.
 return {
   colorscheme = "gruvbox",
   background = "dark",

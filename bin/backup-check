@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
-# Prueft die Backups und holt ueberfaellige nach (taeglich per backup-check.timer, nach dem
-# Einschalten nachgeholt). Liegt der letzte Erfolg laenger als 7,5 Tage zurueck, startet es den
-# Lauf neu: abgebrochene oder verpasste Laeufe (PC aus, NAS weg, Herunterfahren) wiederholen
-# sich so von selbst. Nach 14 Tagen ohne Erfolg kommt eine Benachrichtigung.
-#   backup-check          # pruefen und nachholen
-#   backup-check status   # nur anzeigen
-# Erfolge schreiben die Backup-Skripte (~/.local/bin/backup-documents, backup-hetzner) als
-# Unix-Zeit nach ~/.local/state/backup/<name>.ok.
+# Checks the backups and restarts overdue ones (daily via backup-check.timer, caught up
+# after power-on). If the last success is older than 7.5 days, it starts the run again:
+# aborted or missed runs (PC off, NAS gone, shutdown) repeat on their own that way.
+# After 14 days without success a notification appears.
+#   backup-check          # check and catch up
+#   backup-check status   # show only
+# The backup scripts (~/.local/bin/backup-documents, backup-hetzner) write successes as
+# Unix time to ~/.local/state/backup/<name>.ok.
 set -u
 state=${XDG_STATE_HOME:-$HOME/.local/state}/backup
 now=$(date +%s)
-due=$((7 * 86400 + 12 * 3600)) # woechentliche Laeufe plus Puffer
+due=$((7 * 86400 + 12 * 3600)) # weekly runs plus a buffer
 alarm=$((14 * 86400))
 
 mkdir -p "$state"
-# Seit wann geprueft wird: zaehlt fuer Backups, deren Erfolg noch nie erfasst wurde
-[[ -r $state/.seit ]] || echo "$now" >"$state/.seit"
-since=$(<"$state/.seit")
+# Since when checks run: counts for backups whose success was never recorded
+[[ -r $state/.since ]] || echo "$now" >"$state/.since"
+since=$(<"$state/.since")
 
-# Name, Unit, Beschreibung. backup-nas folgt per OnSuccess auf backup-storaged.
+# Name, unit, description. backup-nas follows backup-storaged through OnSuccess.
 backups=(
-	"storaged backup-storaged.service Dokumente+Bilder -> storageD"
+	"storaged backup-storaged.service Documents+Pictures -> storageD"
 	"nas backup-nas.service storageD -> NAS"
 	"hetzner backup-hetzner.service NAS -> Hetzner"
 )
@@ -31,10 +31,10 @@ for b in "${backups[@]}"; do
 	if [[ -r $state/$name.ok ]]; then
 		last=$(<"$state/$name.ok")
 		age=$((now - last))
-		info="zuletzt erfolgreich $(date -d "@$last" '+%a %d.%m. %H:%M') (vor $((age / 86400)) Tagen)"
+		info="last success $(date -d "@$last" '+%a %d.%m. %H:%M') ($((age / 86400)) days ago)"
 	else
 		age=-1
-		info="noch kein Erfolg erfasst"
+		info="no success recorded yet"
 	fi
 	if [[ ${1:-} == status ]]; then
 		printf '%-30s %s\n' "$label" "$info"
@@ -44,12 +44,12 @@ for b in "${backups[@]}"; do
 	if ((age < 0 || age > due)); then
 		act=$(systemctl --user show -p ActiveState --value "$unit")
 		if [[ $act == activating || $act == active || $act == deactivating ]]; then
-			echo "$label: läuft gerade (oder wartet auf den nächsten Versuch)"
+			echo "$label: running (or waiting for the next attempt)"
 		elif [[ $name == nas ]] && $chain; then
-			echo "$label: folgt auf backup-storaged"
+			echo "$label: follows backup-storaged"
 		else
-			echo "$label: $info -> starte $unit"
-			# Startlimit nach vielen Fehlversuchen zuruecksetzen, sonst verweigert systemd den Start
+			echo "$label: $info -> starting $unit"
+			# Reset the start limit after many failed attempts, otherwise systemd refuses to start
 			systemctl --user reset-failed "$unit" 2>/dev/null
 			systemctl --user start --no-block "$unit"
 			[[ $name == storaged ]] && chain=true
@@ -57,7 +57,7 @@ for b in "${backups[@]}"; do
 	fi
 
 	if ((age > alarm || (age < 0 && now - since > alarm))); then
-		notify-send -u critical -a Backup "Backup überfällig" \
+		notify-send -u critical -a Backup "Backup overdue" \
 			"$label: $info. Log: journalctl --user -u $unit" 2>/dev/null || true
 	fi
 done

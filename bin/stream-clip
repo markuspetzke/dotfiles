@@ -1,13 +1,13 @@
 #!/bin/sh
-# Speichert die letzten 60 s aus dem OBS-Replay-Puffer nach ~/Videos (Clip_*.mp4).
-# Hyprland: SUPER+C. Laeuft der Puffer nicht, wird er gestartet (Clips gibt es dann ab jetzt).
+# Saves the last 60 s of the OBS replay buffer to ~/Videos (Clip_*.mp4).
+# Hyprland: SUPER+C. If the buffer is not running it gets started (clips from now on).
 obs-ws SaveReplayBuffer >/dev/null 2>&1
 case $? in
-    0) notify-send -t 2000 "🎬 Clip gespeichert" "Die letzten 60 Sekunden liegen in ~/Videos" ;;
-    2) notify-send -u critical "Clip" "OBS läuft nicht" ;;
+    0) notify-send -t 2000 "🎬 Clip saved" "The last 60 seconds are in ~/Videos" ;;
+    2) notify-send -u critical "Clip" "OBS is not running" ;;
     *) if obs-ws StartReplayBuffer >/dev/null 2>&1; then
-           notify-send "Clip" "Replay-Puffer war aus und läuft jetzt – ab jetzt kannst du clippen"
+           notify-send "Clip" "The replay buffer was off and runs now – you can clip from now on"
        else
-           notify-send -u critical "Clip" "Konnte den Replay-Puffer nicht starten"
+           notify-send -u critical "Clip" "Could not start the replay buffer"
        fi ;;
 esac

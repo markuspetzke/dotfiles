@@ -1,29 +1,29 @@
 #version 300 es
-// Wired: Roehrenmonitor. Feine Scanlines, Phosphor-Leuchten, leichter Farbversatz,
-// abgedunkelte Raender. Keine echte Woelbung (Mausklicks blieben sonst nicht deckungsgleich)
-// und keine Zeit-Uniform (sonst zeichnet Hyprland dauernd neu).
-// Umschalten: Super+Shift+G. In Vollbild-Spielen automatisch aus (hypr/theme.lua).
+// Wired: tube monitor. Fine scanlines, phosphor glow, slight color fringing,
+// darkened edges. No real curvature (mouse clicks would no longer line up)
+// and no time uniform (otherwise Hyprland redraws constantly).
+// Toggle: Super+Shift+G. Off automatically in fullscreen games (hypr/theme.lua).
 precision highp float;
 
 in vec2 v_texcoord;
 uniform sampler2D tex;
 out vec4 fragColor;
 
-const float SCANLINE = 0.13;   // Abdunklung jeder 3. Pixelzeile
-const float GLOW = 0.22;       // Staerke des Phosphor-Leuchtens
-const float ABERRATION = 0.6;  // Farbversatz in Pixeln
-const float VIGNETTE = 0.28;   // Abdunklung zu den Ecken
+const float SCANLINE = 0.13;   // darkening of every 3rd pixel row
+const float GLOW = 0.22;       // strength of the phosphor glow
+const float ABERRATION = 0.6;  // color fringing in pixels
+const float VIGNETTE = 0.28;   // darkening towards the corners
 
 void main() {
     vec2 px = 1.0 / vec2(textureSize(tex, 0));
 
-    // Leichter Farbversatz: Rot nach rechts, Blau nach links
+    // Slight color fringing: red to the right, blue to the left
     vec3 col;
     col.r = texture(tex, v_texcoord + vec2(ABERRATION * px.x, 0.0)).r;
     col.g = texture(tex, v_texcoord).g;
     col.b = texture(tex, v_texcoord - vec2(ABERRATION * px.x, 0.0)).b;
 
-    // Phosphor-Leuchten: helle Nachbarn strahlen etwas ueber
+    // Phosphor glow: bright neighbors bleed over a little
     vec3 blur = vec3(0.0);
     blur += texture(tex, v_texcoord + vec2( 2.0,  0.0) * px).rgb;
     blur += texture(tex, v_texcoord + vec2(-2.0,  0.0) * px).rgb;

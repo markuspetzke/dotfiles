@@ -1,5 +1,5 @@
-/* Reihenfolge: Theme-Farben, gemeinsames Layout, Theme-Abweichungen.
-   Theme wechseln: `theme <name>` (setzt ~/.config/theme-current). */
+/* Order: theme colors, shared layout, theme overrides.
+   Switch the theme: `theme <name>` (sets ~/.config/theme-current). */
 @import url("../theme-current/waybar-colors.css");
 @import url("base.css");
 @import url("../theme-current/waybar.css");

@@ -1,5 +1,5 @@
-/* Windows-3.1: Abweichungen von waybar/base.css (wird zuletzt geladen). */
-/* Windows-3.1-Bevel: helle Oberkante, dunkle Unterkante. */
+/* Windows 3.1: overrides of waybar/base.css (loaded last). */
+/* Windows 3.1 bevel: light top edge, dark bottom edge. */
 window#waybar {
     border-top: 2px solid #ffffff;
     border-bottom: 2px solid #808080;
@@ -11,7 +11,7 @@ window#waybar {
     color: #ffffff;
 }
 
-/* Workspaces als erhabene 3D-Knoepfe (hell oben/links, dunkel unten/rechts). */
+/* Workspaces as raised 3D buttons (light top/left, dark bottom/right). */
 #workspaces button {
     background: @background;
     color: @foreground;
@@ -28,7 +28,7 @@ window#waybar {
     color: @foreground;
 }
 
-/* Aktiver Workspace: gedrueckt (Bevel umgekehrt) und Navy. */
+/* Active workspace: pressed (bevel reversed) and navy. */
 #workspaces button.active,
 #workspaces button.focused {
     background: @accent;
@@ -39,14 +39,14 @@ window#waybar {
     border-right: 2px solid #ffffff;
 }
 
-/* Module durch eingelassene Trennkanten statt Linien. */
+/* Modules separated by sunken edges instead of lines. */
 #power-profiles-daemon, #idle_inhibitor, #custom-headset, #pulseaudio, #network,
 #cpu, #memory, #temperature, #tray {
     border-left: 1px solid #808080;
     box-shadow: inset 1px 0 #ffffff;
 }
 
-/* Uhr: eingelassenes Feld wie in einer Statusleiste. */
+/* Clock: sunken field like in a status bar. */
 #clock {
     background: @background;
     color: @foreground;

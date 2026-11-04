@@ -1,10 +1,10 @@
 [Unit]
-Description=Wöchentliches Backup NAS -> Hetzner
+Description=Weekly backup NAS -> Hetzner
 
 [Timer]
-# Sonntag Nachmittag, vor dem Immich-Alben-Lauf um 22:30
+# Sunday afternoon, before the Immich albums run at 22:30
 OnCalendar=Sun 13:00
-# PC war aus -> beim nächsten Login nachholen
+# PC was off -> catch up at the next login
 Persistent=true
 
 [Install]

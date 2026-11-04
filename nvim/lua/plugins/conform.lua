@@ -21,8 +21,8 @@ return {
     },
   },
   opts = function()
-    -- prettierd haelt prettier als Daemon am Laufen (nutzt trotzdem Version und
-    -- Plugins aus dem Projekt); prettier nur als Fallback, falls prettierd fehlt.
+    -- prettierd keeps prettier running as a daemon (it still uses the version and
+    -- plugins from the project); prettier only as a fallback if prettierd is missing.
     local prettier = { "prettierd", "prettier", stop_after_first = true }
     return {
       default_format_opts = { lsp_format = "fallback" },

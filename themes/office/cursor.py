@@ -1,9 +1,9 @@
-"""Office: klassischer weisser Pfeil mit schwarzem Rand (Buerorechner-Look), eigene
-Pixelzeichnung -> cursor/Theme-office. python3 cursor.py (danach `theme office`)."""
+"""Office: classic white arrow with a black outline (office PC look), own
+pixel drawing -> cursor/Theme-office. python3 cursor.py (then `theme office`)."""
 import os
 import sys
 
-sys.dont_write_bytecode = True  # kein __pycache__ in themes/
+sys.dont_write_bytecode = True  # no __pycache__ in themes/
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from xcursor import build  # noqa: E402
 

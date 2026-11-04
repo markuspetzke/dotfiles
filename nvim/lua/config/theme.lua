@@ -1,6 +1,6 @@
--- Aktives Desktop-Theme (~/.config/theme-current/nvim.lua, gesetzt mit `theme <name>`).
--- Liefert Colorscheme, gruvbox-Overrides und die Palette fuer eigene Highlights.
--- Fehlt die Datei, gilt themes/retro.
+-- Active desktop theme (~/.config/theme-current/nvim.lua, set with `theme <name>`).
+-- Provides the colorscheme, gruvbox overrides and the palette for own highlights.
+-- If the file is missing, themes/retro applies.
 local M = {}
 
 local function load(path)
@@ -15,7 +15,7 @@ function M.get()
   return M._cache
 end
 
--- Von `theme <name>` in laufenden Instanzen aufgerufen: Palette neu lesen und anwenden.
+-- Called by `theme <name>` in running instances: reread and apply the palette.
 function M.reload()
   M._cache = nil
   local t = M.get()

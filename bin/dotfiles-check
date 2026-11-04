@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Prueft die Dotfiles, damit keine kaputte Config auf GitHub (und von dort auf den Laptop) kommt.
-#   dotfiles-check            # alle Dateien im Repo
-#   dotfiles-check --staged   # nur die fuer den Commit vorgemerkten (Git-Hook .githooks/pre-commit)
-# Prueft: Lua (luacheck, sonst luac -p), Shell (bash -n/sh -n, dazu shellcheck falls installiert),
-# Python (Syntax), JSON und Waybar-JSONC, systemd-User-Units (systemd-analyze verify) und die
-# laufende Hyprland-Config (hyprctl configerrors; Hyprland laedt geaenderte Dateien sofort neu).
-# Exit 1 bei Fehlern, der Commit wird dann abgebrochen. Im Notfall: git commit --no-verify
+# Checks the dotfiles so no broken config reaches GitHub (and from there the laptop).
+#   dotfiles-check            # all files in the repo
+#   dotfiles-check --staged   # only the files staged for the commit (git hook .githooks/pre-commit)
+# Checks: Lua (luacheck, otherwise luac -p), shell (bash -n/sh -n, plus shellcheck if installed),
+# Python (syntax), JSON and Waybar JSONC, systemd user units (systemd-analyze verify) and the
+# running Hyprland config (hyprctl configerrors; Hyprland reloads changed files right away).
+# Exit 1 on errors, which aborts the commit. In an emergency: git commit --no-verify
 set -uo pipefail
 cd "$(git -C "${XDG_CONFIG_HOME:-$HOME/.config}" rev-parse --show-toplevel)" || exit 2
 
@@ -16,8 +16,8 @@ else
 fi
 
 errors=0
-fail() { # fail <datei> <meldung...>
-	printf 'FEHLER %s\n%s\n' "$1" "$(printf '%s\n' "${@:2}" | sed 's/^/    /')"
+fail() { # fail <file> <message...>
+	printf 'ERROR %s\n%s\n' "$1" "$(printf '%s\n' "${@:2}" | sed 's/^/    /')"
 	errors=$((errors + 1))
 }
 
@@ -29,7 +29,7 @@ for f in "${files[@]}"; do
 	*.py) pys+=("$f") ;;
 	*.json | *.jsonc) jsons+=("$f") ;;
 	systemd/user/*.service | systemd/user/*.timer | systemd/user/*.target | systemd/user/*.socket) units+=("$f") ;;
-	bash/*) shells+=("$f") ;; # Bash-Config ohne Shebang
+	bash/*) shells+=("$f") ;; # bash config without a shebang
 	*)
 		first=$(head -n1 "$f" 2>/dev/null | tr -d '\0')
 		case $first in
@@ -50,7 +50,7 @@ if ((${#lua[@]})); then
 	fi
 fi
 
-# Shell: Syntax, bei installiertem shellcheck auch typische Fehler (ab Warnung)
+# Shell: syntax, plus common mistakes (warning and up) if shellcheck is installed
 for f in "${shells[@]}"; do
 	sh=bash
 	head -n1 "$f" | grep -q -E '/sh$|env sh' && sh=sh
@@ -60,13 +60,13 @@ for f in "${shells[@]}"; do
 	fi
 done
 
-# Python: nur Syntax, ohne __pycache__ anzulegen
+# Python: syntax only, without creating __pycache__
 for f in "${pys[@]}"; do
 	out=$(python3 -I -c 'import ast, sys; ast.parse(open(sys.argv[1], "rb").read(), sys.argv[1])' "$f" 2>&1) ||
 		fail "$f" "$(tail -n 3 <<<"$out")"
 done
 
-# JSON/JSONC: Kommentare (// und /* */ ausserhalb von Strings) entfernen, dann parsen
+# JSON/JSONC: strip comments (// and /* */ outside of strings), then parse
 for f in "${jsons[@]}"; do
 	out=$(python3 -I - "$f" 2>&1 <<-'EOF'
 		import json, sys
@@ -88,14 +88,14 @@ for f in "${jsons[@]}"; do
 	) || fail "$f" "$(tail -n 1 <<<"$out")"
 done
 
-# systemd-User-Units. Fehlende Programme ausserhalb des Repos (z. B. Backup-Skripte in
-# ~/.local/bin, die nur auf dem Desktop liegen) sind kein Fehler.
+# systemd user units. Missing programs outside the repo (e.g. backup scripts in
+# ~/.local/bin that only exist on the desktop) are not an error.
 if ((${#units[@]})); then
 	out=$(systemd-analyze --user verify "${units[@]}" 2>&1 | grep -v -E 'is not executable: No such file or directory|^$')
 	[[ -z $out ]] || fail "systemd-Units" "$out"
 fi
 
-# Laufende Hyprland-Config (nur wenn Lua-Dateien dabei sind und Hyprland laeuft)
+# Running Hyprland config (only when Lua files are involved and Hyprland runs)
 if ((${#lua[@]})) && [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]]; then
 	out=$(hyprctl configerrors 2>/dev/null | grep -v -E '^\s*$')
 	[[ -z $out ]] || fail "Hyprland (hyprctl configerrors)" "$out"
@@ -103,7 +103,7 @@ fi
 
 total=$((${#lua[@]} + ${#shells[@]} + ${#pys[@]} + ${#jsons[@]} + ${#units[@]}))
 if ((errors)); then
-	echo "dotfiles-check: $errors Problem(e) in $total gepruefte(n) Datei(en)."
+	echo "dotfiles-check: $errors problem(s) in $total checked file(s)."
 	exit 1
 fi
-echo "dotfiles-check: $total Datei(en) ok (Lua ${#lua[@]}, Shell ${#shells[@]}, Python ${#pys[@]}, JSON ${#jsons[@]}, Units ${#units[@]})."
+echo "dotfiles-check: $total file(s) ok (Lua ${#lua[@]}, shell ${#shells[@]}, Python ${#pys[@]}, JSON ${#jsons[@]}, units ${#units[@]})."

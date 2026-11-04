@@ -1,70 +1,73 @@
 # Themes
 
-Jedes Theme ist ein Ordner mit denselben Dateien. Die eigentlichen Configs binden
-nur das aktive Theme ein: `~/.config/theme-current` -> `themes/<name>`.
-Der Symlink ist nicht im Git, jeder Rechner hat sein eigenes Theme.
+Each theme is a folder with the same set of files. The actual configs only include the
+active theme: `~/.config/theme-current` -> `themes/<name>`.
+The symlink is not in git, so every machine has its own theme.
 
 ```sh
-theme            # Liste, aktives mit *
-theme wired      # umschalten und alles neu laden
+theme            # list, active one marked with *
+theme wired      # switch and reload everything
 ```
 
-Nach einem frischen Clone (z. B. Laptop) einmal `~/.config/bin/theme-setup` ausfuehren:
-Schrift, Skripte, Timer, Launcher und Theme in einem Schritt.
+After a fresh clone (e.g. on the laptop) run `~/.config/bin/theme-setup` once:
+font, scripts, timers, launcher and theme in one step.
 
-Auf dem Laptop (Profil `laptop`) sind Shader und umlaufender Rahmen standardmaessig aus
-(Akku); `Super+Shift+G` schaltet den Shader bei Bedarf ein.
+On the laptop (profile `laptop`) the shader and the animated border are off by default
+(battery); `Super+Shift+G` turns the shader on when needed.
 
-| Theme | Stil |
+| Theme | Style |
 | --- | --- |
-| `tokyonight` | Das Setup von vor den Retro-Themes: runde Ecken, Blur, Schatten, Pill-Leiste, FiraCode |
-| `winxp` | Windows XP (Luna): blaue Taskleiste mit gruenem Startknopf, Huegel-Wallpaper, gelbe Sprechblasen, dunkle Konsole |
-| `office` | The Office (Dunder Mifflin Scranton), dunkel: Raeume als Workspaces, Feierabend-Zaehler, Zitate, Memo, Stempeluhr, World's-Best-Boss-Tasse |
-| `retro` | Bernstein-CRT: warmes Schwarz, Creme, Bernstein |
-| `wired` | Lain: Phosphorgruen und Violett, Terminal-Leiste, Strommast |
-| `win31` | Windows 3.1: Teal-Desktop, Systemgrau, Bevel-Knoepfe, DOS-Terminal |
+| `tokyonight` | The setup from before the retro themes: rounded corners, blur, shadows, pill bar, FiraCode |
+| `winxp` | Windows XP (Luna): blue taskbar with green start button, hills wallpaper, yellow balloons, dark console |
+| `office` | The Office (Dunder Mifflin Scranton), dark: rooms as workspaces, quitting-time counter, quotes, memo, time clock, World's Best Boss mug |
+| `retro` | Amber CRT: warm black, cream, amber |
+| `wired` | Lain: phosphor green and violet, terminal bar, power pole |
+| `win31` | Windows 3.1: teal desktop, system gray, bevel buttons, DOS terminal |
 
-## Dateien eines Themes
+## Files of a theme
 
-| Datei | Eingebunden von |
+| File | Included by |
 | --- | --- |
-| `palette.lua` | `hypr/theme.lua` (Rahmenfarben, Rahmenbreite, Abdunkeln) |
-| `waybar-colors.css`, `waybar.css` | `waybar/style.css` (Farben, dann `base.css`, dann Abweichungen) |
-| `waybar-modules.jsonc` | `waybar/config*.jsonc` (nur Abweichungen; wird vor `modules.jsonc` eingebunden) |
-| `kitty.conf` | `include` am Ende von `kitty/kitty.conf` |
+| `palette.lua` | `hypr/theme.lua` (border colors, border width, dimming) |
+| `waybar-colors.css`, `waybar.css` | `waybar/style.css` (colors, then `base.css`, then overrides) |
+| `waybar-modules.jsonc` | `waybar/config*.jsonc` (overrides only; included before `modules.jsonc`) |
+| `kitty.conf` | `include` at the end of `kitty/kitty.conf` |
 | `hyprlock.conf` | `source` in `hypr/hyprlock.conf` |
-| `greeter.toml` | Farben des Anmeldebildschirms (sysc-greet); einmalig `sudo ~/.config/bin/greeter-setup` | alle |
-| `thunar.css` | Thunar-Fenster (eingebunden ueber `gtk-3.0/gtk.css`); Thunar liest es nur beim Start, `theme` beendet einen Thunar ohne offene Fenster | alle |
-| `(private/)icon-theme/<Name>/` | Symbol-Theme (gsettings), z. B. XP-Ordner in Thunar; sonst Adwaita | winxp |
-| `themes/spicetify/color.ini` (Abschnitt `[<name>]`) | Spotify-Farben ueber Spicetify (Theme `DesktopTheme`); wirkt nach Spotify-Neustart | alle |
-| `hyprtoolkit.conf` | Symlink `hypr/hyprtoolkit.conf` (Launcher) |
-| `dunst.conf` | Symlink `dunst/dunstrc.d/50-theme.conf` |
-| `fastfetch.jsonc`, `fastfetch-logo.txt` | Symlink `fastfetch/config.jsonc` |
-| `nvim.lua` | `nvim/lua/config/theme.lua` (Colorscheme, gruvbox-Overrides, Highlights) |
-| `wallpaper.png`, `wallpaper.py` | `bin/theme-wallpaper` -> `~/.local/state/theme/wallpaper.png` (hyprpaper, Hyprlock); `wallpaper.py` erzeugt die Bilder |
+| `greeter.toml` | login screen colors (sysc-greet); once `sudo ~/.config/bin/greeter-setup` |
+| `thunar.css` | Thunar windows (included through `gtk-3.0/gtk.css`); Thunar reads it only at startup, `theme` quits a Thunar without open windows |
+| `(private/)icon-theme/<Name>/` | icon theme (gsettings), e.g. XP folders in Thunar; Adwaita otherwise |
+| `themes/spicetify/color.ini` (section `[<name>]`) | Spotify colors through Spicetify (theme `DesktopTheme`); applies after restarting Spotify |
+| `hyprtoolkit.conf` | symlink `hypr/hyprtoolkit.conf` (launcher) |
+| `dunst.conf` | symlink `dunst/dunstrc.d/50-theme.conf` |
+| `fastfetch.jsonc`, `fastfetch-logo.txt` | symlink `fastfetch/config.jsonc` |
+| `nvim.lua` | `nvim/lua/config/theme.lua` (colorscheme, gruvbox overrides, highlights) |
+| `wallpaper.png`, `wallpaper.py` | `bin/theme-wallpaper` -> `~/.local/state/theme/wallpaper.png` (hyprpaper, hyprlock); `wallpaper.py` generates the images |
 
-## Optionale Extras
+## Optional extras
 
-| Datei | Wirkung | Themes |
+| File | Effect | Themes |
 | --- | --- | --- |
-| `shader.frag` | Bildschirm-Shader; `Super+Shift+G` an/aus, in Vollbild-Spielen automatisch aus | retro (Scanlines, leichter Bernstein-Stich), wired (Roehre) |
-| `palette.lua`: `border_gradient`, `border_loop` | Verlaufsrahmen (optional umlaufend) | tokyonight, winxp, wired (umlaufend) |
-| `palette.lua`: `config`, `animations`, `window_rules` | ueberschreibt Hyprland-Einstellungen aus `hypr/hyprland.lua` (Theme wird zuletzt geladen) | tokyonight (Rundung, Blur, Schatten, transparentes Kitty), office (Rundung, Schatten) |
-| `nvim.lua`: `background` | helles oder dunkles Neovim (Standard: dunkel) | (derzeit keins hell) |
-| `wallpaper-rotate` + `wallpapers/*.png` | Wallpaper der Reihe nach wechseln (Intervall in Sekunden) | tokyonight (stuendlich) |
-| `wallpaper-phases` + `wallpapers/<phase>.png` | Wallpaper nach Uhrzeit (`theme-wallpaper.timer`, alle 10 min) | winxp (Tag/Abend/Nacht), office (Tag/Abend/Nacht), retro (Sonne wandert), wired (Tag/Daemmerung/Nacht) |
-| `sounds/{notify,lock,unlock}.wav` (+ `sounds.py`), optional `critical`, `startup`, `shutdown` | Klaenge bei Benachrichtigung (dunst; `critical` bei hoher Dringlichkeit), Sperren/Entsperren (`bin/theme-lock`), Sitzungsstart (`theme --session`) und Ausschalten im Startmenue; eigene Dateien in `private/sounds/` haben Vorrang | winxp (Pling, Akkord), office (Telefon, Stempel, Tippen + Ding), retro (Relais, Roehre an/aus), wired (Modem), win31 (Glocke, Akkord) |
-| `cursor/<Name>/` (+ `cursor.py`) | eigener Mauszeiger-Pfeil, Rest geerbt vom Wii-Zeiger | winxp (Pfeil mit Schatten), office (weisser Pfeil), retro (Bernstein-Pfeil), wired (Fadenkreuz), win31 (Pfeil) |
-| `screensaver.py` | Bildschirmschoner nach 9 min (`bin/screensaver`, hypridle) | winxp (Rohre), office (Konferenzraum-Notiz), retro (wandernde Uhr), wired (Hex-Regen), win31 (Sternenfeld) |
-| `nvim.lua`: `dashboard_header` | Kopf des Neovim-Startbildschirms | winxp (Fenster "Willkommen"), office (Memo), retro (Sonne + READY.), wired, win31 |
-| `browser.json` | Farben fuer Helium; `bin/theme-browser` baut daraus `~/.local/share/theme-browser` (einmalig als entpackte Erweiterung laden, siehe `bin/theme-browser`; wirkt nach Helium-Neustart) | alle |
-| `hyprtoolkit.conf` | Launcher (hyprlauncher); `theme` startet den Daemon neu | alle |
-| `startmenu.py` | eigenes Startmenue statt hyprlauncher (Super-Taste, Startknopf; `bin/menu`) | winxp (XP-Startmenue) |
-| `kitty-scanlines.png` | Scanline-Textur im Terminal | wired |
-| `kitty.conf`: `cursor_trail` | Phosphor-Nachleuchten hinter dem Cursor | retro |
-| `waybar-modules.jsonc` | eigene Modul-Formate, z. B. Segmentbalken `CPU ▮▮▯▯▯` (retro), Textlabels (wired) | retro, wired, office (Workspaces als Raeume, Feierabend-Zaehler) |
+| `shader.frag` | screen shader; `Super+Shift+G` toggles it, off automatically in fullscreen games | retro (scanlines, slight amber tint), wired (tube) |
+| `palette.lua`: `border_gradient`, `border_loop` | gradient border (optionally rotating) | tokyonight, winxp, wired (rotating) |
+| `palette.lua`: `config`, `animations`, `window_rules` | overrides Hyprland settings from `hypr/hyprland.lua` (the theme is loaded last) | tokyonight (rounding, blur, shadows, transparent kitty), office (rounding, shadows) |
+| `nvim.lua`: `background` | light or dark Neovim (default: dark) | (none light at the moment) |
+| `wallpaper-rotate` + `wallpapers/*.png` | cycle through wallpapers (interval in seconds) | tokyonight (hourly) |
+| `wallpaper-phases` + `wallpapers/<phase>.png` | wallpaper by time of day (`theme-wallpaper.timer`, every 10 min) | winxp (day/evening/night), office (day/evening/night), retro (moving sun), wired (day/dusk/night) |
+| `sounds/{notify,lock,unlock}.wav` (+ `sounds.py`), optionally `critical`, `startup`, `shutdown` | sounds for notifications (dunst; `critical` for high urgency), lock/unlock (`bin/theme-lock`), session start (`theme --session`) and shutdown in the start menu; your own files in `private/sounds/` take precedence | winxp (ding, chord), office (phone, stamp, typing + ding), retro (relay, tube on/off), wired (modem), win31 (bell, chord) |
+| `cursor/<Name>/` (+ `cursor.py`) | own pointer arrow, everything else inherited from the Wii pointer | winxp (arrow with shadow), office (white arrow), retro (amber arrow), wired (crosshair), win31 (arrow) |
+| `screensaver.py` | screensaver after 9 min (`bin/screensaver`, hypridle) | winxp (pipes), office (conference room note), retro (wandering clock), wired (hex rain), win31 (starfield) |
+| `nvim.lua`: `dashboard_header` | header of the Neovim start screen | winxp ("Welcome" window), office (memo), retro (sun + READY.), wired, win31 |
+| `browser.json` | colors for Helium; `bin/theme-browser` builds `~/.local/share/theme-browser` from it (load once as an unpacked extension, see `bin/theme-browser`; applies after restarting Helium) | all |
+| `hyprtoolkit.conf` | launcher (hyprlauncher); `theme` restarts the daemon | all |
+| `startmenu.py` | own start menu instead of hyprlauncher (Super key, start button; `bin/menu`) | winxp (XP start menu) |
+| `kitty-scanlines.png` | scanline texture in the terminal | wired |
+| `kitty.conf`: `cursor_trail` | phosphor afterglow behind the cursor | retro |
+| `waybar-modules.jsonc` | own module formats, e.g. segment bars `CPU ▮▮▯▯▯` (retro), text labels (wired) | retro, wired, office (rooms as workspaces, quitting-time counter) |
 
-Die Generatoren (`wallpaper.py`, `sounds.py`, `cursor.py`) erzeugen die Dateien neu, z. B.
-nach Farbaenderungen: `python3 themes/wired/wallpaper.py`.
+The generators (`wallpaper.py`, `sounds.py`, `cursor.py`) recreate the files, e.g. after
+changing colors: `python3 themes/wired/wallpaper.py`.
 
-Neues Theme: Ordner kopieren, Farben anpassen, `theme <name>`.
+New theme: copy a folder, adjust the colors, `theme <name>`.
+
+Your own images, logos and sounds that must not be public go into `themes/<name>/private/`
+(ignored by git). What goes where: `themes/winxp/PRIVATE.md`, `themes/office/PRIVATE.md`.

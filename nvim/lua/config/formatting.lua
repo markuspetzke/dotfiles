@@ -1,6 +1,6 @@
 local M = {}
 
--- Nur das langsame Projekt + Filetype umstellen, nicht alle Dateien derselben Sprache.
+-- Switch only the slow project + filetype, not all files of the same language.
 local slow = {}
 local function project_key(bufnr)
   local root = vim.fs.root(bufnr, { { ".git", "package.json", "Cargo.toml", "pyproject.toml" } })
@@ -22,9 +22,9 @@ function M.on_save(bufnr)
     return
   end
   local started = vim.uv.hrtime()
-  -- Save soll sich wie ein normaler Editorbefehl anfuehlen. Schnelle
-  -- Formatter laufen synchron; langsame Projekte wechseln fuer die Sitzung
-  -- automatisch in den asynchronen Modus.
+  -- Saving should feel like a normal editor command. Fast
+  -- formatters run synchronously; slow projects switch to async mode
+  -- automatically for the rest of the session.
   return { timeout_ms = 200, lsp_format = "fallback" }, function(err)
     if vim.api.nvim_buf_is_valid(bufnr) then
       vim.b[bufnr].format_duration_ms = math.floor((vim.uv.hrtime() - started) / 1e6)

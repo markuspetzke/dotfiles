@@ -1,5 +1,5 @@
-"""Wired-Bildschirmschoner (laeuft im Vollbild-Kitty, gestartet von bin/screensaver).
-Erst ~2 s Rauschen, dann fallende Spalten aus Hex-Werten. Beendet sich bei jeder Taste."""
+"""Wired screensaver (runs in a fullscreen kitty, started by bin/screensaver).
+First ~2 s of noise, then falling columns of hex values. Quits on any key."""
 import os
 import random
 import select
@@ -23,7 +23,7 @@ _START = time.time()
 
 
 def key_pressed():
-    """Taste oder Mausbewegung (Terminal-Mausmeldungen) -> beenden; erste Sekunde ignorieren."""
+    """Key or mouse move (terminal mouse reports) -> quit; ignore the first second."""
     if not select.select([sys.stdin], [], [], 0)[0]:
         return False
     os.read(sys.stdin.fileno(), 4096)
@@ -36,7 +36,7 @@ def main():
     rng = random.Random()
     out.write("\x1b[?1049h\x1b[?25l\x1b[?1003h" + bg(BG) + "\x1b[2J")
 
-    # Phase 1: Rauschen
+    # Phase 1: noise
     end = time.time() + 2.0
     while time.time() < end:
         if key_pressed():
@@ -48,7 +48,7 @@ def main():
         out.flush()
         time.sleep(0.06)
 
-    # Phase 2: Hex-Regen (Spaltenbreite 3: "a7 ")
+    # Phase 2: hex rain (column width 3: "a7 ")
     out.write(bg(BG) + "\x1b[2J")
     ncol = cols // 3
     heads = [rng.randrange(-rows, 0) for _ in range(ncol)]

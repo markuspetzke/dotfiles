@@ -1,6 +1,6 @@
-"""Windows-XP-Bildschirmschoner: "Rohre" - bunte Leitungen wachsen kreuz und quer ueber
-den schwarzen Bildschirm (eigene Terminal-Umsetzung der bekannten Idee). Laeuft im
-Vollbild-Kitty (bin/screensaver), beendet sich bei jeder Taste."""
+"""Windows XP screensaver: "Pipes" - colorful pipes grow criss-cross over the
+black screen (own terminal take on the well-known idea). Runs in a
+fullscreen kitty (bin/screensaver), quits on any key."""
 import os
 import random
 import select
@@ -10,14 +10,14 @@ import time
 import tty
 
 COLORS = [(59, 140, 245), (87, 184, 87), (240, 160, 80), (231, 72, 86), (249, 199, 79), (97, 214, 214), (180, 127, 224)]
-DIRS = [(0, -1), (1, 0), (0, 1), (-1, 0)]  # hoch, rechts, runter, links
+DIRS = [(0, -1), (1, 0), (0, 1), (-1, 0)]  # up, right, down, left
 
 
 _START = time.time()
 
 
 def key_pressed():
-    """Taste oder Mausbewegung (Terminal-Mausmeldungen) -> beenden; erste Sekunde ignorieren."""
+    """Key or mouse move (terminal mouse reports) -> quit; ignore the first second."""
     if not select.select([sys.stdin], [], [], 0)[0]:
         return False
     os.read(sys.stdin.fileno(), 4096)
@@ -42,12 +42,12 @@ def main():
         for p in pipes:
             x, y, d, c = p
             nd = d
-            if rng.random() < 0.12:  # abbiegen (nie umkehren)
+            if rng.random() < 0.12:  # turn (never reverse)
                 nd = (d + rng.choice((1, 3))) % 4
-            if nd != d:  # Gelenk: heller Block an der Abbiegung
+            if nd != d:  # joint: a bright block at the turn
                 j = tuple(min(255, int(v * 1.35) + 40) for v in c)
                 buf.append(f"\x1b[{y + 1};{x + 1}H\x1b[38;2;{j[0]};{j[1]};{j[2]}m█")
-            else:  # Rohr: voller Block, waagrecht etwas dunkler (wirkt plastischer)
+            else:  # pipe: full block, a little darker when horizontal (looks more three-dimensional)
                 k = c if nd in (0, 2) else tuple(int(v * 0.8) for v in c)
                 buf.append(f"\x1b[{y + 1};{x + 1}H\x1b[38;2;{k[0]};{k[1]};{k[2]}m█")
             dx, dy = DIRS[nd]
@@ -59,7 +59,7 @@ def main():
             drawn += 1
         out.write("".join(buf))
         out.flush()
-        if drawn > cols * rows * 0.9:  # Bildschirm voll: neu anfangen
+        if drawn > cols * rows * 0.9:  # screen full: start over
             out.write("\x1b[48;2;0;0;0m\x1b[2J")
             pipes = [new_pipe() for _ in range(3)]
             drawn = 0

@@ -1,5 +1,5 @@
--- Hardwareprofil kommt aus scripts/hypr-profile.sh, damit Hyprland, hypridle und
--- waybar dieselbe Erkennung nutzen (HYPR_PROFILE > Systemakku, sonst desktop).
+-- The hardware profile comes from scripts/hypr-profile.sh so Hyprland, hypridle and
+-- waybar use the same detection (HYPR_PROFILE > system battery, otherwise desktop).
 local M = { name = "unknown", profile = nil, is_desktop = false, is_laptop = false }
 
 local f = io.open("/etc/hostname", "r")
@@ -14,7 +14,7 @@ if p then
 	M.profile = (p:read("*l") or ""):gsub("%s+$", "")
 	p:close()
 end
--- Skript fehlt oder liefert Unsinn: Desktop ist der sichere Default (keine Laptop-Monitorlogik).
+-- Script missing or returns nonsense: desktop is the safe default (no laptop monitor logic).
 if M.profile ~= "desktop" and M.profile ~= "laptop" then
 	M.profile = "desktop"
 end

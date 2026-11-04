@@ -1,6 +1,6 @@
--- nvim-treesitter `main`: kein configs-Modul mehr, Highlight/Indent laufen
--- ueber die Neovim-Builtins pro FileType. Parser werden mit dem tree-sitter
--- CLI gebaut (`cargo install tree-sitter-cli`).
+-- nvim-treesitter `main`: no configs module anymore, highlight/indent run
+-- through the Neovim builtins per FileType. Parsers are built with the tree-sitter
+-- CLI (`cargo install tree-sitter-cli`).
 local ensure = {
   "lua",
   "vim",
@@ -14,7 +14,7 @@ local ensure = {
   "astro",
   "markdown",
   "markdown_inline",
-  "regex", -- noice: cmdline-Highlighting
+  "regex", -- noice: cmdline highlighting
   "bash",
   "json",
   "yaml",
@@ -60,8 +60,8 @@ return {
               vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
             end
           end
-          -- Fehlende Parser nachinstallieren, Highlight erst danach starten.
-          -- Filetypes ohne bekannten Parser (lazygit, dashboard, ...) still ignorieren.
+          -- Install missing parsers, start highlighting only after that.
+          -- Silently ignore filetypes without a known parser (lazygit, dashboard, ...).
           if not vim.tbl_contains(ts.get_installed(), lang) then
             if not vim.tbl_contains(ts.get_available(), lang) then
               return

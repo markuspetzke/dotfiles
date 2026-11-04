@@ -1,4 +1,4 @@
-// fastfetch -- Office: Mitarbeiterausweis mit Kaffeetasse (Logo: fastfetch-logo.txt).
+// fastfetch -- Office: employee ID with a coffee mug (logo: fastfetch-logo.txt).
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
@@ -62,7 +62,7 @@
     "break",
     {
       "type": "custom",
-      "format": "DUNDER MIFFLIN · MITARBEITERAUSWEIS",
+      "format": "DUNDER MIFFLIN · EMPLOYEE ID",
       "outputColor": "38;2;242;214;75"
     },
     {
@@ -77,12 +77,12 @@
     },
     {
       "type": "title",
-      "key": "Arbeitsplatz",
+      "key": "Workstation",
       "format": "{host-name}"
     },
     {
       "type": "custom",
-      "key": "Filiale",
+      "key": "Branch",
       "format": "Scranton, PA"
     },
     {
@@ -92,66 +92,66 @@
     },
     {
       "type": "os",
-      "key": "Abteilung",
+      "key": "Department",
       "format": "{pretty-name}"
     },
     {
       "type": "uptime",
-      "key": "Im Dienst seit"
+      "key": "On duty for"
     },
     {
       "type": "packages",
-      "key": "Ablage"
+      "key": "Files"
     },
     "break",
     {
       "type": "wm",
-      "key": "Schreibtisch",
+      "key": "Desk",
       "format": "{pretty-name} {version}"
     },
     {
       "type": "terminal",
-      "key": "Schreibmaschine",
+      "key": "Typewriter",
       "format": "{pretty-name}"
     },
     {
       "type": "shell",
-      "key": "Diktiergerät",
+      "key": "Dictaphone",
       "format": "{pretty-name} {version}"
     },
     "break",
     {
       "type": "cpu",
-      "key": "Rechenwerk",
+      "key": "Calculator",
       "format": "{name} ({cores-logical})",
       "temp": false
     },
     {
       "type": "gpu",
-      "key": "Grafik",
+      "key": "Graphics",
       "format": "{name}",
       "hideType": "integrated",
       "driverSpecific": false
     },
     {
       "type": "memory",
-      "key": "Arbeitsspeicher",
+      "key": "Memory",
       "format": "{percentage-bar}  {used} / {total}"
     },
     {
       "type": "disk",
-      "key": "Aktenschrank",
+      "key": "Filing cabinet",
       "folders": "/",
       "format": "{size-percentage-bar}  {size-used} / {size-total}"
     },
     {
       "type": "battery",
-      "key": "Akku"
+      "key": "Battery"
     },
     "break",
     {
       "type": "command",
-      "key": "Zitat",
+      "key": "Quote",
       "keyColor": "38;2;242;214;75",
       "text": "shuf -n1 ~/.config/themes/office/quotes.txt"
     }

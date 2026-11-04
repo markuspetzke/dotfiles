@@ -1,9 +1,9 @@
-"""Bernstein-CRT: Pixelpfeil in Bernstein mit dunklem Rand -> cursor/Theme-retro.
-python3 cursor.py (danach `theme retro`)."""
+"""Amber CRT: pixel arrow in amber with a dark outline -> cursor/Theme-retro.
+python3 cursor.py (then `theme retro`)."""
 import os
 import sys
 
-sys.dont_write_bytecode = True  # kein __pycache__ in themes/
+sys.dont_write_bytecode = True  # no __pycache__ in themes/
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from xcursor import build  # noqa: E402
 

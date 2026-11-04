@@ -1,4 +1,4 @@
-/* Thunar -- office (eingebunden ueber ~/.config/gtk-3.0/gtk.css; gilt nur fuer Thunar-Fenster) */
+/* Thunar -- office (included through ~/.config/gtk-3.0/gtk.css; applies to Thunar windows only) */
 .thunar, .thunar * {
     font-family: "Noto Sans";
     font-size: 12px;
@@ -16,7 +16,7 @@
     border-color: #3d4450;
 }
 
-/* Dateiansicht */
+/* File view */
 .thunar iconview,
 .thunar exoiconview,
 .thunar .view,
@@ -26,7 +26,7 @@
     color: #e6dfcf;
 }
 
-/* Seitenleiste (Orte, Lesezeichen) */
+/* Sidebar (places, bookmarks) */
 .thunar .shortcuts-pane,
 .thunar .shortcuts-pane treeview,
 .thunar treeview.view.shortcuts-pane,
@@ -37,7 +37,7 @@
     color: #e6dfcf;
 }
 
-/* Auswahl */
+/* Selection */
 .thunar iconview:selected,
 .thunar exoiconview:selected,
 .thunar .view:selected,
@@ -47,7 +47,7 @@
     color: #ffffff;
 }
 
-/* Pfadleiste und Eingabefelder */
+/* Path bar and entry fields */
 .thunar entry {
     background-color: #181b20;
     color: #e6dfcf;

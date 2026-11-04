@@ -1,4 +1,4 @@
--- Theme "Tokyo Night" fuer Neovim: Standard-Startbildschirm, eigene Highlights aus options.lua.
+-- Theme "Tokyo Night" for Neovim: default start screen, own highlights from options.lua.
 return {
   colorscheme = "tokyonight",
 }

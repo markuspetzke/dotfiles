@@ -1,8 +1,8 @@
 [Unit]
-Description=Backups taeglich pruefen und nachholen
+Description=Check backups daily and catch up
 
 [Timer]
-# Nach den Sonntagslaeufen (11:00 Dokumente, 13:00 Hetzner); war der PC aus, nach dem Einschalten
+# After the Sunday runs (11:00 documents, 13:00 Hetzner); if the PC was off, after power-on
 OnCalendar=*-*-* 14:00
 Persistent=true
 

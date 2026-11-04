@@ -1,9 +1,9 @@
--- Eigene Highlights zuerst registrieren, dann das Colorscheme laden -- das
--- feuert ColorScheme genau einmal und ueberschreibt nichts doppelt.
+-- Register own highlights first, then load the colorscheme -- that
+-- fires ColorScheme exactly once and overrides nothing twice.
 vim.api.nvim_create_autocmd("ColorScheme", {
   group = vim.api.nvim_create_augroup("user_highlights", { clear = true }),
   callback = function()
-    -- Eigene Ergaenzungen nur fuer Schemes mit bekannter Palette; andere bleiben unangetastet.
+    -- Own additions only for schemes with a known palette; others stay untouched.
     local palettes = {
       tokyonight = {
         bg = "#222436",
@@ -17,7 +17,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
         orange = "#ff966c",
       },
     }
-    -- Palette des Desktop-Themes gilt fuer dessen Colorscheme (themes/<name>/nvim.lua).
+    -- The desktop theme's palette applies to its colorscheme (themes/<name>/nvim.lua).
     local theme = require("config.theme").get()
     if theme.colorscheme and theme.highlights then
       palettes[theme.colorscheme] = theme.highlights
@@ -50,9 +50,9 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   end,
 })
 
--- Colorscheme: Default hier, die zuletzt per <leader>uC gewaehlte wird in
--- stdpath("state")/colorscheme gemerkt und beim naechsten Start bevorzugt.
--- Standard kommt vom Desktop-Theme (`theme <name>` schreibt es auch in den Zustand unten).
+-- Colorscheme: default here; the one last picked with <leader>uC is remembered in
+-- stdpath("state")/colorscheme and preferred on the next start.
+-- The default comes from the desktop theme (`theme <name>` also writes it to the state below).
 local default_colorscheme = require("config.theme").get().colorscheme or "tokyonight"
 local colorscheme_file = vim.fs.joinpath(vim.fn.stdpath("state"), "colorscheme")
 
@@ -66,7 +66,7 @@ local function read_saved_colorscheme()
   return name ~= "" and name or nil
 end
 
--- Hell/dunkel bestimmt das Desktop-Theme (nvim.lua: background), vor dem Colorscheme setzen
+-- Light/dark comes from the desktop theme (nvim.lua: background); set it before the colorscheme
 vim.opt.background = require("config.theme").get().background or "dark"
 
 local colorscheme = read_saved_colorscheme() or default_colorscheme
@@ -78,7 +78,7 @@ if not pcall(vim.cmd.colorscheme, colorscheme) then
   pcall(vim.cmd.colorscheme, default_colorscheme)
 end
 
--- Jede spaetere Aenderung (Picker, :colorscheme) speichern.
+-- Save every later change (picker, :colorscheme).
 vim.api.nvim_create_autocmd("ColorScheme", {
   group = vim.api.nvim_create_augroup("user_colorscheme_persist", { clear = true }),
   callback = function(ev)
@@ -95,7 +95,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
 -- UI
 vim.opt.termguicolors = true
--- background: siehe oben (vom Desktop-Theme, vor dem Colorscheme)
+-- background: see above (from the desktop theme, before the colorscheme)
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.showmode = false
@@ -130,7 +130,7 @@ vim.opt.expandtab = true
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
-vim.opt.smartindent = false -- Treesitter-Indent uebernimmt das
+vim.opt.smartindent = false -- treesitter indent handles that
 vim.opt.shiftround = true
 
 -- Folding
@@ -157,7 +157,7 @@ vim.opt.clipboard = vim.env.SSH_CONNECTION and "" or "unnamedplus"
 -- Misc
 vim.opt.confirm = true
 vim.opt.mouse = "a"
-vim.opt.formatoptions:remove({ "o" }) -- kein Kommentar-Prefix bei o/O
+vim.opt.formatoptions:remove({ "o" }) -- no comment prefix on o/O
 vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
 
 -- Diagnostics

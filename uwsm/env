@@ -1,11 +1,11 @@
-# Von uwsm beim Session-Start gesourct und an Hyprland und systemd --user exportiert.
+# Sourced by uwsm at session start and exported to Hyprland and systemd --user.
 
-# Electron-Apps (Discord, VS Code, ...) nativ unter Wayland statt XWayland.
+# Electron apps (Discord, VS Code, ...) natively on Wayland instead of XWayland.
 export ELECTRON_OZONE_PLATFORM_HINT=auto
 
-# Hardwareprofil erzwingen, falls die Akku-Erkennung danebenliegt (desktop|laptop).
+# Force the hardware profile if battery detection gets it wrong (desktop|laptop).
 # export HYPR_PROFILE=laptop
 
-# Mauszeiger (Wii Pointer, liegt in ~/.local/share/icons; Varianten P1-P4 = Spielerfarben).
+# Cursor (Wii Pointer, lives in ~/.local/share/icons; variants P1-P4 = player colors).
 export XCURSOR_THEME=Wii-Pointer-P1
 export XCURSOR_SIZE=24

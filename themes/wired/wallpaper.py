@@ -1,8 +1,8 @@
-"""Pixel-Art-Wallpaper "wired-wires": Strommasten und Leitungen, je Tageszeit.
+"""Pixel art wallpaper "wired-wires": power poles and wires, per time of day.
   python3 wallpaper.py              -> wallpapers/{day,dusk,night}.png + wallpaper.png (= dusk)
   python3 wallpaper.py <phase> <out>
-Rendert 480x270, skaliert 4x (nearest) auf 1920x1080, mit Scanlines.
-Welche Phase wann gilt: wallpaper-phases (bin/theme-wallpaper)."""
+Renders 480x270, scaled 4x (nearest) to 1920x1080, with scanlines.
+Which phase applies when: wallpaper-phases (bin/theme-wallpaper)."""
 import math
 import random
 import sys
@@ -52,18 +52,18 @@ def render(phase):
     px = img.load()
     rng = random.Random(3)
 
-    # Himmel: oben schwarz, zum Horizont violett
+    # Sky: black at the top, violet towards the horizon
     sky = [P[k] for k in cfg["sky"]]
     for y in range(HORIZON):
         for x in range(W):
             px[x, y] = ramp(x, y, (y / HORIZON) ** 1.8, sky)
 
-    # wenige Sterne
+    # a few stars
     for _ in range(cfg["stars"]):
         x, y = rng.randrange(W), rng.randrange(int(HORIZON * 0.5))
         px[x, y] = P["fg"] if rng.random() < 0.2 else P["muted"]
 
-    # Boden + gruene Horizontlinie
+    # Ground + green horizon line
     for y in range(HORIZON, H):
         for x in range(W):
             px[x, y] = ramp(x, y, 1 - (y - HORIZON) / (H - HORIZON), [P["void"], P["bg_dark"], P["bg"]])
@@ -71,7 +71,7 @@ def render(phase):
         px[x, HORIZON] = P["green"] if (x // 3) % 7 else P["green_dk"]
         px[x, HORIZON + 1] = dither(x, HORIZON + 1, 0.4, P["bg"], P["green_dk"])
 
-    # Hausdaecher (Silhouetten) entlang des Horizonts
+    # Roofs (silhouettes) along the horizon
     x = 0
     while x < W:
         w = rng.randint(14, 40)
@@ -79,14 +79,14 @@ def render(phase):
         for xx in range(x, min(W, x + w)):
             for yy in range(HORIZON - h, HORIZON):
                 px[xx, yy] = P["pole"]
-        # ein paar erleuchtete Fenster
+        # a few lit windows
         for _ in range(rng.randint(*cfg["lights"])):
             fx, fy = rng.randint(x + 2, x + max(3, w - 3)), rng.randint(HORIZON - h + 2, HORIZON - 3)
             if 0 <= fx < W:
                 px[fx, fy] = P["green"] if rng.random() < 0.7 else P["fg"]
         x += w + rng.randint(0, 12)
 
-    # Strommasten in Perspektive (links nah/gross, nach rechts kleiner)
+    # Power poles in perspective (near/large on the left, smaller to the right)
     poles = []
     for i, (pxp, top) in enumerate([(30, 18), (150, 70), (255, 104), (340, 128), (405, 146), (452, 158)]):
         thick = max(1, 5 - i)
@@ -94,7 +94,7 @@ def render(phase):
         for yy in range(top, min(H, base)):
             for t in range(thick):
                 px[pxp + t, yy] = P["pole"]
-        # Querbalken
+        # Crossbar
         arm = max(4, 36 - i * 6)
         for k, off in enumerate((4, 4 + max(3, 12 - i * 2))):
             for xx in range(pxp - arm // 2, pxp + arm // 2 + thick):
@@ -103,7 +103,7 @@ def render(phase):
                     px[xx, top + off + 1] = P["pole"]
         poles.append((pxp + thick // 2, top, arm))
 
-    # Leitungen: je 4 Draehte zwischen benachbarten Masten, durchhaengend (Kettenlinie ~ Parabel)
+    # Wires: 4 per pair of neighboring poles, sagging (catenary ~ parabola)
     for (x0, t0, a0), (x1, t1, a1) in zip(poles, poles[1:]):
         for k in range(4):
             side = (k % 2) * 2 - 1
@@ -116,7 +116,7 @@ def render(phase):
                 yy = int(ay + (by - ay) * t + sag * 4 * t * (1 - t))
                 if 0 <= yy < H:
                     px[xx, yy] = P["pole"]
-    # Draehte vom ersten Mast nach links aus dem Bild
+    # Wires from the first pole off the image to the left
     x0, t0, a0 = poles[0]
     for k in range(4):
         side = (k % 2) * 2 - 1

@@ -2,7 +2,7 @@ return {
   settings = {
     tailwindCSS = {
       experimental = {
-        -- Klassen auch in cn()/clsx()/cva()-Aufrufen und tw-Template-Literals erkennen.
+        -- Also detect classes in cn()/clsx()/cva() calls and tw template literals.
         classRegex = {
           { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
           { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },

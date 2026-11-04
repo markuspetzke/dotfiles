@@ -1,5 +1,5 @@
 #!/bin/sh
-# Prueft die vorgemerkten Dateien (bin/dotfiles-check), bevor der Commit entsteht.
-# Aktiv ueber: git config core.hooksPath .githooks (setzt bin/theme-setup).
-# Im Notfall ueberspringen: git commit --no-verify
+# Checks the staged files (bin/dotfiles-check) before the commit is created.
+# Enabled through: git config core.hooksPath .githooks (set by bin/theme-setup).
+# Skip in an emergency: git commit --no-verify
 exec "$(git rev-parse --show-toplevel)/bin/dotfiles-check" --staged

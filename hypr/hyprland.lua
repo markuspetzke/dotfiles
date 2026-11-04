@@ -12,9 +12,9 @@ require("./windowrule.lua")
 -------------------
 
 hl.on("hyprland.start", function()
-	-- uwsm: WAYLAND_DISPLAY, DISPLAY und HYPRLAND_INSTANCE_SIGNATURE an systemd geben und
-	-- die Compositor-Unit als bereit melden. Damit ist graphical-session.target erreicht,
-	-- und das zieht hypr-session.target (WantedBy) nach -- kein manueller Start noetig.
+	-- uwsm: pass WAYLAND_DISPLAY, DISPLAY and HYPRLAND_INSTANCE_SIGNATURE to systemd and
+	-- report the compositor unit as ready. That reaches graphical-session.target,
+	-- which pulls in hypr-session.target (WantedBy) -- no manual start needed.
 	hl.exec_cmd("uwsm finalize")
 end)
 
@@ -22,9 +22,9 @@ end)
 ---- ENVIRONMENT VARIABLES ----
 -------------------------------
 
--- Session-Variablen stehen in ~/.config/uwsm/env: uwsm gibt sie Hyprland und allen
--- systemd-Diensten gleichermassen mit. Dark Mode kommt aus gsettings (gtk-theme fuer
--- GTK3, color-scheme fuer GTK4/libadwaita), nicht aus GTK_THEME.
+-- Session variables live in ~/.config/uwsm/env: uwsm passes them to Hyprland and to all
+-- systemd services alike. Dark mode comes from gsettings (gtk-theme for
+-- GTK3, color-scheme for GTK4/libadwaita), not from GTK_THEME.
 
 -----------------------
 ---- LOOK AND FEEL ----
@@ -34,14 +34,14 @@ hl.config({
 	general = {
 		gaps_in = 4,
 		gaps_out = 8,
-		-- Rahmenbreite und Farben kommen aus dem Theme (hypr/theme.lua)
+		-- Border width and colors come from the theme (hypr/theme.lua)
 		resize_on_border = true,
 		allow_tearing = false,
 		layout = "master",
 	},
 
-	-- Grundlage: eckig, ohne Schatten und Blur. Themes duerfen das in palette.lua
-	-- ueberschreiben (z. B. tokyonight: Rundung, Blur, Schatten).
+	-- Base: square corners, no shadows, no blur. Themes may override this in palette.lua
+	-- (e.g. tokyonight: rounding, blur, shadows).
 	decoration = {
 		rounding = 0,
 
@@ -84,7 +84,7 @@ hl.animation({ leaf = "workspacesIn", enabled = true, speed = 1.21, bezier = "al
 hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "zoomFactor", enabled = true, speed = 7, bezier = "quick" })
 
--- Master-Layout: neue Fenster rechts als Slave, Master bekommt 55 %.
+-- Master layout: new windows go right as slaves, the master gets 55 %.
 hl.config({
 	master = {
 		new_status = "slave",
@@ -101,22 +101,22 @@ hl.config({
 	misc = {
 		force_default_wallpaper = 0,
 		disable_hyprland_logo = true,
-		-- Fenster, die "Aufmerksamkeit" wollen (z.B. Browser-Link aus Discord), bekommen den Fokus.
+		-- Windows that ask for attention (e.g. a browser link from Discord) get focus.
 		focus_on_activate = true,
-		-- Kein Einfuegen per Mittelklick -- auf dem Desktop meist nur versehentlich.
+		-- No middle-click paste -- on the desktop it is mostly accidental.
 		middle_click_paste = false,
-		-- VRR/FreeSync aus: mit 2 (nur Vollbild) schaltet FreeSync bei jedem Vollbild-Fenster
-		-- um und die Monitore werden dabei kurz schwarz.
+		-- VRR/FreeSync off: with 2 (fullscreen only) FreeSync toggles for every fullscreen window
+		-- and the monitors briefly go black.
 		vrr = 0,
-		-- Von hypridle abgeschaltete Bildschirme per Taste/Maus wieder aufwecken.
+		-- Wake monitors turned off by hypridle with a key press or mouse move.
 		key_press_enables_dpms = true,
 		mouse_move_enables_dpms = true,
 	},
-	-- Direct Scanout aus: verursachte sporadische Blackscreens in Vollbild-Spielen (TF2 via XWayland).
+	-- Direct scanout off: caused sporadic black screens in fullscreen games (TF2 via XWayland).
 	render = {
 		direct_scanout = 0,
 	},
-	-- Keine News-/Spenden-Popups nach Hyprland-Updates.
+	-- No news/donation popups after Hyprland updates.
 	ecosystem = {
 		no_update_news = true,
 		no_donation_nag = true,
@@ -130,7 +130,7 @@ hl.config({
 hl.config({
 	input = {
 		kb_layout = "de",
-		-- Gehaltene Taste: nach 300 ms mit 40 Zeichen/s wiederholen (Standard 600/25).
+		-- Held key: repeat after 300 ms at 40 chars/s (default 600/25).
 		repeat_delay = 300,
 		repeat_rate = 40,
 		follow_mouse = 1,
@@ -159,7 +159,7 @@ end
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
 
--- Smart Gaps: nur ein Fenster auf dem Workspace -> keine Gaps, keine Rundung.
+-- Smart gaps: only one window on the workspace -> no gaps, no rounding.
 hl.workspace_rule({ workspace = "w[tv1]", gaps_out = 0, gaps_in = 0 })
 hl.workspace_rule({ workspace = "f[1]", gaps_out = 0, gaps_in = 0 })
 hl.window_rule({
@@ -208,6 +208,6 @@ hl.window_rule({
 ---- THEME ----
 ---------------
 
--- Zuletzt laden: das aktive Theme (themes/<name>/palette.lua) setzt Farben und darf
--- Aussehen, Animationen und Fensterregeln von oben ueberschreiben.
+-- Load last: the active theme (themes/<name>/palette.lua) sets colors and may
+-- override looks, animations and window rules from above.
 require("./theme.lua")

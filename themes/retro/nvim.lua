@@ -1,7 +1,7 @@
--- Theme "Bernstein-CRT" fuer Neovim: Colorscheme, gruvbox-Overrides, eigene Highlights.
+-- Theme "Amber CRT" for Neovim: colorscheme, gruvbox overrides, own highlights.
 return {
   colorscheme = "gruvbox",
-  -- Kopf des Neovim-Startbildschirms (snacks dashboard): Sonne + READY. wie ein alter Heimcomputer
+  -- Header of the Neovim start screen (snacks dashboard): sun + READY. like an old home computer
   dashboard_header = table.concat({
     "          ▄▄██████▄▄          ",
     "       ▄██████████████▄       ",

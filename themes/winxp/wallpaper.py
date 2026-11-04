@@ -1,8 +1,8 @@
-"""Wallpaper "winxp": eigene Zeichnung einer sanften gruenen Huegellandschaft unter blauem
-Himmel mit Schoenwetterwolken (im Stil der XP-Zeit, kein Foto).
+"""Wallpaper "winxp": own drawing of gentle green hills under a blue
+sky with fair-weather clouds (in the style of the XP era, not a photo).
   python3 wallpaper.py              -> wallpapers/{day,dusk,night}.png + wallpaper.png (= day)
   python3 wallpaper.py <phase> <out>
-Das Original-Foto kann man selbst nach private/wallpaper.jpg legen, es hat dann Vorrang."""
+You can put the original photo into private/wallpaper.jpg yourself, it then takes precedence."""
 import os
 import sys
 
@@ -11,7 +11,7 @@ from PIL import Image, ImageFilter
 
 W, H = 1920, 1080
 PHASES = {
-    #        Himmel oben,   Himmel Horizont, Huegel hell,   Huegel dunkel, Wolken,         Licht
+    #        sky top,       sky horizon,     hills light,   hills dark,    clouds,         light
     "day":   ((24, 86, 200), (160, 205, 244), (132, 200, 66), (46, 122, 26), (255, 255, 255), 1.00),
     "dusk":  ((40, 52, 120), (236, 150, 110), (96, 140, 52), (40, 82, 26), (255, 214, 190), 0.85),
     "night": ((6, 12, 34), (34, 54, 100), (34, 62, 34), (14, 30, 16), (120, 130, 160), 0.55),
@@ -28,17 +28,17 @@ def render(phase, seed=4):
     y = np.linspace(0, 1, H)[:, None]
     x = np.linspace(0, 1, W)[None, :]
 
-    # Himmel: Verlauf von tiefblau oben zu hell am Horizont
+    # Sky: gradient from deep blue at the top to light at the horizon
     t = np.clip(y / 0.75, 0, 1) ** 1.3
     sky = np.stack([lerp(top[i], horizon[i], t) * np.ones_like(x) for i in range(3)], -1)
 
-    # Wolken: weiche, weiss aufgehellte Flecken (Ellipsen + Weichzeichner)
+    # Clouds: soft, white brightened patches (ellipses + blur)
     clouds = Image.new("L", (W, H), 0)
     px = clouds.load()
     for _ in range(16):
         cx, cy = rng.uniform(0, W), rng.uniform(H * 0.04, H * 0.38)
         rx, ry = rng.uniform(50, 170), rng.uniform(14, 36)
-        for _ in range(7):  # mehrere Kugeln je Wolke -> Haufenwolke
+        for _ in range(7):  # several balls per cloud -> cumulus
             ox, oy = rng.normal(0, rx * 0.5), rng.normal(0, ry * 0.4)
             r = rng.uniform(0.4, 0.9)
             x0, x1 = int(cx + ox - rx * r), int(cx + ox + rx * r)
@@ -54,28 +54,28 @@ def render(phase, seed=4):
     clouds = np.asarray(clouds.filter(ImageFilter.GaussianBlur(11)), dtype=np.float32)[..., None] / 255.0
     sky = sky * (1 - clouds * 0.9) + np.array(cloud_col) * clouds * 0.9
 
-    # Huegel: weiche Kurven, vorne heller Hang, hinten ein zweiter, etwas dunklerer
+    # Hills: soft curves, a lighter slope in front, a second, slightly darker one behind
     def ridge(base, amp, freq, phase_):
         return base - amp * np.sin(x * np.pi * freq + phase_) - amp * 0.35 * np.sin(x * np.pi * freq * 2.3 + 1.7)
 
     img = sky.copy()
     hills = (
-        # hinterer, flacher Huegel rechts
+        # back, flat hill on the right
         lambda: 0.70 - 0.07 * np.exp(-((x - 0.82) / 0.30) ** 2),
-        # vorderer Huegel: runde Kuppe links der Mitte, sanft nach rechts abfallend
+        # front hill: round top left of the center, gently sloping to the right
         lambda: 0.74 - 0.22 * np.exp(-((x - 0.36) / 0.36) ** 2) - 0.02 * np.sin(x * np.pi * 3.1),
     )
     for edge_fn, shade in zip(hills, (0.8, 1.0)):
         edge = edge_fn()
         mask = (y >= edge).astype(np.float32)
         depth = np.clip((y - edge) / 0.35, 0, 1)
-        lit = 1 - np.clip((x - 0.2) * 0.6, 0, 0.45)  # Licht von links oben
+        lit = 1 - np.clip((x - 0.2) * 0.6, 0, 0.45)  # light from the top left
         col = np.stack([lerp(hill_hi[i], hill_lo[i], depth) * lit * shade for i in range(3)], -1)
-        noise = rng.normal(0, 4, (H, W, 1))  # leichte Grasstruktur
+        noise = rng.normal(0, 4, (H, W, 1))  # slight grass texture
         col = col + noise
         img = img * (1 - mask[..., None]) + col * mask[..., None]
 
-    # Nacht: ein paar Sterne
+    # Night: a few stars
     if phase == "night":
         for _ in range(180):
             sx, sy = rng.integers(0, W), rng.integers(0, int(H * 0.45))

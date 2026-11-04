@@ -6,7 +6,7 @@ vim.g.maplocalleader = "\\"
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- Remote-Provider werden nicht genutzt (keine Python/Ruby/Perl/Node-Plugins).
+-- Remote providers are not used (no Python/Ruby/Perl/Node plugins).
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0

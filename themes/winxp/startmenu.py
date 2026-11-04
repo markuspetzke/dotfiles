@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Windows-XP-Startmenue fuer das winxp-Theme (eigene Umsetzung mit GTK 3).
+"""Windows XP start menu for the winxp theme (own implementation with GTK 3).
 
-Kopfzeile mit Benutzerbild, links angeheftete + haeufig genutzte Programme (aus dem
-hyprlauncher-Verlauf), rechts Orte und System, unten Abmelden/Ausschalten.
-Gestartet von bin/menu (Startknopf, Super-Taste). Schliesst sich bei Esc oder Fokusverlust.
-Benutzerbild: private/user.png, sonst ~/.face, sonst eine Kachel mit Initiale."""
+Header with the user picture, pinned + frequently used programs on the left (from the
+hyprlauncher history), places and system on the right, log off/turn off at the bottom.
+Started by bin/menu (start button, Super key). Closes on Esc or focus loss.
+User picture: private/user.png, otherwise ~/.face, otherwise a tile with the initial."""
 import collections
 import getpass
 import os
@@ -89,7 +89,7 @@ def launch(cmd):
                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-# Symbole: private/icons/<name>.png (Originale, nicht im Git) vor icons/<name>.png (icons.py)
+# Icons: private/icons/<name>.png (originals, not in git) before icons/<name>.png (icons.py)
 ICON_DIRS = [os.path.join(HERE, "private", "icons"), os.path.join(HERE, "icons")]
 
 
@@ -98,7 +98,7 @@ def icon_image(icon, size):
         for d in ICON_DIRS:
             f = os.path.join(d, icon + ".png")
             if os.path.isfile(f):
-                # Originale sind 48 px Pixelgrafik: "nearest" waere zu kantig, bilinear passt
+                # The originals are 48 px pixel art: "nearest" would be too blocky, bilinear fits
                 pb = GdkPixbuf.Pixbuf.new_from_file(f).scale_simple(size, size, GdkPixbuf.InterpType.BILINEAR)
                 return Gtk.Image.new_from_pixbuf(pb)
     if isinstance(icon, Gio.Icon):
@@ -110,7 +110,7 @@ def icon_image(icon, size):
 
 
 def frequent_apps(skip, limit=6):
-    """Haeufigste Programme aus dem hyprlauncher-Verlauf, als Gio.AppInfo."""
+    """Most frequent programs from the hyprlauncher history, as Gio.AppInfo."""
     path = os.path.join(HOME, ".local/share/hyprlauncher/desktop.cache")
     try:
         names = [line.strip().lower() for line in open(path) if line.strip()]
@@ -134,7 +134,7 @@ class StartMenu(Gtk.Window):
         self.set_default_size(460, 580)
         self.set_name("menu")
         self.connect("key-press-event", self.on_key)
-        # Erst schliessen, wenn das Menue einmal den Fokus hatte (sonst beendet es sich beim Oeffnen)
+        # Only close once the menu had focus (otherwise it quits right when opening)
         self.had_focus = False
         self.connect("focus-in-event", self.on_focus_in)
         self.connect("focus-out-event", lambda *_: self.had_focus and self.quit_soon())
@@ -145,7 +145,7 @@ class StartMenu(Gtk.Window):
         self.stack.add_named(self.build_shutdown(), "shutdown")
         self.add(self.stack)
 
-    # --- Aufbau -------------------------------------------------------------
+    # --- Layout ------------------------------------------------------------
     def build_menu(self):
         root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
@@ -192,7 +192,7 @@ class StartMenu(Gtk.Window):
         left.pack_start(self.sep("left"), False, False, 0)
         for app in frequent_apps(pinned_ids):
             left.pack_start(self.item(app.get_icon(), app.get_name(), None, lambda a=app: launch([a.get_id()]), size=32), False, False, 0)
-        # Suchfeld: hat beim Oeffnen sofort den Fokus (Super druecken, tippen, Enter)
+        # Search field: has focus right when opening (press Super, type, Enter)
         self.search = Gtk.SearchEntry()
         self.search.set_name("search")
         self.search.set_placeholder_text("Search programs")
@@ -268,7 +268,7 @@ class StartMenu(Gtk.Window):
         row.pack_start(icon_image(icon, size), False, False, 0)
         texts = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER)
         lbl = Gtk.Label(label=title, xalign=0)
-        lbl.set_ellipsize(Pango.EllipsizeMode.END)  # lange Namen kuerzen, Spaltenbreite bleibt fest
+        lbl.set_ellipsize(Pango.EllipsizeMode.END)  # shorten long names, the column width stays fixed
         lbl.set_max_width_chars(24)
         lbl.get_style_context().add_class("name")
         if bold:
@@ -312,7 +312,7 @@ class StartMenu(Gtk.Window):
         s.get_style_context().add_class(side)
         return s
 
-    # --- Suche --------------------------------------------------------------
+    # --- Search ------------------------------------------------------------
     def score(self, app, q):
         name = (app.get_name() or "").lower()
         if name.startswith(q):
@@ -367,7 +367,7 @@ class StartMenu(Gtk.Window):
             launch([self.hits[self.sel].get_id()])
             self.quit_soon()
 
-    # --- Aktionen -----------------------------------------------------------
+    # --- Actions -----------------------------------------------------------
     def open_launcher(self):
         subprocess.Popen(["hyprlauncher", "-t"], start_new_session=True,
                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -391,7 +391,7 @@ class StartMenu(Gtk.Window):
     daemon = False
 
     def quit_soon(self):
-        if self.daemon:  # Hintergrundprozess: nur verstecken, beim naechsten Aufruf sofort da
+        if self.daemon:  # background process: only hide, instantly there on the next call
             GLib.idle_add(self.hide_menu)
             return
         if not self.closing:
@@ -410,7 +410,7 @@ class StartMenu(Gtk.Window):
         self.show_all()
         self.search.grab_focus()
         self.present()
-        # Hyprland gibt Fenstern aus Hintergrundprozessen nicht von selbst den Fokus
+        # Hyprland does not give focus to windows of background processes by itself
         GLib.timeout_add(40, lambda: subprocess.Popen(
             ["hyprctl", "dispatch", 'hl.dsp.focus({ window = "class:^xp-startmenu$" })'],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) and False)
@@ -420,32 +420,32 @@ class StartMenu(Gtk.Window):
             self.hide_menu()
         else:
             self.show_menu()
-        return False  # als idle-Callback nur einmal ausfuehren
+        return False  # run only once as an idle callback
 
     def on_signal(self, *_):
-        # Nicht direkt im Signal-Handler zeigen (GTK haengt dort beim Mappen),
-        # sondern in der naechsten Runde der Hauptschleife
+        # Do not show directly in the signal handler (GTK hangs there while mapping),
+        # but in the next round of the main loop
         GLib.idle_add(self.toggle)
-        return True  # Signal-Handler aktiv lassen
+        return True  # keep the signal handler active
 
 
 def main():
-    # Wayland: Fensterklasse (app_id) kommt aus dem Programmnamen -> Hyprland-Regel "xp-startmenu"
+    # Wayland: the window class (app_id) comes from the program name -> Hyprland rule "xp-startmenu"
     GLib.set_prgname("xp-startmenu")
     provider = Gtk.CssProvider()
     provider.load_from_data(CSS)
     Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
     win = StartMenu()
     win.connect("destroy", Gtk.main_quit)
-    # --daemon: bleibt im Hintergrund, SIGUSR1 blendet ein/aus (bin/menu); --show: gleich zeigen
+    # --daemon: stays in the background, SIGUSR1 shows/hides it (bin/menu); --show: show right away
     win.daemon = "--daemon" in sys.argv
     if win.daemon:
-        # eigene PID fuer bin/menu (setsid kann forken, $! waere dann falsch)
+        # own PID for bin/menu (setsid may fork, $! would be wrong then)
         pidfile = os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "theme-startmenu.pid")
         with open(pidfile, "w") as f:
             f.write(str(os.getpid()))
         win.connect("delete-event", lambda *_: win.hide_menu() or True)
-        try:  # neuer Name (PyGObject >= 3.50); GLib.unix_signal_add loest dort nicht aus
+        try:  # new name (PyGObject >= 3.50); GLib.unix_signal_add does not fire there
             gi.require_version("GLibUnix", "2.0")
             from gi.repository import GLibUnix
             GLibUnix.signal_add(GLib.PRIORITY_HIGH, signal.SIGUSR1, win.on_signal)

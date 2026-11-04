@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# Einrichtung auf einem neuen Rechner (z. B. Laptop) nach `git clone` bzw. `git pull`:
-#   ~/.config/bin/theme-setup [theme]   # Standard: vorhandenes Theme behalten, sonst retro
-#   ~/.config/bin/theme-setup --check   # nur pruefen (Programme, Systemschritte), nichts aendern
-# Macht: Skripte nach ~/.local/bin verlinken, Bash-Config und Commit-Pruefung einbinden,
-# Pixelschrift (Departure Mono Nerd Font, OFL) installieren falls sie fehlt,
-# Session-Dienste aktivieren, Launcher aufraeumen, Theme setzen.
-# Zum Schluss: fehlende Programme und die einmaligen sudo-Schritte (logind, Greeter, ...).
+# Setup on a new machine (e.g. laptop) after `git clone` or `git pull`:
+#   ~/.config/bin/theme-setup [theme]   # default: keep the current theme, otherwise retro
+#   ~/.config/bin/theme-setup --check   # check only (programs, system steps), change nothing
+# Does: link scripts into ~/.local/bin, hook up the bash config and the commit check,
+# install the pixel font (Departure Mono Nerd Font, OFL) if missing,
+# enable the session services, tidy up the launcher, set the theme.
+# At the end: missing programs and the one-time sudo steps (logind, greeter, ...).
 set -euo pipefail
 cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
 profile=$("$cfg/hypr/scripts/hypr-profile.sh")
 
-# Programme, die Configs und Skripte aufrufen: "Befehl Arch-Paket"
+# Programs called by configs and scripts: "command Arch-package"
 check_programs() {
 	local missing=() cmd pkg
 	while read -r cmd pkg; do
@@ -41,63 +41,63 @@ check_programs() {
 		missing+=(brightnessctl)
 	fi
 	if ((${#missing[@]})); then
-		echo "    FEHLT: sudo pacman -S --needed ${missing[*]}"
+		echo "    MISSING: sudo pacman -S --needed ${missing[*]}"
 	else
-		echo "    alles da"
+		echo "    all there"
 	fi
 }
 
-# Einmalige Schritte mit sudo, die das Skript nicht selbst machen kann
+# One-time steps with sudo that the script cannot do itself
 check_system() {
 	local todo=()
 	if [[ $profile == laptop ]]; then
 		local dst=/etc/systemd/logind.conf.d/90-hypr-laptop.conf
 		cmp -s "$cfg/hypr/logind/laptop.conf" "$dst" ||
-			todo+=("sudo install -Dm644 $cfg/hypr/logind/laptop.conf $dst   # Zuklappen; wirkt nach Neustart")
+			todo+=("sudo install -Dm644 $cfg/hypr/logind/laptop.conf $dst   # lid; takes effect after a reboot")
 		local can
 		can=$(busctl call org.freedesktop.login1 /org/freedesktop/login1 \
 			org.freedesktop.login1.Manager CanSuspendThenHibernate 2>/dev/null || true)
 		[[ $can == 's "yes"' ]] ||
-			echo "    Hinweis: Hibernate nicht eingerichtet, Leerlauf und Zuklappen nutzen normalen Suspend"
+			echo "    Note: hibernation not set up, idle and lid use plain suspend"
 	fi
-	# power-profiles-daemon braucht kein enable: er startet bei Bedarf ueber D-Bus
+	# power-profiles-daemon needs no enable: it starts on demand through D-Bus
 	if [[ -f /etc/greetd/hyprland-greeter-config.lua && ! -O /var/lib/sysc-greet/themes ]]; then
-		todo+=("sudo $cfg/bin/greeter-setup   # Anmeldebildschirm folgt dem Theme")
+		todo+=("sudo $cfg/bin/greeter-setup   # login screen follows the theme")
 	fi
 	if ((${#todo[@]})); then
 		printf '    %s\n' "${todo[@]}"
 	else
-		echo "    nichts offen"
+		echo "    nothing pending"
 	fi
 }
 
 if [[ ${1:-} == --check ]]; then
-	echo "Profil: $profile"
-	echo "Programme"
+	echo "Profile: $profile"
+	echo "Programs"
 	check_programs
-	echo "Systemschritte (sudo)"
+	echo "System steps (sudo)"
 	check_system
 	exit 0
 fi
 
-echo "1/7 Skripte nach ~/.local/bin"
+echo "1/7 Scripts into ~/.local/bin"
 mkdir -p "$HOME/.local/bin"
 for f in "$cfg"/bin/*; do
 	[[ -x $f && ! -d $f ]] || continue
 	ln -sf "$f" "$HOME/.local/bin/$(basename "$f")"
 done
 
-echo "2/7 Bash und Git"
-# ~/.bashrc laedt die Bash-Config aus dem Repo (bash/bashrc); vorhandene Zeilen bleiben
+echo "2/7 Bash and git"
+# ~/.bashrc loads the bash config from the repo (bash/bashrc); existing lines stay
 if ! grep -q 'config/bash/bashrc' "$HOME/.bashrc" 2>/dev/null; then
-	printf '\n# Bash-Config aus dem Dotfiles-Repo\n[[ -r ~/.config/bash/bashrc ]] && . ~/.config/bash/bashrc\n' >>"$HOME/.bashrc"
-	echo "    ~/.bashrc laedt jetzt ~/.config/bash/bashrc"
+	printf '\n# Bash config from the dotfiles repo\n[[ -r ~/.config/bash/bashrc ]] && . ~/.config/bash/bashrc\n' >>"$HOME/.bashrc"
+	echo "    ~/.bashrc now loads ~/.config/bash/bashrc"
 fi
-# Vor jedem Commit pruefen (bin/dotfiles-check ueber .githooks/pre-commit)
+# Check before every commit (bin/dotfiles-check through .githooks/pre-commit)
 git -C "$cfg" config core.hooksPath .githooks
-git config --global user.name >/dev/null || echo "    Hinweis: Git-Name und -Mail fehlen (git config --global user.name/user.email)"
+git config --global user.name >/dev/null || echo "    Note: git name and mail missing (git config --global user.name/user.email)"
 
-echo "3/7 Schriften"
+echo "3/7 Fonts"
 if ! fc-list : family | grep -q "DepartureMono Nerd Font"; then
 	tmp=$(mktemp -d)
 	trap 'rm -rf "$tmp"' EXIT
@@ -106,40 +106,40 @@ if ! fc-list : family | grep -q "DepartureMono Nerd Font"; then
 	tar -xJf "$tmp/dm.tar.xz" -C "$HOME/.local/share/fonts/DepartureMono" --wildcards '*.otf' 'LICENSE*' 2>/dev/null ||
 		tar -xJf "$tmp/dm.tar.xz" -C "$HOME/.local/share/fonts/DepartureMono"
 	fc-cache -f "$HOME/.local/share/fonts" >/dev/null
-	echo "    Departure Mono Nerd Font installiert"
+	echo "    Departure Mono Nerd Font installed"
 else
-	echo "    Departure Mono Nerd Font vorhanden"
+	echo "    Departure Mono Nerd Font present"
 fi
 for fam in "FiraCode Nerd Font" "Noto Sans"; do
-	fc-list : family | grep -q "$fam" || echo "    FEHLT: $fam (Paket ttf-firacode-nerd bzw. noto-fonts installieren)"
+	fc-list : family | grep -q "$fam" || echo "    MISSING: $fam (install the package ttf-firacode-nerd or noto-fonts)"
 done
 
 echo "4/7 systemd"
 systemctl --user daemon-reload
-# Startet alle Session-Dienste mit Hyprland (der Link dafuer ist nicht im Git)
+# Starts all session services with Hyprland (the link for it is not in git)
 systemctl --user enable --quiet hypr-session.target
 systemctl --user start theme-wallpaper.timer 2>/dev/null || true
 
-# Spotify: Spicetify-Theme verlinken (Farbschemata in themes/spicetify/color.ini)
+# Spotify: link the Spicetify theme (color schemes in themes/spicetify/color.ini)
 if command -v spicetify >/dev/null; then
 	themes_dir=$(dirname "$(spicetify -c 2>/dev/null)")/Themes
 	mkdir -p "$themes_dir" && ln -sfn "$cfg/themes/spicetify" "$themes_dir/DesktopTheme"
-	echo "    Spicetify: DesktopTheme verlinkt (einmalig noetig: spicetify backup apply)"
+	echo "    Spicetify: DesktopTheme linked (needed once: spicetify backup apply)"
 fi
 
-echo "5/7 Launcher aufraeumen"
+echo "5/7 Tidy up the launcher"
 "$cfg/bin/launcher-hide" >/dev/null || true
 
 echo "6/7 Theme"
 current=$(basename "$(readlink "$cfg/theme-current" 2>/dev/null || true)")
 "$cfg/bin/theme" "${1:-${current:-retro}}"
 
-echo "7/7 Pruefen ($profile)"
+echo "7/7 Checks ($profile)"
 check_programs
 check_system
 
 cat <<EOT
 
-Fertig. Optional:
-  Helium: helium://extensions -> Entpackte Erweiterung laden -> ~/.local/share/theme-browser
+Done. Optional:
+    Helium: helium://extensions -> Load unpacked -> ~/.local/share/theme-browser
 EOT

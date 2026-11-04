@@ -1,5 +1,5 @@
-// Windows XP: Taskleiste unten ohne Luecken, Startknopf, Infobereich nur mit Symbolen,
-// Uhr im englischen 12-Stunden-Format. Leeres "format" blendet ein Modul aus.
+// Windows XP: taskbar at the bottom without gaps, start button, notification area with icons only,
+// clock in the English 12-hour format. An empty "format" hides a module.
 {
     "position": "bottom",
     "custom/start": {
@@ -14,7 +14,7 @@
             "format": {
                 "months": "<span color='#000000'><b>{}</b></span>",
                 "days": "<span color='#000000'>{}</span>",
-                "weeks": "<span color='#7a7a7a'><b>KW{}</b></span>",
+                "weeks": "<span color='#7a7a7a'><b>W{}</b></span>",
                 "weekdays": "<span color='#0054e3'><b>{}</b></span>",
                 "today": "<span color='#e04343'><b><u>{}</u></b></span>"
             }

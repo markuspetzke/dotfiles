@@ -1,5 +1,5 @@
 [Unit]
-Description=Medienwiedergabe: Idle-Sperre halten, Video-Fenster markieren
+Description=Media playback: hold an idle inhibitor, tag video windows
 PartOf=hypr-session.target
 After=hypr-session.target
 

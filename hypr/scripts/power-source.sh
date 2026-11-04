@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Stromquelle des Rechners.
-#   power-source.sh           # gibt "ac" oder "battery" aus
-#   power-source.sh ac        # Exit 0 am Netzteil (auch ohne Systemakku, also am Desktop)
-#   power-source.sh battery   # Exit 0 auf Akku
-# Netzteil = Quelle vom Typ Mains oder USB (Laden ueber USB-C) mit online=1. Maus- und
-# Headset-Akkus (scope=Device) zaehlen nicht. Genutzt von hypridle-laptop.conf und
+# Power source of the machine.
+#   power-source.sh           # prints "ac" or "battery"
+#   power-source.sh ac        # exit 0 on AC power (also without a system battery, i.e. desktop)
+#   power-source.sh battery   # exit 0 on battery
+# AC power = a source of type Mains or USB (USB-C charging) with online=1. Mouse and
+# headset batteries (scope=Device) do not count. Used by hypridle-laptop.conf and
 # run-power-profile.sh.
 set -u
-dir=${POWER_SUPPLY_DIR:-/sys/class/power_supply} # zum Testen ueberschreibbar
+dir=${POWER_SUPPLY_DIR:-/sys/class/power_supply} # can be overridden for testing
 
 battery=false
 online=false
@@ -28,7 +28,7 @@ case ${1:-} in
 "") printf '%s\n' "$source" ;;
 ac | battery) [[ $source == "$1" ]] ;;
 *)
-	echo "Aufruf: $0 [ac|battery]" >&2
+	echo "Usage: $0 [ac|battery]" >&2
 	exit 2
 	;;
 esac

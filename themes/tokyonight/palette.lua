@@ -1,5 +1,5 @@
--- Theme "Tokyo Night": das Setup von vor den Retro-Themes (tokyonight moon).
--- Runde Ecken, Blur, Schatten, blau-violetter Verlaufsrahmen, leicht transparentes Kitty.
+-- Theme "Tokyo Night": the setup from before the retro themes (tokyonight moon).
+-- Rounded corners, blur, shadows, blue-violet gradient border, slightly transparent kitty.
 return {
 	colors = {
 		bg = "#222436",
@@ -17,7 +17,7 @@ return {
 	hypr = {
 		border_size = 2,
 		border_gradient = { "#82aaff", "#c099ff" },
-		-- Ueberschreibt das eckige Grund-Aussehen aus hypr/hyprland.lua
+		-- Overrides the square base look from hypr/hyprland.lua
 		config = {
 			general = { gaps_in = 5, gaps_out = 12 },
 			decoration = {
@@ -33,7 +33,7 @@ return {
 			{ leaf = "windowsOut", enabled = true, speed = 1.49, bezier = "linear", style = "popin 87%" },
 		},
 		window_rules = {
-			-- Terminal leicht transparent (Blur), alles andere opak
+			-- Terminal slightly transparent (blur), everything else opaque
 			{ name = "kitty-opacity", match = { class = "kitty" }, opacity = "0.92 0.85" },
 		},
 	},

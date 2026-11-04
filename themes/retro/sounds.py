@@ -1,7 +1,7 @@
-"""Bernstein-CRT: synthetisierte Klaenge eines alten Roehrenterminals
--> sounds/{notify,lock,unlock}.wav (python3 sounds.py). Eigene Klaenge, keine Samples:
-notify = Relais-Klick + kurzes Gloeckchen, lock = Roehre aus ("Thunk", fallender Ton),
-unlock = Roehre an (Brummen schwillt an, Pfeifen steigt)."""
+"""Amber CRT: synthesized sounds of an old tube terminal
+-> sounds/{notify,lock,unlock}.wav (python3 sounds.py). Own sounds, no samples:
+notify = relay click + a short bell, lock = tube off ("thunk", falling tone),
+unlock = tube on (hum swells, whistle rises)."""
 import math
 import os
 import random
@@ -28,11 +28,11 @@ def n(dur):
 
 
 def click(dur=0.012):
-    """Kurzer, gedaempfter Rausch-Impuls (Relais)."""
+    """Short, muffled noise burst (relay)."""
     out, prev = [], 0.0
     for i in range(n(dur)):
         v = rng.uniform(-1, 1)
-        prev = prev * 0.6 + v * 0.4  # einfacher Tiefpass
+        prev = prev * 0.6 + v * 0.4  # simple low-pass
         out.append(prev * math.exp(-i / (RATE * 0.003)))
     return out
 
@@ -53,7 +53,7 @@ def sweep(f0, f1, dur, amp=1.0, fade_in=0.01, fade_out=0.05):
 
 
 def hum(dur, swell):
-    """50-Hz-Brummen mit Obertoenen, schwillt an (swell=True) oder ab."""
+    """50 Hz hum with overtones, swells up (swell=True) or down."""
     out = []
     for i in range(n(dur)):
         t = i / RATE

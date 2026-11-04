@@ -1,5 +1,5 @@
 [Unit]
-Description=Theme-Wallpaper alle 10 Minuten an die Tageszeit anpassen
+Description=Adjust the theme wallpaper to the time of day every 10 minutes
 PartOf=hypr-session.target
 
 [Timer]

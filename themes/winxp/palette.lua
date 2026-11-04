@@ -1,5 +1,5 @@
--- Theme "Windows XP" (Luna-Stil): blaue Taskleiste, gruener Startknopf, blaue Fensterrahmen,
--- gruene Huegellandschaft. Terminal und Editor dunkel wie die Konsole.
+-- Theme "Windows XP" (Luna style): blue taskbar, green start button, blue window borders,
+-- green hills. Terminal and editor dark like the console.
 return {
 	colors = {
 		bg = "#0c1830",
@@ -16,11 +16,11 @@ return {
 	},
 	hypr = {
 		border_size = 3,
-		-- Taskleiste unten: auch ein einzelnes Fenster mit Abstand, Rahmen, Rundung
+		-- Taskbar at the bottom: a single window also keeps gaps, border, rounding
 		smart_gaps = false,
-		-- Wie die Luna-Titelleisten: Blau-Verlauf
+		-- Like the Luna title bars: blue gradient
 		border_gradient = { "#0054e3", "#3b8cf5" },
-		-- XP-Startmenue (startmenu.py): unten links ueber der Taskleiste, ohne Rahmen
+		-- XP start menu (startmenu.py): bottom left above the taskbar, no border
 		window_rules = {
 			{
 				name = "xp-startmenu",
@@ -31,8 +31,8 @@ return {
 				border_size = 0,
 				rounding = 0,
 				no_anim = true,
-				-- Fokus bleibt im Menue (sonst nimmt follow_mouse ihn beim Bewegen der Maus weg);
-				-- schliessen: Esc, Super/Startknopf erneut, Eintrag waehlen
+				-- Focus stays in the menu (follow_mouse would take it away when moving the mouse);
+				-- close: Esc, Super/start button again, pick an entry
 				stay_focused = true,
 			},
 		},
