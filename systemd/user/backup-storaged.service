@@ -7,6 +7,7 @@ OnSuccess=backup-nas.service
 
 [Service]
 Type=oneshot
-ExecStart=%h/.local/bin/backup-documents storaged
+# Kein Ruhezustand mitten im Lauf (hypridle prüft vor dem Suspend auf solche Sperren)
+ExecStart=/usr/bin/systemd-inhibit --what=sleep --who=backup-storaged --why="Backup Dokumente -> storageD läuft" %h/.local/bin/backup-documents storaged
 Nice=10
 IOSchedulingClass=idle

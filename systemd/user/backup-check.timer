@@ -1,0 +1,10 @@
+[Unit]
+Description=Backups taeglich pruefen und nachholen
+
+[Timer]
+# Nach den Sonntagslaeufen (11:00 Dokumente, 13:00 Hetzner); war der PC aus, nach dem Einschalten
+OnCalendar=*-*-* 14:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

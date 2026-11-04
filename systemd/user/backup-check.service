@@ -1,0 +1,8 @@
+[Unit]
+Description=Backups pruefen, ueberfaellige nachholen
+# Nur auf dem Desktop (GLaDOS), wie die Backups selbst
+ConditionHost=GLaDOS
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/bin/backup-check

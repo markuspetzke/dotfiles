@@ -2,13 +2,15 @@
 Description=Backup /mnt/storageD -> NAS
 # Nur auf dem Desktop (GLaDOS). Auf dem Laptop sind die Timer ohnehin nicht aktiviert; das ist die Absicherung.
 ConditionHost=GLaDOS
-# NAS schläft -> alle 2 h neu versuchen, höchstens 6x am Tag
+# Tagsüber weckt das Skript die NAS per WoL. Scheitert es trotzdem (nachts, NAS weg):
+# alle 2 h neu versuchen, höchstens 6x am Tag; danach holt backup-check den Lauf nach.
 StartLimitIntervalSec=1d
 StartLimitBurst=6
 
 [Service]
 Type=oneshot
-ExecStart=%h/.local/bin/backup-documents nas
+# Kein Ruhezustand mitten im Lauf (hypridle prüft vor dem Suspend auf solche Sperren)
+ExecStart=/usr/bin/systemd-inhibit --what=sleep --who=backup-nas --why="Backup storageD -> NAS läuft" %h/.local/bin/backup-documents nas
 Restart=on-failure
 RestartSec=2h
 Nice=10

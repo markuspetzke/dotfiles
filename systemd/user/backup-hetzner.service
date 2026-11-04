@@ -10,8 +10,11 @@ StartLimitBurst=6
 Type=oneshot
 # Fortschritt einmal pro Minute ins Journal (journalctl --user -u backup-hetzner -f)
 Environment=RESTIC_PROGRESS_FPS=0.016666
-# Kein Ruhezustand während des Backups (sonst reißt die SFTP-Verbindung ab und restic hängt)
-ExecStart=/usr/bin/systemd-inhibit --what=sleep:idle --who=backup-hetzner --why="Backup NAS -> Hetzner läuft" %h/.local/bin/backup-hetzner
+# Kein Ruhezustand während des Backups (sonst reißt die SFTP-Verbindung ab und restic hängt).
+# Nur "sleep": hypridle prüft vor dem Suspend, ob etwas den Ruhezustand blockiert
+# (hypr/scripts/sleep-allowed.sh). Sperre und Monitor-Aus laufen weiter; "idle" hätte
+# hypridle komplett stillgelegt, auch stundenlang ohne Sperre.
+ExecStart=/usr/bin/systemd-inhibit --what=sleep --who=backup-hetzner --why="Backup NAS -> Hetzner läuft" %h/.local/bin/backup-hetzner
 Restart=on-failure
 RestartSec=1h
 Nice=10

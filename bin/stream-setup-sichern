@@ -1,6 +1,6 @@
 #!/bin/sh
 # Kopiert die Stream-Einrichtung nach ~/Documents/Twitch/setup/, damit sie mit dem
-# normalen Monats-Backup (backup-storaged, ~/Documents) mitgesichert wird.
+# woechentlichen Backup (backup-storaged, ~/Documents) mitgesichert wird.
 # Laeuft als ExecStartPre von backup-storaged.service, kann aber auch jederzeit von Hand laufen.
 # Bewusst NICHT gesichert: Stream-Key (service.json) und Websocket-Passwort, da das Backup bis Hetzner geht.
 set -eu

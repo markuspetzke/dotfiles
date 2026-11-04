@@ -1,8 +1,10 @@
 [Unit]
-Description=Monatliches Backup ~/Documents -> storageD -> NAS
+Description=Wöchentliches Backup ~/Documents -> storageD -> NAS
 
 [Timer]
-OnCalendar=Sun *-*-01..07 19:00
+# Sonntag vor dem Hetzner-Lauf (13:00): so ist der aktuelle Stand schon auf der NAS, wenn
+# sie nach Hetzner gesichert wird. Wöchentlich statt monatlich: rsync überträgt nur Änderungen.
+OnCalendar=Sun 11:00
 # PC war aus -> beim nächsten Login nachholen
 Persistent=true
 

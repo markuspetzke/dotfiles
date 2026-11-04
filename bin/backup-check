@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Prueft die Backups und holt ueberfaellige nach (taeglich per backup-check.timer, nach dem
+# Einschalten nachgeholt). Liegt der letzte Erfolg laenger als 7,5 Tage zurueck, startet es den
+# Lauf neu: abgebrochene oder verpasste Laeufe (PC aus, NAS weg, Herunterfahren) wiederholen
+# sich so von selbst. Nach 14 Tagen ohne Erfolg kommt eine Benachrichtigung.
+#   backup-check          # pruefen und nachholen
+#   backup-check status   # nur anzeigen
+# Erfolge schreiben die Backup-Skripte (~/.local/bin/backup-documents, backup-hetzner) als
+# Unix-Zeit nach ~/.local/state/backup/<name>.ok.
+set -u
+state=${XDG_STATE_HOME:-$HOME/.local/state}/backup
+now=$(date +%s)
+due=$((7 * 86400 + 12 * 3600)) # woechentliche Laeufe plus Puffer
+alarm=$((14 * 86400))
+
+mkdir -p "$state"
+# Seit wann geprueft wird: zaehlt fuer Backups, deren Erfolg noch nie erfasst wurde
+[[ -r $state/.seit ]] || echo "$now" >"$state/.seit"
+since=$(<"$state/.seit")
+
+# Name, Unit, Beschreibung. backup-nas folgt per OnSuccess auf backup-storaged.
+backups=(
+	"storaged backup-storaged.service Dokumente+Bilder -> storageD"
+	"nas backup-nas.service storageD -> NAS"
+	"hetzner backup-hetzner.service NAS -> Hetzner"
+)
+
+chain=false
+for b in "${backups[@]}"; do
+	read -r name unit label <<<"$b"
+	if [[ -r $state/$name.ok ]]; then
+		last=$(<"$state/$name.ok")
+		age=$((now - last))
+		info="zuletzt erfolgreich $(date -d "@$last" '+%a %d.%m. %H:%M') (vor $((age / 86400)) Tagen)"
+	else
+		age=-1
+		info="noch kein Erfolg erfasst"
+	fi
+	if [[ ${1:-} == status ]]; then
+		printf '%-30s %s\n' "$label" "$info"
+		continue
+	fi
+
+	if ((age < 0 || age > due)); then
+		act=$(systemctl --user show -p ActiveState --value "$unit")
+		if [[ $act == activating || $act == active || $act == deactivating ]]; then
+			echo "$label: läuft gerade (oder wartet auf den nächsten Versuch)"
+		elif [[ $name == nas ]] && $chain; then
+			echo "$label: folgt auf backup-storaged"
+		else
+			echo "$label: $info -> starte $unit"
+			# Startlimit nach vielen Fehlversuchen zuruecksetzen, sonst verweigert systemd den Start
+			systemctl --user reset-failed "$unit" 2>/dev/null
+			systemctl --user start --no-block "$unit"
+			[[ $name == storaged ]] && chain=true
+		fi
+	fi
+
+	if ((age > alarm || (age < 0 && now - since > alarm))); then
+		notify-send -u critical -a Backup "Backup überfällig" \
+			"$label: $info. Log: journalctl --user -u $unit" 2>/dev/null || true
+	fi
+done
+exit 0
