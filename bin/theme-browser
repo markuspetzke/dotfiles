@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+"""Baut aus themes/<aktiv>/browser.json eine Chromium-Theme-Erweiterung fuer Helium:
+~/.local/share/theme-browser/ (manifest.json + Wallpaper als Hintergrund der neuen Tab-Seite).
+
+Einmalig in Helium: helium://extensions -> Entwicklermodus an -> "Entpackte Erweiterung laden"
+-> ~/.local/share/theme-browser waehlen. Danach liest Helium den Ordner bei jedem Start neu,
+ein Theme-Wechsel (`theme <name>`) wirkt also nach einem Neustart von Helium."""
+import json
+import os
+import shutil
+import sys
+
+cfg = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+theme = os.path.join(cfg, "theme-current")
+out = os.path.join(os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share")), "theme-browser")
+src = os.path.join(theme, "browser.json")
+if not os.path.isfile(src):
+    sys.exit(0)
+
+name = os.path.basename(os.path.realpath(theme))
+spec = {k: v for k, v in json.load(open(src)).items() if not k.startswith("_")}
+rgb = lambda h: [int(h[i:i + 2], 16) for i in (1, 3, 5)]
+
+os.makedirs(os.path.join(out, "images"), exist_ok=True)
+wall = os.path.join(theme, "wallpaper.png")
+# Eigenes Bild (private/, nicht im Git) hat Vorrang: Tagesvariante bzw. einzelnes Wallpaper
+for cand in ("private/wallpapers/day.png", "private/wallpaper.png", "private/wallpaper.jpg", "private/wallpaper.webp"):
+    if os.path.isfile(os.path.join(theme, cand)):
+        wall = os.path.join(theme, cand)
+        break
+images = {}
+if wall and os.path.isfile(wall):
+    if wall.endswith(".png"):
+        shutil.copyfile(wall, os.path.join(out, "images", "ntp.png"))
+    else:  # jpg/webp -> png (Pillow), sonst ohne Bild
+        try:
+            from PIL import Image
+            Image.open(wall).convert("RGB").save(os.path.join(out, "images", "ntp.png"))
+        except Exception:
+            wall = ""
+    images["theme_ntp_background"] = "images/ntp.png"
+
+manifest = {
+    "manifest_version": 3,
+    "name": f"Desktop-Theme: {name}",
+    "description": "Erzeugt von ~/.config/bin/theme-browser aus themes/" + name + "/browser.json",
+    "version": "1.0",
+    "theme": {
+        "images": images,
+        "colors": {k: rgb(v) for k, v in spec.items()},
+        "properties": {"ntp_background_alignment": "center", "ntp_background_repeat": "no-repeat"},
+    },
+}
+with open(os.path.join(out, "manifest.json"), "w") as f:
+    json.dump(manifest, f, indent=2)
+# Chromium cached das gepackte Theme im Erweiterungsordner -> verwerfen, sonst bleibt das alte
+try:
+    os.remove(os.path.join(out, "Cached Theme.pak"))
+except FileNotFoundError:
+    pass
+print("Browser-Theme:", name)

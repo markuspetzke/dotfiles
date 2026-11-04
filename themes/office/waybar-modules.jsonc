@@ -1,0 +1,35 @@
+// Office (Dunder Mifflin Scranton): Raeume, Feierabend-Zaehler mit Zitat im Tooltip.
+{
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "1": "Rezeption",
+            "2": "Michaels Büro",
+            "3": "Konferenzraum",
+            "4": "Lager",
+            "default": "Annex {name}"
+        }
+    },
+    "hyprland/window": {
+        "format": "{title}"
+    },
+    "custom/uptime": {
+        "exec": "~/.config/themes/office/feierabend.sh",
+        "return-type": "json",
+        "interval": 60,
+        "tooltip": true
+    },
+    "clock": {
+        "format": "{:%a %d.%m.  %H:%M}",
+        "calendar": {
+            "format": {
+                "months": "<span color='#e6dfcf'><b>{}</b></span>",
+                "days": "<span color='#e6dfcf'>{}</span>",
+                "weeks": "<span color='#8d8778'><b>KW{}</b></span>",
+                "weekdays": "<span color='#5b8ad0'><b>{}</b></span>",
+                "today": "<span color='#f2d64b'><b><u>{}</u></b></span>"
+            }
+        },
+        "tooltip-format": "<b>Dunder Mifflin · Scranton</b>\n<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
+    }
+}

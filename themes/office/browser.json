@@ -1,0 +1,17 @@
+{
+  "_kommentar": "Helium/Chromium-Theme Office (dunkel): Anthrazit, Firmenblau",
+  "frame": "#181b20",
+  "frame_inactive": "#1f2329",
+  "background_tab": "#181b20",
+  "toolbar": "#1f2329",
+  "tab_text": "#e6dfcf",
+  "tab_background_text": "#8d8778",
+  "toolbar_text": "#e6dfcf",
+  "toolbar_button_icon": "#5b8ad0",
+  "bookmark_text": "#e6dfcf",
+  "omnibox_background": "#2a2f37",
+  "omnibox_text": "#e6dfcf",
+  "ntp_background": "#1f2329",
+  "ntp_text": "#e6dfcf",
+  "ntp_link": "#5b8ad0"
+}

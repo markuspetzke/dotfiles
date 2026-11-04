@@ -1,0 +1,16 @@
+# Anmeldebildschirm (sysc-greet) -- Windows 3.1. `theme` kopiert die Datei nach
+# /var/lib/sysc-greet/themes/ und waehlt sie aus (Einrichtung: bin/greeter-setup).
+name = "win31"
+
+[colors]
+bg_base = "#008080"
+bg_active = "#c0c0c0"
+primary = "#ffffff"
+secondary = "#c0c0c0"
+accent = "#ffff55"
+warning = "#ffff55"
+danger = "#a00000"
+fg_primary = "#ffffff"
+fg_secondary = "#dfdfdf"
+fg_muted = "#c0c0c0"
+border_focus = "#000080"

@@ -1,0 +1,16 @@
+# Anmeldebildschirm (sysc-greet) -- Wired. `theme` kopiert die Datei nach
+# /var/lib/sysc-greet/themes/ und waehlt sie aus (Einrichtung: bin/greeter-setup).
+name = "wired"
+
+[colors]
+bg_base = "#0c0e0c"
+bg_active = "#161a16"
+primary = "#7fd88f"
+secondary = "#9d84d8"
+accent = "#9d84d8"
+warning = "#d8c060"
+danger = "#d8607a"
+fg_primary = "#c9d6c3"
+fg_secondary = "#a9b8a3"
+fg_muted = "#6f7d6b"
+border_focus = "#7fd88f"

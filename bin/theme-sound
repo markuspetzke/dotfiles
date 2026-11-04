@@ -1,0 +1,37 @@
+#!/bin/sh
+# Spielt einen Sound des aktiven Themes, falls vorhanden:
+#   theme-sound [--wait] notify|critical|lock|unlock|startup|shutdown
+# --wait: blockiert bis der Sound fertig ist (z. B. vor dem Ausschalten).
+# Suchreihenfolge: themes/<name>/private/sounds/<ereignis>.{wav,ogg,flac,mp3} (eigene Dateien,
+# nicht im Git), dann themes/<name>/sounds/<ereignis>.wav (erzeugte Klaenge).
+# Von dunst als "script" aufgerufen (5 Argumente: app, summary, body, icon, urgency):
+# LOW -> still, CRITICAL -> "critical" (falls vorhanden, sonst notify), sonst "notify".
+wait=""
+[ "${1:-}" = "--wait" ] && { wait=1; shift; }
+if [ $# -ge 5 ]; then
+	case "$5" in
+	LOW) exit 0 ;;
+	CRITICAL) event=critical ;;
+	*) event=notify ;;
+	esac
+else
+	event=${1:-notify}
+fi
+theme="${XDG_CONFIG_HOME:-$HOME/.config}/theme-current"
+
+find_sound() {
+	for f in "$theme/private/sounds/$1".wav "$theme/private/sounds/$1".ogg "$theme/private/sounds/$1".flac \
+		"$theme/private/sounds/$1".mp3 "$theme/sounds/$1.wav"; do
+		[ -f "$f" ] && { echo "$f"; return 0; }
+	done
+	return 1
+}
+
+file=$(find_sound "$event") || { [ "$event" = critical ] && file=$(find_sound notify); } || exit 0
+[ -n "$file" ] || exit 0
+command -v pw-play >/dev/null || exit 0
+if [ -n "$wait" ]; then
+	pw-play --volume 0.6 "$file" >/dev/null 2>&1
+else
+	pw-play --volume 0.6 "$file" >/dev/null 2>&1 &
+fi

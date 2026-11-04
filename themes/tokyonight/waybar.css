@@ -1,0 +1,161 @@
+/* Tokyo Night: der alte Leistenstil (schwebende Pills ueber dem Wallpaper), ueberschreibt
+   waybar/base.css. Hintergrund durchsichtig wie damals. */
+window#waybar {
+    background: transparent;
+    border-bottom: none;
+}
+
+/* Trennlinien und Feld-Stil aus base.css zuruecksetzen */
+#custom-playerctl, #custom-power-profile, #custom-headset, #custom-uptime, #idle_inhibitor,
+#pulseaudio, #network, #cpu, #memory, #temperature, #battery, #backlight, #bluetooth, #clock, #tray {
+    border-left: none;
+}
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "FiraCode Nerd Font";
+    font-size: 13px;
+    font-weight: normal;
+    min-height: 0;
+}
+
+/* Eine ruhige, abgesetzte Leiste statt einzelner harter Rahmen. */
+#waybar > .box {
+    background: @background;
+    border: 1px solid alpha(@foreground, 0.08);
+    border-radius: 12px;
+    margin: 6px 9px 0;
+    padding: 2px 5px;
+}
+
+#workspaces {
+    background: @background-light;
+    border-radius: 8px;
+    margin: 2px 4px 2px 2px;
+    padding: 0 2px;
+}
+
+#workspaces button {
+    background: transparent;
+    border-radius: 6px;
+    color: @comment;
+    margin: 2px;
+    padding: 0 9px;
+    transition: background 150ms ease, color 150ms ease;
+}
+
+#workspaces button:hover {
+    background: @background-hover;
+    color: @foreground;
+}
+
+#workspaces button.active,
+#workspaces button.focused {
+    background: @blue;
+    color: @black;
+    font-weight: bold;
+}
+
+#workspaces button.urgent {
+    background: @red;
+    color: @black;
+}
+
+#window {
+    color: @foreground;
+    font-weight: bold;
+    padding: 0 12px;
+}
+
+/* Gemeinsame Modulform: kompakte farbige pills. */
+#custom-playerctl,
+#custom-power-profile,
+#custom-headset,
+#idle_inhibitor,
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#temperature,
+#battery,
+#backlight,
+#bluetooth,
+#clock,
+#tray {
+    background: @background-light;
+    border-radius: 7px;
+    margin: 2px 2px;
+    padding: 0 9px;
+}
+
+#custom-playerctl {
+    color: @magenta;
+    margin-left: 2px;
+}
+
+#custom-playerctl.Playing { color: @cyan; }
+#custom-playerctl.Paused { color: @orange; }
+
+#custom-power-profile { color: @green; }
+#custom-power-profile.performance { color: @red; }
+#custom-power-profile.power-saver { color: @yellow; }
+#custom-power-profile.unavailable { color: @comment; }
+#custom-headset { color: @blue; }
+#custom-headset.warning { color: @yellow; }
+#custom-headset.critical { color: @red; }
+#custom-headset.charging { color: @green; }
+
+#idle_inhibitor { color: @comment; }
+#idle_inhibitor.activated { color: @yellow; }
+
+#pulseaudio { color: @orange; }
+#pulseaudio.muted { color: @red; }
+
+#network { color: @blue; }
+#network.disconnected { color: @red; }
+
+#cpu { color: @green; }
+#memory { color: @magenta; }
+#temperature { color: @yellow; }
+#temperature.critical {
+    color: @red;
+    animation: blink 1s linear infinite alternate;
+}
+
+#clock { color: @blue; font-weight: bold; }
+
+#battery { color: @green; }
+#battery.charging,
+#battery.plugged { color: @cyan; }
+#battery.warning:not(.charging) { color: @orange; }
+#battery.critical:not(.charging) {
+    color: @red;
+    animation: blink 1s linear infinite alternate;
+}
+
+#backlight { color: @yellow; }
+#bluetooth { color: @blue; }
+#bluetooth.disabled { color: @comment; }
+
+#tray {
+    padding: 0 7px;
+    margin-right: 2px;
+}
+
+#tray > .passive { -gtk-icon-effect: dim; }
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    color: @red;
+}
+
+tooltip {
+    background: @background;
+    border: 1px solid alpha(@blue, 0.35);
+    border-radius: 8px;
+    color: @foreground;
+}
+
+@keyframes blink {
+    to { color: @foreground; }
+}

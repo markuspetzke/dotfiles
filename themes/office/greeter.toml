@@ -1,0 +1,16 @@
+# Anmeldebildschirm (sysc-greet) -- Office. `theme` kopiert die Datei nach
+# /var/lib/sysc-greet/themes/ und waehlt sie aus (Einrichtung: bin/greeter-setup).
+name = "office"
+
+[colors]
+bg_base = "#1f2329"
+bg_active = "#2a2f37"
+primary = "#5b8ad0"
+secondary = "#f2d64b"
+accent = "#5b8ad0"
+warning = "#f2d64b"
+danger = "#d0574a"
+fg_primary = "#e6dfcf"
+fg_secondary = "#cfc8b6"
+fg_muted = "#8d8778"
+border_focus = "#5b8ad0"

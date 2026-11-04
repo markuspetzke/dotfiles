@@ -1,0 +1,143 @@
+// fastfetch -- Windows XP: Systemeigenschaften. Logo: private/logo.png als Pixelgrafik, sonst
+// fastfetch-logo.txt (Monitor); beides erzeugt bin/theme-fastfetch-logo (bei `theme`).
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "file-raw",
+    "source": "~/.local/state/theme/fastfetch-logo.ans",
+    "color": {
+      "1": "38;2;192;192;192",
+      "2": "38;2;59;140;245",
+      "3": "38;2;255;255;255",
+      "4": "38;2;87;184;87"
+    },
+    "padding": {
+      "top": 1,
+      "left": 1,
+      "right": 3
+    }
+  },
+  "display": {
+    "separator": "  ",
+    "showErrors": false,
+    "color": {
+      "keys": "38;2;59;140;245",
+      "title": "38;2;87;184;87",
+      "output": "38;2;216;221;232",
+      "separator": "38;2;122;138;168"
+    },
+    "key": {
+      "width": 17
+    },
+    "size": {
+      "binaryPrefix": "iec",
+      "ndigits": 1
+    },
+    "percent": {
+      "type": [
+        "num",
+        "bar"
+      ],
+      "color": {
+        "green": "38;2;87;184;87",
+        "yellow": "38;2;249;199;79",
+        "red": "38;2;231;72;86"
+      }
+    },
+    "bar": {
+      "width": 10,
+      "char": {
+        "elapsed": "█",
+        "total": "░"
+      },
+      "border": {
+        "left": "",
+        "right": ""
+      },
+      "color": {
+        "total": "38;2;64;85;127"
+      }
+    }
+  },
+  "modules": [
+    "break",
+    {
+      "type": "custom",
+      "format": "System Properties",
+      "outputColor": "38;2;87;184;87"
+    },
+    {
+      "type": "separator",
+      "string": "─",
+      "outputColor": "38;2;64;85;127"
+    },
+    {
+      "type": "os",
+      "key": "System",
+      "format": "{pretty-name} {arch}"
+    },
+    {
+      "type": "kernel",
+      "key": "Version",
+      "format": "{release}"
+    },
+    {
+      "type": "title",
+      "key": "Registered to",
+      "format": "{user-name}"
+    },
+    {
+      "type": "title",
+      "key": "Computer name",
+      "format": "{host-name}"
+    },
+    {
+      "type": "uptime",
+      "key": "Uptime"
+    },
+    "break",
+    {
+      "type": "wm",
+      "key": "Desktop",
+      "format": "{pretty-name} {version}"
+    },
+    {
+      "type": "shell",
+      "key": "Command Prompt",
+      "format": "{pretty-name} {version}"
+    },
+    {
+      "type": "packages",
+      "key": "Software"
+    },
+    "break",
+    {
+      "type": "cpu",
+      "key": "Processor",
+      "format": "{name} ({cores-logical})",
+      "temp": false
+    },
+    {
+      "type": "gpu",
+      "key": "Display",
+      "format": "{name}",
+      "hideType": "integrated",
+      "driverSpecific": false
+    },
+    {
+      "type": "memory",
+      "key": "Memory",
+      "format": "{percentage-bar}  {used} / {total}"
+    },
+    {
+      "type": "disk",
+      "key": "Local Disk (C:)",
+      "folders": "/",
+      "format": "{size-percentage-bar}  {size-used} / {size-total}"
+    },
+    {
+      "type": "battery",
+      "key": "Battery"
+    }
+  ]
+}

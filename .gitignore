@@ -20,6 +20,11 @@ nvim/nvim.log
 # Desktop-Themes; das aktive (theme-current) ist ein lokaler Symlink und bleibt draussen
 !themes/
 !themes/**
+# GTK 3: nur gtk.css (bindet das Thunar-Styling des Themes ein)
+!gtk-3.0/
+!gtk-3.0/gtk.css
+# Eigene, evtl. urheberrechtlich geschuetzte Dateien je Theme (Logo, Bilder, Musik)
+themes/*/private/
 # Eigene Skripte; per Symlink nach ~/.local/bin (siehe bin/README.md)
 !bin/
 !bin/**
@@ -33,3 +38,4 @@ systemd/user/*.wants/
 hypr/.monitor-profile
 
 !.gitignore
+!CLAUDE.md

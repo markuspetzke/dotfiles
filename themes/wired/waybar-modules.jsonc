@@ -12,9 +12,9 @@
         "format-muted": "VOL --"
     },
     "network": {
-        "format-ethernet": "NET",
-        "format-linked": "NET?",
-        "format-disconnected": "NET --"
+        "format-ethernet": "NET ▂▄▆█",
+        "format-linked": "NET ▂___",
+        "format-disconnected": "NET ____"
     },
     "cpu": {
         "format": "CPU {usage}%"
@@ -38,5 +38,34 @@
                 "today": "<span color='#7fd88f'><b><u>{}</u></b></span>"
             }
         }
+    },
+    "custom/uptime": {
+        "exec": "awk '{s=int($1); printf \"CONNECTED %02d:%02d\\n\", s/3600, (s%3600)/60}' /proc/uptime",
+        "interval": 60,
+        "tooltip": false
+    },
+    "battery": {
+        "format": "BAT {capacity}%",
+        "format-charging": "BAT+ {capacity}%",
+        "format-plugged": "AC {capacity}%"
+    },
+    "backlight": {
+        "format": "LUM {percent}%"
+    },
+    "bluetooth": {
+        "format": "BT",
+        "format-disabled": "BT --",
+        "format-connected": "BT {num_connections}"
+    },
+    "network#wifi": {
+        "format-wifi": "NET {icon}",
+        "format-icons": [
+            "▂___",
+            "▂▄__",
+            "▂▄▆_",
+            "▂▄▆█",
+            "▂▄▆█"
+        ],
+        "format-disconnected": "NET ____"
     }
 }

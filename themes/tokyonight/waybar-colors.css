@@ -1,0 +1,21 @@
+/* Tokyo Night: Farben fuer waybar/base.css und die alten Namen fuer waybar.css */
+@define-color background #222436;
+@define-color background-dark #1b1d2b;
+@define-color surface #2f334d;
+@define-color surface2 #636da6;
+@define-color foreground #c8d3f5;
+@define-color muted #636da6;
+@define-color accent #82aaff;
+@define-color olive #c3e88d;
+@define-color teal #86e1fc;
+@define-color orange #ff966c;
+@define-color red #ff757f;
+@define-color background-light #2f334d;
+@define-color background-hover #3b4161;
+@define-color black #1b1d2b;
+@define-color green #c3e88d;
+@define-color yellow #ffc777;
+@define-color blue #82aaff;
+@define-color magenta #c099ff;
+@define-color cyan #86e1fc;
+@define-color comment #636da6;

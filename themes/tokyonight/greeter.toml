@@ -1,0 +1,16 @@
+# Anmeldebildschirm (sysc-greet) -- Tokyo Night. `theme` kopiert die Datei nach
+# /var/lib/sysc-greet/themes/ und waehlt sie aus (Einrichtung: bin/greeter-setup).
+name = "tokyonight"
+
+[colors]
+bg_base = "#222436"
+bg_active = "#2f334d"
+primary = "#82aaff"
+secondary = "#c099ff"
+accent = "#86e1fc"
+warning = "#ffc777"
+danger = "#ff757f"
+fg_primary = "#c8d3f5"
+fg_secondary = "#a9b8e8"
+fg_muted = "#636da6"
+border_focus = "#82aaff"

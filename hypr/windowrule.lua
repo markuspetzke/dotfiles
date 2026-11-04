@@ -64,3 +64,13 @@ hl.layer_rule({
 	ignore_alpha = 0.3,
 	dim_around = true,
 })
+
+-- Bildschirmschoner (bin/screensaver): Vollbild, ohne Animation und Abdunkeln
+hl.window_rule({
+	name = "screensaver",
+	match = { class = "^screensaver$" },
+
+	fullscreen = true,
+	no_anim = true,
+	no_dim = true,
+})

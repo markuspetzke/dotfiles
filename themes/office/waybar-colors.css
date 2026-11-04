@@ -1,0 +1,13 @@
+/* Office (dunkel): Farben fuer waybar/base.css */
+@define-color background #1f2329;
+@define-color background-dark #181b20;
+@define-color surface #2a2f37;
+@define-color surface2 #3d4450;
+@define-color foreground #e6dfcf;
+@define-color muted #8d8778;
+@define-color accent #5b8ad0;
+@define-color olive #7fae5b;
+@define-color teal #4fa3b0;
+@define-color orange #d9893a;
+@define-color red #d0574a;
+@define-color postit #f2d64b;

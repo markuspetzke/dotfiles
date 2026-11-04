@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Einrichtung der Themes auf einem neuen Rechner (z. B. Laptop) nach `git pull`:
+#   ~/.config/bin/theme-setup [theme]     # Standard: vorhandenes Theme behalten, sonst retro
+# Macht: Skripte nach ~/.local/bin verlinken, Pixelschrift (Departure Mono Nerd Font, OFL)
+# installieren falls sie fehlt, Wallpaper-Timer starten, Launcher aufraeumen, Theme setzen.
+# Danach optional einmalig: sudo ~/.config/bin/greeter-setup (Anmeldebildschirm).
+set -euo pipefail
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+echo "1/5 Skripte nach ~/.local/bin"
+mkdir -p "$HOME/.local/bin"
+for f in "$cfg"/bin/*; do
+	[[ -x $f && ! -d $f ]] || continue
+	ln -sf "$f" "$HOME/.local/bin/$(basename "$f")"
+done
+
+echo "2/5 Schriften"
+if ! fc-list : family | grep -q "DepartureMono Nerd Font"; then
+	tmp=$(mktemp -d)
+	trap 'rm -rf "$tmp"' EXIT
+	curl -sSfL -o "$tmp/dm.tar.xz" https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/DepartureMono.tar.xz
+	mkdir -p "$HOME/.local/share/fonts/DepartureMono"
+	tar -xJf "$tmp/dm.tar.xz" -C "$HOME/.local/share/fonts/DepartureMono" --wildcards '*.otf' 'LICENSE*' 2>/dev/null ||
+		tar -xJf "$tmp/dm.tar.xz" -C "$HOME/.local/share/fonts/DepartureMono"
+	fc-cache -f "$HOME/.local/share/fonts" >/dev/null
+	echo "    Departure Mono Nerd Font installiert"
+else
+	echo "    Departure Mono Nerd Font vorhanden"
+fi
+for fam in "FiraCode Nerd Font" "Noto Sans"; do
+	fc-list : family | grep -q "$fam" || echo "    FEHLT: $fam (Paket ttf-firacode-nerd bzw. noto-fonts installieren)"
+done
+
+echo "3/5 systemd"
+systemctl --user daemon-reload
+systemctl --user start theme-wallpaper.timer 2>/dev/null || true
+
+# Spotify: Spicetify-Theme verlinken (Farbschemata in themes/spicetify/color.ini)
+if command -v spicetify >/dev/null; then
+	themes_dir=$(dirname "$(spicetify -c 2>/dev/null)")/Themes
+	mkdir -p "$themes_dir" && ln -sfn "$cfg/themes/spicetify" "$themes_dir/DesktopTheme"
+	echo "    Spicetify: DesktopTheme verlinkt (einmalig noetig: spicetify backup apply)"
+fi
+
+echo "4/5 Launcher aufraeumen"
+"$cfg/bin/launcher-hide" >/dev/null || true
+
+echo "5/5 Theme"
+current=$(basename "$(readlink "$cfg/theme-current" 2>/dev/null || true)")
+"$cfg/bin/theme" "${1:-${current:-retro}}"
+
+cat <<EOT
+
+Fertig. Optional:
+  sudo ~/.config/bin/greeter-setup     # Anmeldebildschirm folgt dem Theme
+  Helium: helium://extensions -> Entpackte Erweiterung laden -> ~/.local/share/theme-browser
+EOT

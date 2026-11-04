@@ -66,6 +66,9 @@ local function read_saved_colorscheme()
   return name ~= "" and name or nil
 end
 
+-- Hell/dunkel bestimmt das Desktop-Theme (nvim.lua: background), vor dem Colorscheme setzen
+vim.opt.background = require("config.theme").get().background or "dark"
+
 local colorscheme = read_saved_colorscheme() or default_colorscheme
 if not pcall(vim.cmd.colorscheme, colorscheme) then
   vim.notify(
@@ -92,7 +95,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
 -- UI
 vim.opt.termguicolors = true
-vim.opt.background = "dark"
+-- background: siehe oben (vom Desktop-Theme, vor dem Colorscheme)
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.showmode = false

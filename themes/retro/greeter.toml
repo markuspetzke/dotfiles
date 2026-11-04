@@ -1,0 +1,16 @@
+# Anmeldebildschirm (sysc-greet) -- Bernstein-CRT. `theme` kopiert die Datei nach
+# /var/lib/sysc-greet/themes/ und waehlt sie aus (Einrichtung: bin/greeter-setup).
+name = "retro"
+
+[colors]
+bg_base = "#1b1a16"
+bg_active = "#2a2822"
+primary = "#e8a33d"
+secondary = "#8f9a5b"
+accent = "#d97a3a"
+warning = "#e8a33d"
+danger = "#c8553d"
+fg_primary = "#e6dcc3"
+fg_secondary = "#c9bfa6"
+fg_muted = "#8a8370"
+border_focus = "#e8a33d"

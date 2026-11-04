@@ -1,0 +1,3 @@
+/* GTK 3: Thunar passend zum Desktop-Theme (themes/<name>/thunar.css, nur fuer Thunar-Fenster).
+   Theme wechseln: `theme <name>`. */
+@import url("../theme-current/thunar.css");

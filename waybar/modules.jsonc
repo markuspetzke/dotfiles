@@ -70,6 +70,31 @@
         "on-click-right": "playerctl next"
     },
 
+    // Leistenposition und Modulabstand (Themes koennen sie ueberschreiben, z. B. winxp)
+    "position": "top",
+    "spacing": 1,
+
+    // Startknopf-Bild: nur sichtbar, wenn das Theme private/start-icon.png hat (winxp)
+    "image#start": {
+        "exec": "f=\"$HOME/.config/theme-current/private/start-icon.png\"; [ -f \"$f\" ] && echo \"$f\"",
+        "size": 20,
+        "interval": 86400,
+        "on-click": "~/.config/bin/menu",
+        "tooltip": false
+    },
+
+    // Startknopf: nur sichtbar, wenn das Theme "exec" setzt (winxp).
+    "custom/start": {
+        "exec": "true",
+        "interval": "once"
+    },
+
+    // Nur sichtbar, wenn das Theme "exec" setzt (z. B. wired: CONNECTED hh:mm).
+    "custom/uptime": {
+        "exec": "true",
+        "interval": "once"
+    },
+
     "clock": {
         "format": "󰥔 {:%H:%M}",
         "format-alt": "󰃮 {:%a, %d.%m.%Y}",

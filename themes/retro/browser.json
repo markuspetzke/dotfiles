@@ -1,0 +1,17 @@
+{
+  "_kommentar": "Helium/Chromium-Theme (bin/theme-browser baut daraus eine Theme-Erweiterung)",
+  "frame": "#141310",
+  "frame_inactive": "#1b1a16",
+  "background_tab": "#141310",
+  "toolbar": "#1b1a16",
+  "tab_text": "#e6dcc3",
+  "tab_background_text": "#8a8370",
+  "toolbar_text": "#e6dcc3",
+  "toolbar_button_icon": "#e8a33d",
+  "bookmark_text": "#e6dcc3",
+  "omnibox_background": "#2a2822",
+  "omnibox_text": "#e6dcc3",
+  "ntp_background": "#1b1a16",
+  "ntp_text": "#e6dcc3",
+  "ntp_link": "#e8a33d"
+}

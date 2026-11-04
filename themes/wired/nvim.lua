@@ -1,6 +1,17 @@
 -- Theme "Wired" fuer Neovim: Colorscheme, gruvbox-Overrides, eigene Highlights.
 return {
   colorscheme = "gruvbox",
+  -- Kopf des Neovim-Startbildschirms (snacks dashboard)
+  dashboard_header = table.concat({
+    "██╗    ██╗██╗██████╗ ███████╗██████╗ ",
+    "██║    ██║██║██╔══██╗██╔════╝██╔══██╗",
+    "██║ █╗ ██║██║██████╔╝█████╗  ██║  ██║",
+    "██║███╗██║██║██╔══██╗██╔══╝  ██║  ██║",
+    "╚███╔███╔╝██║██║  ██║███████╗██████╔╝",
+    " ╚══╝╚══╝ ╚═╝╚═╝  ╚═╝╚══════╝╚═════╝ ",
+    "",
+    "        >> NVIM // CONNECTED         ",
+  }, "\n"),
   gruvbox = {
     contrast = "hard",
     palette_overrides = {

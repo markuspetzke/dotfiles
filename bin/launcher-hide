@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+"""Blendet die Programme aus hypr/launcher-hidden.txt im Launcher aus.
+
+Legt dafuer in ~/.local/share/applications eine Kopie des System-Eintrags mit NoDisplay=true
+an (gleiche Desktop-ID ueberschreibt den System-Eintrag). Programme bleiben installiert,
+Dateizuordnungen funktionieren weiter. Eigene Kopien sind markiert: Steht ein Programm nicht
+mehr in der Liste, wird seine Kopie wieder entfernt. Bei jedem Lauf werden die Kopien aus dem
+aktuellen System-Eintrag neu erzeugt (z. B. nach Paket-Updates)."""
+import glob
+import os
+import subprocess
+
+cfg = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+local = os.path.join(os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share")), "applications")
+MARK = "# Ausgeblendet von ~/.config/bin/launcher-hide (Liste: hypr/launcher-hidden.txt)\n"
+SYSTEM = ["/usr/local/share/applications", "/usr/share/applications", "/var/lib/flatpak/exports/share/applications"]
+
+wanted = []
+for line in open(os.path.join(cfg, "hypr/launcher-hidden.txt")):
+    line = line.strip()
+    if line and not line.startswith("#"):
+        wanted.append(line)
+
+os.makedirs(local, exist_ok=True)
+
+# Eigene Kopien, die nicht mehr gewuenscht sind, entfernen
+for f in glob.glob(os.path.join(local, "*.desktop")):
+    with open(f, encoding="utf-8", errors="replace") as fh:
+        if fh.readline() == MARK and os.path.basename(f) not in wanted:
+            os.remove(f)
+            print("wieder sichtbar:", os.path.basename(f))
+
+for did in wanted:
+    src = next((os.path.join(d, did) for d in SYSTEM if os.path.isfile(os.path.join(d, did))), None)
+    dst = os.path.join(local, did)
+    if src is None:
+        print("nicht installiert, uebersprungen:", did)
+        continue
+    if os.path.exists(dst):
+        with open(dst, encoding="utf-8", errors="replace") as fh:
+            if fh.readline() != MARK:
+                print("eigener Eintrag vorhanden, nicht angefasst:", did)
+                continue
+    out, section = [MARK], None
+    with open(src, encoding="utf-8", errors="replace") as fh:
+        for line in fh:
+            s = line.strip()
+            if s.startswith("[") and s.endswith("]"):
+                section = s
+                out.append(line)
+                if s == "[Desktop Entry]":
+                    out.append("NoDisplay=true\n")
+                continue
+            if section == "[Desktop Entry]" and s.split("=", 1)[0].strip() == "NoDisplay":
+                continue  # vorhandenen Wert ersetzen
+            out.append(line)
+    with open(dst, "w", encoding="utf-8") as fh:
+        fh.writelines(out)
+    print("ausgeblendet:", did)
+
+# Launcher-Daemon neu starten, damit er die Liste neu einliest
+if subprocess.run(["pkill", "-x", "hyprlauncher"]).returncode == 0:
+    subprocess.run(["hyprctl", "dispatch", 'hl.dsp.exec_cmd("hyprlauncher -d")'], stdout=subprocess.DEVNULL)

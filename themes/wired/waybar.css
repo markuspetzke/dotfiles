@@ -30,3 +30,7 @@ window#waybar {
 #cpu, #memory, #temperature, #pulseaudio, #network, #custom-playerctl.Playing {
     text-shadow: 0 0 4px alpha(@foreground, 0.35);
 }
+
+#custom-uptime {
+    color: @muted;
+}

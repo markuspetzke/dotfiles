@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+"""Markiert Fenster mit laufendem Video (Hyprland-Tag "video"), damit Themes mit dim_inactive
+sie nicht abdunkeln (Regel "no-dim-video" in hypr/theme.lua). Wird von Hyprland alle 2 s
+im Hintergrund gestartet (blockiert den Compositor nicht).
+Video = Medium laeuft (playerctl "Playing") und sein Titel steht im Fenstertitel (z. B. YouTube),
+oder das Fenster unterdrueckt die Bildschirmsperre, meldet Inhaltstyp "video" oder ist ein Player."""
+import json
+import subprocess
+
+PLAYERS = {"mpv", "vlc", "org.videolan.VLC", "celluloid", "io.github.celluloid_player.Celluloid", "org.gnome.Totem"}
+
+
+def run(*cmd):
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=2).stdout
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+
+
+playing = []
+for line in run("playerctl", "-a", "metadata", "--format", "{{status}}\t{{title}}").splitlines():
+    status, _, title = line.partition("\t")
+    if status == "Playing" and len(title.strip()) >= 3:
+        playing.append(title.strip().lower())
+
+try:
+    clients = json.loads(run("hyprctl", "clients", "-j") or "[]")
+except json.JSONDecodeError:
+    clients = []
+
+for c in clients:
+    wtitle = (c.get("title") or "").lower()
+    video = bool(
+        c.get("inhibitingIdle")
+        or c.get("contentType") == "video"
+        or c.get("class") in PLAYERS
+        or any(t in wtitle for t in playing)
+    )
+    tags = c.get("tags") or []
+    tagged = "video" in tags if isinstance(tags, list) else "video" in str(tags)
+    if video != tagged:
+        sign = "+" if video else "-"
+        run("hyprctl", "dispatch", f'hl.dsp.window.tag({{ tag = "{sign}video", window = "address:{c["address"]}" }})')

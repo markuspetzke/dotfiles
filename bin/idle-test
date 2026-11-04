@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Testet die Idle-Kette mit kurzen Zeiten, ohne 10 Minuten zu warten:
+#   10 s Bildschirmschoner -> 20 s Sperren -> 30 s Monitore aus. Kein Suspend.
+#   idle-test [sekunden]   # Testdauer, Standard 60; Strg+C bricht ab
+# Haelt dafuer hypridle.service an und startet es danach in jedem Fall wieder.
+set -uo pipefail
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
+dur=${1:-60}
+tmp=$(mktemp --suffix=.conf)
+pid=""
+
+restore() {
+	trap - EXIT INT TERM HUP
+	[[ -n $pid ]] && kill "$pid" 2>/dev/null
+	rm -f "$tmp"
+	systemctl --user start hypridle.service
+	echo
+	echo "Test beendet, hypridle laeuft wieder mit den normalen Zeiten."
+}
+trap restore EXIT INT TERM HUP
+
+if playerctl -a status 2>/dev/null | grep -q Playing; then
+	echo "Achtung: Es laeuft gerade Musik/Video -> die Idle-Kette tut dann absichtlich nichts."
+	echo "Bitte pausieren und neu starten (oder Strg+C)."
+	exit 1
+fi
+
+sed -e 's/timeout = 540$/timeout = 10/' \
+	-e 's/screensaver start 60 90$/screensaver start 10 20/' \
+	-e 's/timeout = 600$/timeout = 20/' \
+	-e 's/timeout = 630$/timeout = 30/' \
+	-e '/timeout = 3600$/,/}/ s/on-timeout = .*/on-timeout = true  # Suspend im Test aus/' \
+	"$cfg/hypr/hypridle.conf" >"$tmp"
+
+systemctl --user stop hypridle.service
+hypridle -c "$tmp" >/dev/null 2>&1 &
+pid=$!
+
+echo "Idle-Test (${dur}s): jetzt Maus und Tastatur loslassen."
+echo "  10 s Bildschirmschoner, 20 s Sperre, 30 s Monitore aus  (Strg+C bricht ab)"
+for ((i = dur; i > 0; i--)); do
+	kill -0 "$pid" 2>/dev/null || { echo "hypridle hat sich beendet."; exit 1; }
+	printf '\r  noch %3ds ' "$i"
+	sleep 1
+done

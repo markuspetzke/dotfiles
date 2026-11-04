@@ -1,13 +1,13 @@
 {
     "layer": "top",
-    "position": "top",
+    // "position" steht in modules.jsonc (Standard oben), Themes koennen es ueberschreiben
     "height": 30,
-    "spacing": 1,
+    // "spacing" steht in modules.jsonc (Standard 1), Themes koennen es ueberschreiben
     "margin": 0,
     // Theme-Module zuerst: bei gleichen Schluesseln gewinnt die zuerst eingebundene Datei.
     "include": ["~/.config/theme-current/waybar-modules.jsonc", "~/.config/waybar/modules.jsonc"],
 
-    "modules-left": ["hyprland/workspaces", "custom/playerctl"],
+    "modules-left": ["image#start", "custom/start", "hyprland/workspaces", "custom/playerctl"],
     "modules-center": ["hyprland/window"],
-    "modules-right": ["custom/power-profile", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network#wifi", "battery", "cpu", "memory", "clock", "tray"]
+    "modules-right": ["custom/power-profile", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network#wifi", "battery", "cpu", "memory", "custom/uptime", "clock", "tray"]
 }
