@@ -10,6 +10,8 @@
 cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
 prog="$cfg/theme-current/screensaver.py"
 run="${XDG_RUNTIME_DIR:-/tmp}"
+# Nur der Python-Prozess der Animation (nicht kitty oder die Shell, die ihn startet)
+anim="^python3 -I $prog\$"
 
 running() { pgrep -f "kitty --class screensaver" >/dev/null; }
 
@@ -28,7 +30,12 @@ start)
 		running || exit 0
 		loginctl lock-session
 		sleep $((dpms_after - lock_after))
-		running && pidof hyprlock >/dev/null && hyprctl dispatch 'hl.dsp.dpms({action = "off"})' >/dev/null
+		running && pidof hyprlock >/dev/null || exit 0
+		hyprctl dispatch 'hl.dsp.dpms({action = "off"})' >/dev/null
+		# Monitore aus: Animation anhalten, sonst laeuft sie ungesehen weiter, bis jemand
+		# zurueckkommt. Beenden ginge nicht, das Schliessen zaehlt als Aktivitaet und schaltet
+		# die Monitore wieder an. "stop" setzt sie fort und beendet sie.
+		pkill -STOP -f "$anim"
 	) >/dev/null 2>&1 &
 	echo $! >"$run/screensaver.timer"
 	;;
@@ -39,6 +46,7 @@ stop)
 	fi
 	[ -f "$run/screensaver.timer" ] && kill "$(cat "$run/screensaver.timer")" 2>/dev/null
 	rm -f "$run/screensaver.timer" "$run/screensaver.start"
+	pkill -CONT -f "$anim" # angehaltene Animation (Monitore aus) fortsetzen, damit sie sauber endet
 	pkill -f "kitty --class screensaver" || true
 	;;
 esac

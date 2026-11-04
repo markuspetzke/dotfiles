@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Markiert Fenster mit laufendem Video (Hyprland-Tag "video"), damit Themes mit dim_inactive
-sie nicht abdunkeln (Regel "no-dim-video" in hypr/theme.lua). Wird von Hyprland alle 2 s
-im Hintergrund gestartet (blockiert den Compositor nicht).
+sie nicht abdunkeln (Regel "no-dim-video" in hypr/theme.lua). Laeuft im Hintergrund (blockiert
+den Compositor nicht) und nur bei Ereignissen: Hyprland startet es bei Fensterwechseln
+(hypr/theme.lua), media-watch.service bei Play/Pause/Titelwechsel eines Players.
 Video = Medium laeuft (playerctl "Playing") und sein Titel steht im Fenstertitel (z. B. YouTube),
 oder das Fenster unterdrueckt die Bildschirmsperre, meldet Inhaltstyp "video" oder ist ein Player."""
 import json

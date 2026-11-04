@@ -1,0 +1,21 @@
+[Unit]
+Description=Medienwiedergabe: Idle-Sperre halten, Video-Fenster markieren
+PartOf=hypr-session.target
+After=hypr-session.target
+
+[Service]
+ExecStart=%h/.config/hypr/scripts/media-watch.sh
+Restart=always
+RestartSec=2
+TimeoutStopSec=5
+MemoryMax=64M
+TasksMax=32
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictSUIDSGID=true
+RestrictRealtime=true

@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 # Testet die Idle-Kette mit kurzen Zeiten, ohne 10 Minuten zu warten:
-#   10 s Bildschirmschoner -> 20 s Sperren -> 30 s Monitore aus. Kein Suspend.
+#   (Laptop: 5 s abdunkeln ->) 10 s Bildschirmschoner -> 20 s Sperren -> 30 s Monitore aus.
+#   Kein Suspend. Nimmt die Config des Profils (hypridle.conf bzw. hypridle-laptop.conf).
 #   idle-test [sekunden]   # Testdauer, Standard 60; Strg+C bricht ab
 # Haelt dafuer hypridle.service an und startet es danach in jedem Fall wieder.
 set -uo pipefail
 cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
 dur=${1:-60}
+conf="$cfg/hypr/hypridle.conf"
+[[ $("$cfg/hypr/scripts/hypr-profile.sh") == laptop ]] && conf="$cfg/hypr/hypridle-laptop.conf"
 tmp=$(mktemp --suffix=.conf)
 pid=""
 
@@ -20,23 +23,25 @@ restore() {
 trap restore EXIT INT TERM HUP
 
 if playerctl -a status 2>/dev/null | grep -q Playing; then
-	echo "Achtung: Es laeuft gerade Musik/Video -> die Idle-Kette tut dann absichtlich nichts."
-	echo "Bitte pausieren und neu starten (oder Strg+C)."
+	echo "Achtung: Es laeuft gerade Musik/Video -> media-watch.service haelt dann eine Idle-Sperre,"
+	echo "die Kette tut absichtlich nichts. Bitte pausieren und neu starten (oder Strg+C)."
 	exit 1
 fi
 
-sed -e 's/timeout = 540$/timeout = 10/' \
+sed -e 's/timeout = 300$/timeout = 5/' \
+	-e 's/timeout = 540$/timeout = 10/' \
 	-e 's/screensaver start 60 90$/screensaver start 10 20/' \
 	-e 's/timeout = 600$/timeout = 20/' \
 	-e 's/timeout = 630$/timeout = 30/' \
-	-e '/timeout = 3600$/,/}/ s/on-timeout = .*/on-timeout = true  # Suspend im Test aus/' \
-	"$cfg/hypr/hypridle.conf" >"$tmp"
+	-e '/timeout = \(900\|3600\)$/,/}/ s/on-timeout = .*/on-timeout = true  # Suspend im Test aus/' \
+	"$conf" >"$tmp"
 
 systemctl --user stop hypridle.service
 hypridle -c "$tmp" >/dev/null 2>&1 &
 pid=$!
 
-echo "Idle-Test (${dur}s): jetzt Maus und Tastatur loslassen."
+echo "Idle-Test (${dur}s, $(basename "$conf")): jetzt Maus und Tastatur loslassen."
+grep -q 'timeout = 5$' "$tmp" && echo "  5 s abdunkeln"
 echo "  10 s Bildschirmschoner, 20 s Sperre, 30 s Monitore aus  (Strg+C bricht ab)"
 for ((i = dur; i > 0; i--)); do
 	kill -0 "$pid" 2>/dev/null || { echo "hypridle hat sich beendet."; exit 1; }

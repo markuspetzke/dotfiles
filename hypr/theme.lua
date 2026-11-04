@@ -115,20 +115,27 @@ end
 if opt.dim_inactive then
 	hl.window_rule({ name = "no-dim-video", match = { tag = "video" }, no_dim = true })
 
-	-- Erkennung im Hintergrund (bin/video-tags), damit der Compositor nie auf playerctl wartet
+	-- Erkennung im Hintergrund (bin/video-tags), damit der Compositor nie auf playerctl wartet.
+	-- Kein Polling: Player-Wechsel (Play/Pause/Titel) meldet media-watch.service, Fenster-
+	-- wechsel kommen von hier. Mehrere Ereignisse innerhalb von 300 ms loesen nur einen Lauf aus.
 	local script = home .. "/.config/bin/video-tags"
 	_G.theme_video_gen = (_G.theme_video_gen or 0) + 1
 	local vgen = _G.theme_video_gen
+	local pending = false
 	local function update_video_tags()
-		if vgen ~= _G.theme_video_gen then
-			return false -- Handler eines frueheren Config-Ladevorgangs
+		if vgen ~= _G.theme_video_gen or pending then
+			return -- Handler eines frueheren Config-Ladevorgangs bzw. Lauf schon geplant
 		end
-		hl.exec_cmd(script)
-		return true
+		pending = true
+		hl.timer(function()
+			pending = false
+			hl.exec_cmd(script)
+		end, { timeout = 300, type = "oneshot" })
 	end
-	hl.timer(update_video_tags, { timeout = 2000, type = "repeat" })
+	hl.on("window.open", update_video_tags)
 	hl.on("window.active", update_video_tags)
 	hl.on("window.title", update_video_tags)
+	update_video_tags() -- Stand nach Config-Reload bzw. Theme-Wechsel
 end
 
 if opt.border_loop and not host.is_laptop then
