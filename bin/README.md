@@ -28,5 +28,5 @@ for f in ~/.config/bin/*; do [ "${f##*.}" = md ] || ln -sf "$f" ~/.local/bin/; d
 | `obs-ws` | minimal obs-websocket v5 client (Python stdlib) |
 | `dotfiles-check` | check the repo: Lua, shell (with shellcheck if installed), Python, JSON, systemd units, the running Hyprland config; runs before every commit (`.githooks/pre-commit`) |
 | `cpu-stability` | stability test for CPU undervolting (Curve Optimizer): every core alone, then all cores, with result verification; reports hardware errors (MCE) and a previous run that ended in a freeze or reboot (`cpu-stability [min per core] [min all cores] [rounds]`, needs `stress-ng`) |
-| `backup-check` | check backups and restart overdue ones (daily via `backup-check.timer`); `backup-check status` shows when each backup last succeeded |
+| `backup-check` | check backups and restart overdue ones (daily via `backup-check.timer`); `backup-check status` shows when each backup last succeeded. Also reads the NAS health (SMART, reallocated/pending sectors, last mirror run) when the NAS is on; `backup-check nas` does only that |
 | `stream-setup-backup` | copy the OBS/PipeWire setup to `~/Documents/Twitch/setup` (before `backup-storaged`) |

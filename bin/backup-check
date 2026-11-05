@@ -3,8 +3,11 @@
 # after power-on). If the last success is older than 7.5 days, it starts the run again:
 # aborted or missed runs (PC off, NAS gone, shutdown) repeat on their own that way.
 # After 14 days without success a notification appears.
+# Also reads the NAS health (SMART status, reallocated/pending sectors, last mirror run) when
+# the NAS is on anyway; it does not wake it. Problems show up as a notification.
 #   backup-check          # check and catch up
 #   backup-check status   # show only
+#   backup-check nas      # only the NAS health (backup-hetzner calls it while the NAS is up)
 # The backup scripts (~/.local/bin/backup-documents, backup-hetzner) write successes as
 # Unix time to ~/.local/state/backup/<name>.ok.
 set -u
@@ -14,6 +17,44 @@ due=$((7 * 86400 + 12 * 3600)) # weekly runs plus a buffer
 alarm=$((14 * 86400))
 
 mkdir -p "$state"
+
+# NAS health, read over ssh (host alias "nas"). Prints problems, records the time of the check.
+nas_health() {
+	local host problems
+	host=$(ssh -G nas 2>/dev/null | awk '$1 == "hostname" {print $2}')
+	if ! timeout 2 bash -c "exec 3<>/dev/tcp/$host/22" 2>/dev/null; then
+		echo "NAS health: NAS is off, skipped"
+		return 0
+	fi
+	problems=$(timeout 30 ssh -o BatchMode=yes -o ConnectTimeout=5 nas 'sh -s' <<-'EOF'
+		for f in /run/nas-smart-health /run/nas-smart-health-spiegel; do
+			[ -r "$f" ] && [ "$(cat "$f")" != PASSED ] && echo "${f##*/}: $(cat "$f")"
+		done
+		for f in /var/lib/smartmontools/attrlog.*.csv; do
+			d=${f#*attrlog.}; d=${d%%.ata.csv}
+			tail -n 1 "$f" | tr '\t' '\n' |
+				awk -F';' -v d="$d" '$1 ~ /^(5|197|198)$/ && $3 > 0 {print d ": SMART attribute " $1 " = " $3}'
+		done
+		read -r when result < /var/lib/nas-spiegel/letzter-lauf 2>/dev/null || { echo "mirror: never ran"; exit 0; }
+		[ "$result" = OK ] || echo "mirror: last run $when failed"
+		[ $(( $(date +%s) - $(date -d "$when" +%s) )) -gt $((40 * 86400)) ] && echo "mirror: last run $when, over 40 days ago"
+		exit 0
+	EOF
+	) || { echo "NAS health: ssh failed"; return 0; }
+	date +%s >"$state/nas-health.ok"
+	if [[ -n $problems ]]; then
+		echo "NAS health: problems:"
+		echo "$problems"
+		notify-send -u critical -a Backup "NAS needs attention" "$problems" 2>/dev/null || true
+	else
+		echo "NAS health: ok (SMART, sectors, mirror)"
+	fi
+}
+
+if [[ ${1:-} == nas ]]; then
+	nas_health
+	exit 0
+fi
 # Since when checks run: counts for backups whose success was never recorded
 [[ -r $state/.since ]] || echo "$now" >"$state/.since"
 since=$(<"$state/.since")
@@ -61,4 +102,11 @@ for b in "${backups[@]}"; do
 			"$label: $info. Log: journalctl --user -u $unit" 2>/dev/null || true
 	fi
 done
+
+if [[ ${1:-} == status ]]; then
+	[[ -r $state/nas-health.ok ]] &&
+		printf '%-30s %s\n' "NAS health" "last checked $(date -d "@$(<"$state/nas-health.ok")" '+%a %d.%m. %H:%M')"
+	exit 0
+fi
+nas_health
 exit 0
