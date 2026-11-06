@@ -10,7 +10,13 @@ since="${XDG_RUNTIME_DIR:-/tmp}/bt-idle-since"
 powered() { bluetoothctl show 2>/dev/null | grep -q 'Powered: yes'; }
 on() {
 	rfkill unblock bluetooth 2>/dev/null
-	bluetoothctl power on >/dev/null
+	# Right after an unblock or a bluetoothd start the adapter needs a moment
+	local i
+	for i in 1 2 3 4 5; do
+		bluetoothctl power on >/dev/null 2>&1 && powered && return 0
+		sleep 1
+	done
+	return 1
 }
 off() {
 	bluetoothctl power off >/dev/null
