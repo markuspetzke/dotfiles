@@ -181,14 +181,18 @@
         "on-scroll-down": "brightnessctl -e4 -n2 set 5%-"
     },
 
+    // Bluetooth starts powered off (laptop: AutoEnable=false); right click switches it on/off
     "bluetooth": {
         "format": "󰂯",
+        "format-off": "󰂲",
         "format-disabled": "󰂲",
         "format-connected": "󰂱 {num_connections}",
         "tooltip-format": "{controller_alias}\t{controller_address}",
+        "tooltip-format-off": "Bluetooth off (right click: on)",
         "tooltip-format-connected": "{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        "on-click": "uwsm-app -- kitty -e bluetuith"
+        "on-click": "uwsm-app -- blueman-manager",
+        "on-click-right": "bluetoothctl show | grep -q 'Powered: yes' && bluetoothctl power off || bluetoothctl power on"
     },
 
     "network#wifi": {
