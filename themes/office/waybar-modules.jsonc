@@ -31,5 +31,24 @@
             }
         },
         "tooltip-format": "<b>Dunder Mifflin · Scranton</b>\n<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    // Noto Sans has a narrow space and the Nerd Font icons are wider than their advance:
+    // two spaces between icon and number, otherwise they touch
+    "backlight": {
+        "format": "{icon}  {percent}%"
+    },
+    "battery": {
+        "format": "{icon}  {capacity}%",
+        "format-charging": "󰂄  {capacity}%",
+        "format-plugged": "󰚥  {capacity}%"
+    },
+    "cpu": {
+        "format": "󰘚  {usage}%"
+    },
+    "memory": {
+        "format": "󰍛  {percentage}%"
+    },
+    "pulseaudio": {
+        "format": "{icon}  {volume}%"
     }
 }
