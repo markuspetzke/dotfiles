@@ -80,6 +80,24 @@
         ],
         "tooltip-format": "{capacity}% · {timeTo}"
     },
+    "bluetooth": {
+        "format": "BT  ON",
+        "format-off": "BT -----",
+        "format-disabled": "BT -----",
+        "format-connected": "BT {device_alias}",
+        "format-connected-battery": "BT {device_alias} {device_battery_percentage}%"
+    },
+    "network#wifi": {
+        "format-wifi": "NET {icon}",
+        "format-icons": [
+            "▮▯▯▯▯",
+            "▮▮▯▯▯",
+            "▮▮▮▯▯",
+            "▮▮▮▮▯",
+            "▮▮▮▮▮"
+        ],
+        "format-disconnected": "NET -----"
+    },
     "backlight": {
         "format": "LUM {icon}",
         "format-icons": [
