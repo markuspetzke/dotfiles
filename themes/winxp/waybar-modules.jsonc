@@ -43,15 +43,5 @@
         "format": "{icon}",
         "format-muted": "󰝟",
         "tooltip-format": "{desc}: {volume}%"
-    },
-    // Noto Sans has a narrow space and the Nerd Font icons are wider than their advance:
-    // two spaces between icon and number, otherwise they touch
-    "backlight": {
-        "format": "{icon}  {percent}%"
-    },
-    "battery": {
-        "format": "{icon}  {capacity}%",
-        "format-charging": "󰂄  {capacity}%",
-        "format-plugged": "󰚥  {capacity}%"
     }
 }

@@ -1,7 +1,8 @@
 /* Office: overrides of waybar/base.css. Office font instead of pixels, dark bar with
    a blue edge, workspaces as rooms, quitting-time counter as a post-it. */
 * {
-    font-family: "Noto Sans", "Liberation Sans", sans-serif;
+    /* Icons come from the Propo Nerd Font: real glyph width, they do not run into the number */
+    font-family: "Noto Sans", "FiraCode Nerd Font Propo", "Liberation Sans", sans-serif;
     font-size: 12px;
 }
 
