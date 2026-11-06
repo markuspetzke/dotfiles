@@ -1,0 +1,8 @@
+[Unit]
+Description=Switch Bluetooth off after 10 minutes without a connected device
+# Only on machines with a Bluetooth adapter (the laptop)
+ConditionPathExists=/sys/class/bluetooth/hci0
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/bin/bt idle-off

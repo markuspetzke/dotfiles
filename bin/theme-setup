@@ -40,6 +40,10 @@ check_programs() {
 	if [[ $profile == laptop ]] && ! command -v brightnessctl >/dev/null; then
 		missing+=(brightnessctl)
 	fi
+	# Bluetooth (Waybar module, bin/bt): only with an adapter
+	if [[ -e /sys/class/bluetooth/hci0 ]] && ! command -v bluetui >/dev/null; then
+		missing+=(bluetui)
+	fi
 	if ((${#missing[@]})); then
 		echo "    MISSING: sudo pacman -S --needed ${missing[*]}"
 	else

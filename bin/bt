@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Bluetooth helper for the laptop, where Bluetooth starts powered off (bluez AutoEnable=false).
+#   bt toggle     power on/off (Waybar right click)
+#   bt open       power on and open bluetui (Waybar click)
+#   bt idle-off   power off after 10 min without a connected device (bt-idle-off.timer)
+# Powering on also lifts an rfkill soft block; otherwise "power on" fails with org.bluez.Error.Failed.
+set -u
+since="${XDG_RUNTIME_DIR:-/tmp}/bt-idle-since"
+
+powered() { bluetoothctl show 2>/dev/null | grep -q 'Powered: yes'; }
+on() {
+	rfkill unblock bluetooth 2>/dev/null
+	bluetoothctl power on >/dev/null
+}
+off() {
+	bluetoothctl power off >/dev/null
+	rm -f "$since"
+}
+
+case ${1:-toggle} in
+toggle)
+	if powered; then off; else on; fi
+	;;
+open)
+	powered || on
+	exec uwsm-app -- kitty -e bluetui
+	;;
+idle-off)
+	if ! powered || [[ -n $(bluetoothctl devices Connected 2>/dev/null) ]]; then
+		rm -f "$since"
+		exit 0
+	fi
+	[[ -f $since ]] || { date +%s >"$since"; exit 0; }
+	(($(date +%s) - $(<"$since") >= 600)) && off
+	;;
+*)
+	echo "usage: bt [toggle|open|idle-off]" >&2
+	exit 2
+	;;
+esac
+exit 0

@@ -181,18 +181,22 @@
         "on-scroll-down": "brightnessctl -e4 -n2 set 5%-"
     },
 
-    // Bluetooth starts powered off (laptop: AutoEnable=false); right click switches it on/off
+    // Bluetooth starts powered off (laptop: AutoEnable=false) and goes off again after 10 min
+    // without a device (bt-idle-off.timer). Click: on + bluetui, right click: on/off (bin/bt).
     "bluetooth": {
         "format": "󰂯",
         "format-off": "󰂲",
         "format-disabled": "󰂲",
-        "format-connected": "󰂱 {num_connections}",
-        "tooltip-format": "{controller_alias}\t{controller_address}",
-        "tooltip-format-off": "Bluetooth off (right click: on)",
-        "tooltip-format-connected": "{device_enumerate}",
-        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        "on-click": "uwsm-app -- blueman-manager",
-        "on-click-right": "bluetoothctl show | grep -q 'Powered: yes' && bluetoothctl power off || bluetoothctl power on"
+        "format-connected": "󰂱 {device_alias}",
+        "format-connected-battery": "󰂱 {device_alias} {device_battery_percentage}%",
+        "max-length": 24,
+        "tooltip-format": "{controller_alias}: on, nothing connected\nclick: devices · right click: off",
+        "tooltip-format-off": "Bluetooth off\nclick: on + devices · right click: on",
+        "tooltip-format-connected": "{controller_alias}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}",
+        "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_battery_percentage}%",
+        "on-click": "~/.config/bin/bt open",
+        "on-click-right": "~/.config/bin/bt toggle"
     },
 
     "network#wifi": {
