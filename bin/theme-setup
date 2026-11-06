@@ -37,6 +37,8 @@ check_programs() {
 	EOT
 	systemctl --user cat hyprpolkitagent.service >/dev/null 2>&1 || missing+=(hyprpolkitagent)
 	python3 -c 'import PIL' 2>/dev/null || missing+=(python-pillow)
+	# Theme start menus (themes/*/startmenu.py, e.g. winxp) are Python GTK 3 programs
+	python3 -I -c 'import gi; gi.require_version("Gtk", "3.0")' 2>/dev/null || missing+=(python-gobject)
 	if [[ $profile == laptop ]] && ! command -v brightnessctl >/dev/null; then
 		missing+=(brightnessctl)
 	fi
