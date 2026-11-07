@@ -141,7 +141,7 @@ if host.is_laptop then
 	hl.config({
 		input = {
 			touchpad = {
-				natural_scroll = false,
+				natural_scroll = true,
 				tap_to_click = true,
 				disable_while_typing = true,
 			},
